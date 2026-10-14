@@ -6,11 +6,12 @@ import PublicLayout from "./layouts/PublicLayout.jsx";
 import ClientLayout from "./layouts/ClientLayout.jsx";
 import AdminLayout from "./layouts/AdminLayout.jsx";
 import { publicRoutes, clientRoutes, adminRoutes } from "./routes.js";
+import BookLoader from "./components/ui/BookLoader.jsx";
 function routeElements(items) {
   return items.map(({path,Component})=><Route key={path} path={path} element={<Component/>}/>);
 }
 export default function AppRoutes() {
-  return <Suspense fallback={<main className="mx-auto max-w-7xl px-5 py-16" role="status">Carregando página...</main>}>
+  return <Suspense fallback={<main className="mx-auto max-w-7xl px-5 py-16"><BookLoader label="Carregando página…"/></main>}>
     <Routes>
       <Route element={<PublicLayout/>}>
         {routeElements(publicRoutes)}

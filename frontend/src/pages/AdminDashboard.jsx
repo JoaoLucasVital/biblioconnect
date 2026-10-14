@@ -19,6 +19,7 @@ import {
   Legend,
 } from "recharts";
 import api from "../api/api.js";
+import BookLoader from "../components/ui/BookLoader.jsx";
 
 function formatarMoeda(valor) {
   return Number(valor || 0).toLocaleString("pt-BR", {
@@ -176,7 +177,7 @@ function AdminDashboard() {
     return (
       <main  className="py-10 sm:py-14">
         <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-          <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando painel administrativo...</p>
+          <BookLoader label="Carregando painel administrativo…"/>
         </div>
       </main>
     );
@@ -185,7 +186,7 @@ function AdminDashboard() {
   return (
     <main  className="py-10 sm:py-14">
       <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-        <section  className="mb-8 flex flex-wrap items-start justify-between gap-6 border-b border-stroke pb-8">
+        <section  className="admin-heading mb-8 flex flex-wrap items-start justify-between gap-6 border-b border-stroke pb-8">
           <div  className="min-w-0 [&_h1]:font-display [&_h1]:text-4xl [&_p]:mt-3 [&_p]:text-muted [&_p]:text-sm">
             <span  className="mb-3 block text-xs uppercase tracking-[0.15em] text-muted">Área administrativa</span>
             <h1  className="font-display text-4xl leading-tight sm:text-5xl">Painel do BiblioConnect</h1>
@@ -205,7 +206,7 @@ function AdminDashboard() {
         {erro && <StatusMessage type={"error"}>{erro}</StatusMessage>}
         {mensagem && <StatusMessage type={"info"}>{mensagem}</StatusMessage>}
 
-        <section  className="my-6 flex flex-wrap gap-6 text-sm">
+        <section  className="admin-leaders my-6 flex flex-wrap gap-6 text-sm">
           <div className="grid min-w-0 flex-1 basis-64 content-start gap-2">
             <span  className="w-fit bg-soft px-3 py-2 text-sm">Livro mais vendido</span>
 
@@ -257,7 +258,7 @@ function AdminDashboard() {
           </section>
         )}
 
-        <section  className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section  className="admin-actions mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <Link to="/admin/pedidos" className="grid gap-2 border-t border-stroke py-5 text-sm [&_strong]:font-display [&_strong]:text-xl [&_span]:text-muted [&_small]:text-muted border-accent">
             <span  className="text-xs uppercase tracking-wider">Operação</span>
             <strong>Gerenciar pedidos</strong>
@@ -283,7 +284,7 @@ function AdminDashboard() {
           </Link>
         </section>
 
-        <section  className="mb-10 grid grid-cols-2 gap-x-6 gap-y-5 xl:grid-cols-4">
+        <section  className="admin-metrics mb-10 grid grid-cols-2 gap-x-6 gap-y-5 xl:grid-cols-4">
           <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-3xl">
             <span>Reservas</span>
             <strong>{stats.reservas}</strong>
@@ -325,7 +326,7 @@ function AdminDashboard() {
           </div>
         </section>
 
-        <section  className="my-8 grid min-w-0 gap-7 xl:grid-cols-2">
+        <section  className="admin-charts my-8 grid min-w-0 gap-7 xl:grid-cols-2">
           <div  className="min-w-0 border-t border-stroke pt-6">
             <div  className="mb-5 [&_h2]:font-display [&_h2]:text-xl [&_p]:mt-2 [&_p]:text-sm [&_p]:text-muted">
               <div>
@@ -371,7 +372,7 @@ function AdminDashboard() {
           </div>
         </section>
 
-        <section  className="my-8 grid min-w-0 gap-7 xl:grid-cols-2">
+        <section  className="admin-charts my-8 grid min-w-0 gap-7 xl:grid-cols-2">
           <div  className="min-w-0 border-t border-stroke pt-6">
             <div  className="mb-5 [&_h2]:font-display [&_h2]:text-xl [&_p]:mt-2 [&_p]:text-sm [&_p]:text-muted">
               <div>

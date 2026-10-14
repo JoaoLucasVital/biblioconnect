@@ -13,7 +13,7 @@ test("catálogo tenta novamente após HTTP 500",async({page})=>{
 test("lista vazia conserva descoberta e ações",async({page})=>{
   await page.route(`${process.env.QA_API_URL}/livros`,route=>route.fulfill({json:[]}));
   await page.goto("/");await expect(page.getByText("Nenhum livro disponível ainda")).toBeVisible();
-  await page.getByRole("link",{name:"Ver catálogo",exact:true}).click();
+  await page.getByRole("link",{name:"Abrir catálogo",exact:true}).click();
   await expect(page.getByRole("heading",{name:"Nenhum livro encontrado"})).toBeVisible();
 });
 test("casos extremos usam os mesmos componentes sem transbordar",async({page},info)=>{

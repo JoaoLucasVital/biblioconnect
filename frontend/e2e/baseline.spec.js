@@ -39,10 +39,10 @@ test("administrador entra e acessa o acervo administrativo", async ({ page }) =>
 
 test("alternância de tema existente continua lembrada ao recarregar", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: /escuro/i }).click();
+  await page.getByRole("switch", { name: "Tema escuro",exact:true }).check();
   await expect(page.locator("body")).toHaveClass(/dark/);
   await page.reload();
   await expect(page.locator("body")).toHaveClass(/dark/);
-  await page.getByRole("button", { name: /claro/i }).click();
+  await page.getByRole("switch", { name: "Tema escuro",exact:true }).uncheck();
   await expect(page.locator("body")).not.toHaveClass(/dark/);
 });

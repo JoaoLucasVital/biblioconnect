@@ -1,6 +1,6 @@
 ---
 name: BiblioConnect
-description: Catálogo editorial contemporâneo com livros em primeiro plano e operações claras.
+description: Atlas editorial contemporâneo com livros conectados, descoberta espacial e operações claras.
 colors:
   brand: "#1e3a5f"
   accent: "#e67e00"
@@ -112,9 +112,9 @@ components:
 
 ## Overview
 
-**Creative North Star: "Catálogo editorial contemporâneo"**
+**Creative North Star: "Atlas editorial contemporâneo"**
 
-Um catálogo editorial contemporâneo em que capas, títulos e autores conduzem a leitura. Creme, marinho e laranja preservam a identidade e o logotipo BiblioConnect; tipografia expressiva e margens generosas dão presença aos livros, enquanto os controles permanecem discretos.
+Uma biblioteca editorial contemporânea em que capas, títulos e autores conduzem a leitura. O Atlas do Acervo torna visíveis relações reais de categoria e autor. Creme, marinho e laranja preservam a identidade BiblioConnect; o pedido de uma nova marca substitui a preservação do logotipo anterior. A escolha entre as três propostas está em avaliação.
 
 A mesma linguagem acompanha descoberta, catálogo, compra, aluguel, reserva e acompanhamento de pedidos. A home oferece a expressão mais cênica; conta e administração adotam densidade operacional, navegação clara e estados explícitos. Tema escuro, foco visível e alternativas sem movimento fazem parte do sistema.
 
@@ -131,7 +131,7 @@ A paleta combina papel quente, marinho institucional e laranja de ação; os val
 
 ### Primary
 
-- **Marinho da marca** (`brand`): identidade e logotipo preservados.
+- **Marinho da marca** (`brand`): identidade institucional, navegação administrativa e Atlas. O Atlas usa superfície #102b45, painel #173852, tinta #fff7ed, secundário #c0d0dc, linhas #496176 e acento claro #f7a742 para leitura sobre marinho.
 - **Laranja de ação** (`accent`, `accent-hover`): ações principais, indicadores ativos e destaques pontuais. No texto de destaque da home, o tom mais escuro aparece no tema claro e o acento original no escuro.
 - **Tinta do botão** (`primary-foreground`): texto escuro sobre o laranja nos dois temas, inclusive no hover.
 
@@ -217,15 +217,25 @@ Campos têm label visível, superfície, contorno secundário e raio médio. O c
 
 ### Navigation
 
-Cabeçalho com logotipo original, wordmark serifada e links sans de peso médio. Link ativo recebe sublinhado estrutural laranja; links inativos usam secundário e ficam em tinta no hover. Há link para pular ao conteúdo. Menus compactos usam o mesmo diálogo nativo que as operações; administração acrescenta sidebar orientada a tarefas.
+Cabeçalho com marca BiblioConnect, wordmark serifada e links sans de peso médio. O seletor sol/lua escolhido pelo usuário mantém localStorage.theme e body.dark, possui nome acessível e alvo 60×44 px. Link ativo recebe sublinhado laranja; há link para pular ao conteúdo. Menus compactos usam o diálogo nativo; administração acrescenta sidebar marinho com os mesmos destinos, ícones Lucide e acesso ao Atlas.
 
 ### Dialogs
 
 Diálogos nativos com título serifado, superfícies temáticas, divisores entre cabeçalho/conteúdo/rodapé e rolagem interna. Largura máxima de 640 px, margem lateral total de 32 px e altura máxima de 85dvh. Foco protegido, Escape, clique no backdrop e retorno ao acionador acompanham o estado ocupado; operações em andamento bloqueiam fechamento e confirmação duplicada.
 
-### Editorial book opening
+### Atlas do Acervo
 
-A abertura reúne título, acesso ao catálogo e livro real. A cena 3D é carregada sob demanda apenas na home a partir de 768 px e sem movimento reduzido; capa estática atende telas pequenas, redução de movimento, carregamento e falha de textura/WebGL. O conteúdo permanece utilizável sem a animação.
+O Atlas é o primeiro bloco da home: título serifado expressivo, CTA Interactive Hover Link, busca, categorias reais, mapa e painel da leitura selecionada. SVG desenha relações; botões nativos representam os livros. Linhas contínuas indicam autor em comum, tracejadas indicam categoria. Posições são determinísticas; o mapa exibe até 48 livros, distribuídos entre as categorias, com aviso do limite e lista completa equivalente. Não há pontos fictícios, Dewey inventado nem operações privadas nesse espaço público.
+
+O celular abre em lista; no desktop é possível alternar mapa/lista. Movimento reduzido abre em lista e conserva a opção de mapa estático. Seleção por teclado/foco ou clique mostra capa, título, autor, estoque, sinopse e valores retornados pela API, com acesso ao catálogo existente. Carregamento usa o livro Nawsome apenas durante a requisição; erro não mostra contagem zero como dado válido. O título revela caracteres por opacity/transform em 200ms, com stagger total limitado a 400ms e estado estático em reduced-motion.
+
+### Digitação com fade
+
+FadeInput usa o input nativo como fonte de valor, caret, seleção e eventos. Nas buscas e no nome do cadastro, apenas a última inserção no fim recebe fade de 180ms por camada aria-hidden temporária. Digitação rápida substitui o efeito anterior sem fila. Composição, colagem, exclusão, seleção, edição no meio, texto com rolagem horizontal, reduced-motion e forced-colors usam apresentação nativa. Senhas, e-mails e números não recebem o efeito.
+
+### Editorial book feature
+
+A seção secundária da home reúne título, acesso ao catálogo e livro real. A cena 3D é carregada sob demanda apenas na home a partir de 768 px e sem movimento reduzido; capa estática atende telas pequenas, redução de movimento, carregamento e falha de textura/WebGL. O conteúdo permanece utilizável sem a animação.
 
 A entrada dos títulos usa 480 ms e deslocamento de 18 px; detalhes usam 400 ms e 10 px, com easing power3.out. A troca automática de destaques ocorre em 6 segundos e pausa por foco, hover de mouse, aba oculta ou controle manual. Essa composição pertence à home, não é um molde obrigatório para páginas operacionais.
 
@@ -233,7 +243,7 @@ A entrada dos títulos usa 480 ms e deslocamento de 18 px; detalhes usam 400 ms 
 
 ### Do:
 
-- **Do** preservar logotipo, paleta original e alternância de tema.
+- **Do** preservar nome, paleta e alternância de tema, adotando a nova marca escolhida pelo usuário.
 - **Do** dar prioridade a capa, título e autor e permitir quebra de títulos longos.
 - **Do** usar pequenos rótulos de seção e divisores quando organizarem a leitura.
 - **Do** manter rótulos, foco visível e estados de carregamento, erro, vazio e indisponibilidade.

@@ -10,6 +10,7 @@ import PurchaseDialog from "../features/catalog/PurchaseDialog.jsx";
 import RentalDialog from "../features/catalog/RentalDialog.jsx";
 import ReservationDialog from "../features/catalog/ReservationDialog.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
+import BookLoader from "../components/ui/BookLoader.jsx";
 
 function calcularMultaReserva(dataRetirada) {
   if (!dataRetirada) {
@@ -323,7 +324,7 @@ function Books() {
   const reservaCalculada = calcularMultaReserva(dataRetirada);
   const aluguelCalculado = calcularAluguel(livroAluguel, diasAluguel);
 
-  if (loading) return <main className="mx-auto max-w-7xl px-5 py-16 sm:px-8"><p role="status" className="text-muted">Carregando catálogo...</p></main>;
+  if (loading) return <main className="mx-auto max-w-7xl px-5 py-16 sm:px-8"><BookLoader label="Carregando catálogo…"/></main>;
   const dialogError = feedback.type==="error" ? feedback.text : "";
   return <main className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
     <header className="mb-8 flex flex-wrap items-end justify-between gap-6">

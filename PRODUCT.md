@@ -20,15 +20,15 @@ React/Vite no navegador, Express e Prisma/PostgreSQL no servidor. Desenvolviment
 
 ## Capabilities and Constraints
 
-Catálogo, compra, aluguel, reserva, entrega, pagamentos, conta/confirmação/recuperação, avaliações moderadas, chat e administração. Preservar rotas, contratos, logotipo, cores e dados. A etapa atual muda o frontend e seu ferramental de validação; não acrescenta leitor digital ou novas regras de negócio.
+Catálogo, compra, aluguel, reserva, entrega, pagamentos, conta/confirmação/recuperação, avaliações moderadas, chat e administração. Preservar rotas, contratos, cores e dados. O usuário solicitou uma nova marca em 14/10/2026; a obrigação anterior de preservar o logotipo foi substituída. A etapa atual muda o frontend e seu ferramental de validação; não acrescenta leitor digital ou novas regras de negócio.
 
 ## Brand Commitments
 
-Nome e logotipo BiblioConnect. Paleta existente e direção editorial contemporânea, fontes e composição detalhadas na especificação aprovada. Uiverse, 21st.dev e React Bits são referências solicitadas, com atribuição para código incorporado.
+Nome BiblioConnect e nova marca em avaliação. Paleta existente e direção editorial contemporânea com Atlas do Acervo como assinatura de descoberta. Uiverse, 21st.dev e React Bits são referências solicitadas, com atribuição para código incorporado. Sol/lua RiccardoRapelli, Interactive Hover Button Magic UI, loading Nawsome e fade de caracteres foram escolhidos pelo usuário.
 
 ## Evidence on Hand
 
-Código original e especificação em `docs/superpowers/specs/2026-10-13-biblioconnect-editorial-design.md`. Baseline: testes unitários, integração real em QA e screenshots de navegador em `frontend/test-results`. Não há evidência para inventar depoimentos, parceiros, títulos em estoque ou vendas.
+Código original, especificação inicial e decisões da segunda rodada em `docs/design-references/2026-10-14/README.md`, com plano revisado e aprovado em `docs/superpowers/plans/2026-10-14-biblioconnect-atlas-plan.md`. O banco original recebeu livros expressamente autorizados; proveniência e verificações em `docs/verification/2026-10-14-persistent-acervo.md`. Não há evidência para inventar depoimentos, parceiros ou vendas.
 
 ## Product Principles
 

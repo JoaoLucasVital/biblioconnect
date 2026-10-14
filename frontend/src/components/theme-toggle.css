@@ -1,5 +1,5 @@
 /* RiccardoRapelli's sun/cloud/moon switch, scoped for accessible React use. */
-.bc-theme-switch { position:relative; display:inline-flex; width:64px; height:44px; flex-shrink:0; align-items:center; cursor:pointer; }
+.bc-theme-switch { position:relative; display:inline-flex; width:60px; height:44px; flex-shrink:0; align-items:center; cursor:pointer; }
 .bc-theme-switch input { position:absolute; inset:0; width:100%; height:100%; opacity:0; z-index:2; cursor:pointer; }
 .bc-theme-switch input:focus-visible { outline:none; }
 .bc-theme-switch input:focus-visible + .bc-theme-slider { outline:2px solid var(--text); outline-offset:4px; }

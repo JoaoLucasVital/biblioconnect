@@ -36,4 +36,14 @@ Foram reutilizados os arquivos de capa já presentes no projeto de referência, 
 - Comando local do worktree: `rtk proxy node .superpowers/start-persistent.mjs`.
 - A carga é uma operação separada: `.superpowers/seed-existing-acervo.mjs`; inicializar o aplicativo não volta a cadastrar livros.
 
-Os dois scripts e relatórios operacionais em `.superpowers` são locais e ignorados pelo Git. Não incluem credenciais externas. Uma futura instalação em outra máquina deve usar o fluxo documentado do projeto e receber configuração própria. O frontend atual ainda é a primeira rodada editorial; o Atlas e os componentes selecionados aguardam implementação.
+Os scripts e relatórios operacionais em `.superpowers` são locais e ignorados pelo Git. Não incluem credenciais externas. Uma futura instalação em outra máquina deve usar o fluxo documentado do projeto e receber configuração própria. A segunda rodada agora inclui o Atlas conectado a esses dados e os componentes escolhidos.
+
+## Ampliação para exercitar relações reais no Atlas
+
+Foram incluídos mais oito títulos autorizados pelo pedido de abastecer o acervo: Quincas Borba (1891), Helena (1876), Iaiá Garcia (1878), Papéis Avulsos (1882), Histórias sem Data (1884), Noite na Taverna (1855), Lira dos Vinte Anos (1853) e Macário (1855), ids 67–74. O conjunto completo passou de quatro para **12 livros**. Metadados/fontes e sinopses próprias em `docs/design-references/2026-10-14/atlas-books.json`.
+
+Referências: [romances no corpus digital da BYU](https://machado.byu.edu/novels/), [Papéis Avulsos no Gutenberg](https://www.gutenberg.org/ebooks/57001), [Histórias sem Data no Gutenberg](https://www.gutenberg.org/ebooks/33056), [Álvares de Azevedo na Biblioteca Municipal de Torres](https://biblioteca.torres.rs.gov.br/autores/azevedo-alvares-de/). As sinopses são breves descrições próprias, não transcrições dos sites.
+
+Cada novo livro tem estoque 4, compra R$20 e aluguel R$5 configurados para apresentação. Ano representa publicação da obra segundo as fontes; `redator` foi identificado explicitamente como referência bibliográfica de apresentação. Não foi atribuída uma editora comercial fictícia. Os oito títulos não possuem imagem de capa cadastrada e usam o fallback tipográfico do aplicativo. As três capas históricas anteriores continuam intactas.
+
+Nova carga autenticada pela API: before=4, after=12. Reexecução: before=12, after=12, created=[]. Comparação profunda dos quatro registros anteriores sem alterações. Nenhum usuário, pedido, pagamento ou indicador de vendas foi fabricado.
