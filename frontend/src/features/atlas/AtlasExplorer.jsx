@@ -3,6 +3,7 @@ import { Compass, List, Search, X } from "lucide-react";
 import { buildAtlas } from "./atlasModel.js";
 import AtlasMap from "./AtlasMap.jsx";
 import AtlasBookPanel from "./AtlasBookPanel.jsx";
+import AtlasResults from "./AtlasResults.jsx";
 import BookCover from "../../components/ui/BookCover.jsx";
 import BookLoader from "../../components/ui/BookLoader.jsx";
 import StatusMessage from "../../components/ui/StatusMessage.jsx";
@@ -42,7 +43,7 @@ export default function AtlasExplorer({livros=[],loading=false,error="",onRetry}
           {model.total===0?<div className="atlas-state"><Search size={30} aria-hidden="true"/><h2>Nenhuma leitura encontrada</h2><p>Experimente outro título, autor ou categoria.</p><button className="atlas-clear" type="button" onClick={clear}><X size={15} aria-hidden="true"/>Limpar busca</button></div>:isMap?<AtlasMap model={model} selectedId={selected?.id} onSelect={setSelectedId}/>:<ul className="atlas-book-list" aria-label="Livros no Atlas">{model.books.map(book=><li key={book.id}><button type="button" className={selected?.id===book.id?"is-selected":""} aria-pressed={selected?.id===book.id} aria-label={`Ver ${book.titulo}, de ${book.autor}`} onClick={()=>setSelectedId(book.id)}>
             <BookCover livro={book} className="w-10 shrink-0"/><span className="min-w-0"><strong>{book.titulo}</strong><small>{book.autor}</small></span><span className="atlas-list-category">{book.categoria||"Sem categoria"}</span>
           </button></li>)}</ul>}
-          <div className="atlas-map-footer" role="status"><span>{model.total} {model.total===1?"livro encontrado":"livros encontrados"}{isMap && model.total>model.visibleCount?` · ${model.visibleCount} pontos no mapa; todos os resultados na lista`:""}</span><span aria-hidden="true">ESCOLHA UM PONTO. ENCONTRE UMA HISTÓRIA. ↗</span></div>
+          {(!isMap || model.total===0) && <AtlasResults total={model.total} visibleCount={model.visibleCount}/>}
         </div>
         <AtlasBookPanel livro={selected}/>
       </div>

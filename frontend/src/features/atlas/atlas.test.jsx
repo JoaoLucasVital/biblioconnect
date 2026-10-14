@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from "@testing-library/react";
 import { expect, it } from "vitest";
-import { buildAtlas } from "./atlasModel.js";
+import { buildAtlas,fitAtlasNodes } from "./atlasModel.js";
 import AtlasExplorer from "./AtlasExplorer.jsx";
 import { renderWithRouter } from "../../test/renderWithRouter.jsx";
 import { livroDisponivel } from "../../test/fixtures.js";
@@ -67,4 +67,24 @@ it("loading e erro não apresentam contagens como se o acervo já tivesse carreg
   unmount(); renderWithRouter(<AtlasExplorer livros={[]} error="Falha de conexão" onRetry={()=>{}}/>);
   expect(screen.getByRole("alert")).toHaveTextContent("Falha de conexão");
   expect(screen.getByRole("button",{name:"Tentar novamente"})).toBeVisible();
+});
+
+it("alvos de 44px ficam separados no mapa real de tablet",()=>{
+  const many=Array.from({length:200},(_,i)=>({...books[0],id:i+1,titulo:`Livro ${i}`}));
+  const result=fitAtlasNodes(buildAtlas(many,{}),{width:484,height:500});
+  expect(result.nodes).toHaveLength(48);
+  for(let i=0;i<result.nodes.length;i++)for(let j=i+1;j<result.nodes.length;j++){
+    const a=result.nodes[i],b=result.nodes[j];
+    expect(Math.abs(a.x-b.x)*484/1000>=44 || Math.abs(a.y-b.y)*500/560>=44).toBe(true);
+  }
+});
+
+it("área pequena limita pontos e relações sem perder livros da lista",()=>{
+  const many=Array.from({length:200},(_,i)=>({...books[0],id:i+1,titulo:`Livro ${i}`}));
+  const model=buildAtlas(many,{}),result=fitAtlasNodes(model,{width:200,height:300});
+  expect(result.visibleCount).toBeLessThan(48);
+  expect(result.books).toHaveLength(200); expect(result.total).toBe(200);
+  const ids=new Set(result.nodes.map(n=>n.id));
+  expect(result.edges.every(e=>ids.has(e.source)&&ids.has(e.target))).toBe(true);
+  expect(model.nodes).toHaveLength(48);
 });

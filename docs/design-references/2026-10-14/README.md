@@ -1,14 +1,14 @@
 # Segunda rodada visual — referências para avaliação
 
-Data: 14/10/2026. Estado: proposta escrita avaliada pelo usuário; decisões registradas abaixo. Componentes da segunda rodada ainda não integrados.
+Data: 14/10/2026. Estado: proposta e plano escrito aprovados; segunda rodada integrada e em verificação final.
 
 ## Decisões do usuário nesta rodada
 
 - Substituir o controle claro/escuro por [jolly-chicken-91, RiccardoRapelli](https://uiverse.io/RiccardoRapelli/jolly-chicken-91), mantendo a preferência persistida, foco visível e nome acessível.
 - Usar o segundo botão, Interactive Hover Button da Magic UI; rejeitar o botão STORM992002. [Fonte oficial](https://magicui.design/docs/components/interactive-hover-button).
 - Loading Nawsome e referências de texto aprovados. Digitação com valor imediato e fade visual aprovada.
-- Criar a nova marca. [Três propostas produzidas](logo-concepts.png); escolha do conceito pendente, com recomendação da proposta 03.
-- Reutilizar expressamente o banco existente e cadastrar livros. Operação concluída: três livros novos, registro anterior preservado, quatro livros após reinício e nova carga sem duplicatas.
+- Criar a nova marca. [Três propostas produzidas](logo-concepts.png); proposta 03 aplicada provisoriamente à prévia após ausência de preferência, suposição comunicada. A escolha do usuário continua aberta, sem registrar aprovação fictícia.
+- Reutilizar expressamente o banco existente e cadastrar livros. Operação concluída: 11 livros novos, registro anterior preservado, **12 livros** após reinício e nova carga sem duplicatas.
 - Seguir com a composição recomendada: Atlas protagonista, linguagem editorial contemporânea, cores mantidas e funções existentes preservadas.
 
 O plano de execução está em `../../superpowers/plans/2026-10-14-biblioconnect-atlas-plan.md`. Abaixo fica preservado o raciocínio da proposta e das referências, com as decisões acima prevalecendo sobre os candidatos inicialmente apresentados.
@@ -44,7 +44,7 @@ Administração: incorporar a densidade e a organização das outras três image
 | --- | --- | --- |
 | Hero com imagens em movimento | [Image Stream Hero, Ruixen](https://21st.dev/@ruixen.ui/components/image-stream-hero) | Referência de composição e movimento de capas; adaptar ao marinho/laranja, sem importar outra identidade |
 | Constelações | [Constellation Grid, Daiwiik Harihar](https://21st.dev/@daiwiikharihar/components/constellation-grid) | Referência visual; é uma malha física de canvas, não um mapa funcional de livros. O Atlas exige seus próprios dados e interações |
-| Botão com preenchimento em hover | [STORM992002, Uiverse](https://uiverse.io/STORM992002/neat-dog-73) | Entrada de cor de baixo para cima, adaptada à paleta, duração e contraste do projeto |
+| Botão com preenchimento em hover | [STORM992002, Uiverse](https://uiverse.io/STORM992002/neat-dog-73) | Rejeitado pelo usuário; não incorporado |
 | Botão com troca de texto/seta | [Interactive Hover Button, Magic UI](https://21st.dev/@dillionverma/components/interactive-hover-button) | Ação principal de explorar, com resposta equivalente por foco e toque |
 | Loading de livro | [Nawsome, Uiverse](https://uiverse.io/Nawsome/curly-goose-54) | Livro com páginas animadas; adaptar para marca e usar só durante carregamento real, sem espera artificial |
 | Animação por caractere | [Split Text](https://reactbits.dev/text-animations/split-text) e [Blur Text](https://reactbits.dev/text-animations/blur-text) | Referências de revelação de texto; não são componentes de input prontos |
@@ -83,4 +83,4 @@ Proposta a decidir depois: frontend Vercel, API em execução Node adequada aos 
 
 ## Próxima decisão
 
-Revisar o plano concreto desta rodada e escolher a proposta da nova marca. A execução seguirá o método inline já escolhido, mantendo a primeira implementação como base funcional e o banco existente como destino persistente da prévia.
+O plano concreto foi revisado e aprovado pelo usuário e executado inline. A prévia usa o banco existente e recebeu a aplicação provisória da marca 03. A avaliação visual da nova composição e a preferência definitiva da logo permanecem abertas; deploy e integração por PR são etapas posteriores.

@@ -225,7 +225,7 @@ Diálogos nativos com título serifado, superfícies temáticas, divisores entre
 
 ### Atlas do Acervo
 
-O Atlas é o primeiro bloco da home: título serifado expressivo, CTA Interactive Hover Link, busca, categorias reais, mapa e painel da leitura selecionada. SVG desenha relações; botões nativos representam os livros. Linhas contínuas indicam autor em comum, tracejadas indicam categoria. Posições são determinísticas; o mapa exibe até 48 livros, distribuídos entre as categorias, com aviso do limite e lista completa equivalente. Não há pontos fictícios, Dewey inventado nem operações privadas nesse espaço público.
+O Atlas é o primeiro bloco da home: título serifado expressivo, CTA Interactive Hover Link, busca, categorias reais, mapa e painel da leitura selecionada. SVG desenha relações; botões nativos representam os livros. Linhas contínuas indicam autor em comum, tracejadas indicam categoria. Posições são determinísticas e projetadas na área real por ResizeObserver; alvos de 44px ficam separados em células de pelo menos52px. O mapa exibe até 48 livros, reduzindo pontos se faltar área, com aviso do número efetivo e lista completa equivalente. Não há pontos fictícios, Dewey inventado nem operações privadas nesse espaço público.
 
 O celular abre em lista; no desktop é possível alternar mapa/lista. Movimento reduzido abre em lista e conserva a opção de mapa estático. Seleção por teclado/foco ou clique mostra capa, título, autor, estoque, sinopse e valores retornados pela API, com acesso ao catálogo existente. Carregamento usa o livro Nawsome apenas durante a requisição; erro não mostra contagem zero como dado válido. O título revela caracteres por opacity/transform em 200ms, com stagger total limitado a 400ms e estado estático em reduced-motion.
 

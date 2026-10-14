@@ -48,3 +48,21 @@ test("movimento reduzido usa lista e mantém texto e operações disponíveis",a
   await expect(page.locator("canvas")).toHaveCount(0);
   await expect(atlas.getByRole("link",{name:"Abrir catálogo"})).toHaveAttribute("href","/livros");
 });
+
+test("mapa denso em tablet mantém cada alvo de livro livre para clique",async({page})=>{
+  const many=Array.from({length:200},(_,i)=>({...publicBooks[0],id:i+1,titulo:`Leitura ${String(i).padStart(3,"0")}`}));
+  await page.route(`${process.env.QA_API_URL}/livros`,route=>route.fulfill({json:many}));
+  await page.setViewportSize({width:768,height:1100}); await page.goto("/");
+  const points=page.locator(".atlas-node"); await expect(points).toHaveCount(48);
+  const misses=await points.evaluateAll(elements=>elements.flatMap(element=>{
+    const r=element.getBoundingClientRect();
+    const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.closest(".atlas-node");
+    return hit===element?[]:[{expected:element.getAttribute("aria-label"),received:hit?.getAttribute("aria-label")}];
+  }));
+  expect(misses).toEqual([]);
+  for(const point of await points.all()){
+    const box=await point.boundingBox(); await page.mouse.click(box.x+box.width/2,box.y+box.height/2);
+    await expect(point).toHaveAttribute("aria-pressed","true");
+  }
+  await expect(page.getByRole("region",{name:"Atlas do Acervo",exact:true}).getByRole("status")).toContainText("200 livros encontrados");
+});

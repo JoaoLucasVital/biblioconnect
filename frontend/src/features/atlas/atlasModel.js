@@ -2,6 +2,35 @@ const normalize=value=>String(value??"").normalize("NFD").replace(/[\u0300-\u036
 const categoryOf=book=>String(book.categoria||"").trim()||"Sem categoria";
 const compare=(a,b)=>String(a).localeCompare(String(b),"pt-BR",{numeric:true,sensitivity:"base"});
 
+/** Project into collision-free 44px targets using the chart's actual CSS dimensions. */
+export function fitAtlasNodes(model,{width,height}) {
+  const columns=Math.max(0,Math.floor((width-48)/52));
+  const rows=Math.max(0,Math.floor((height-140)/52));
+  const capacity=columns*rows;
+  if(!capacity)return {...model,nodes:[],edges:[],visibleCount:0};
+  const slots=[];
+  for(let row=0;row<rows;row++)for(let column=0;column<columns;column++){
+    slots.push({x:24+(column+.5)*(width-48)/columns,y:70+(row+.5)*(height-140)/rows});
+  }
+  const groups=new Map();
+  for(const node of model.nodes){if(!groups.has(node.categoryKey))groups.set(node.categoryKey,[]);groups.get(node.categoryKey).push(node);}
+  const candidates=[];
+  for(let round=0;candidates.length<Math.min(capacity,model.nodes.length);round++){
+    for(const group of groups.values())if(group[round] && candidates.length<capacity)candidates.push(group[round]);
+  }
+  const nodes=candidates.map((node,index)=>{
+    const desiredX=node.x*width/1000,desiredY=node.y*height/560;
+    let best=0,distance=Infinity;
+    slots.forEach((slot,i)=>{const next=(slot.x-desiredX)**2+(slot.y-desiredY)**2;if(next<distance){best=i;distance=next;}});
+    const [slot]=slots.splice(best,1);
+    // Small deterministic offsets keep the atlas organic; at least49px separates targets.
+    const dx=((index*7)%5-2)*.7,dy=((index*11)%5-2)*.7;
+    return {...node,x:(slot.x+dx)/width*1000,y:(slot.y+dy)/height*560};
+  });
+  const ids=new Set(nodes.map(n=>n.id));
+  return {...model,nodes,edges:model.edges.filter(e=>ids.has(e.source)&&ids.has(e.target)),visibleCount:nodes.length};
+}
+
 /** Public book data only. Coordinates describe a collection, never geographic locations. */
 export function buildAtlas(livros=[],{query="",category=""}={}) {
   const all=[...livros].sort((a,b)=>compare(categoryOf(a),categoryOf(b)) || compare(a.titulo,b.titulo) || compare(a.id,b.id));

@@ -47,3 +47,9 @@ Referências: [romances no corpus digital da BYU](https://machado.byu.edu/novels
 Cada novo livro tem estoque 4, compra R$20 e aluguel R$5 configurados para apresentação. Ano representa publicação da obra segundo as fontes; `redator` foi identificado explicitamente como referência bibliográfica de apresentação. Não foi atribuída uma editora comercial fictícia. Os oito títulos não possuem imagem de capa cadastrada e usam o fallback tipográfico do aplicativo. As três capas históricas anteriores continuam intactas.
 
 Nova carga autenticada pela API: before=4, after=12. Reexecução: before=12, after=12, created=[]. Comparação profunda dos quatro registros anteriores sem alterações. Nenhum usuário, pedido, pagamento ou indicador de vendas foi fabricado.
+
+## Conexões do serviço local
+
+Foi observada falha P1001 na primeira consulta após períodos sem uso. A biblioteca de socket usada pelo launcher tinha limite padrão de uma conexão. Uma reprodução isolada em banco em memória manteve um socket antigo aberto e tentou uma consulta Prisma pela nova conexão: falhou com limite1 e passou com limite4. O launcher local passou a permitir quatro sockets; a fila interna do PGlite continua serializando consultas. Backend, Prisma/schema e dados não foram alterados para esse ajuste operacional.
+
+Reinício após a correção: backup `before-editorial-2026-10-14T15-59-40.942Z`, 12 livros encontrados. Ambas as cargas foram repetidas depois: before12/after12, nenhum novo cadastro, três capas históricas ainda HTTP200. Uma nova abertura da home após mais de seis minutos sem consulta voltou a mostrar os12 livros na primeira tentativa. Isso verifica o cenário observado; não é uma alegação de teste de disponibilidade contínua nem de ambiente de produção.

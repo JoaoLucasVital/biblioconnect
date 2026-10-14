@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-14T02:49:37.005Z",
+  "generatedAt": "2026-10-14T15:59:51.955Z",
   "title": "Design System: BiblioConnect",
   "extensions": {
     "colorMeta": {
@@ -345,7 +345,19 @@
         "name": "xl",
         "value": "1280px"
       }
-    ]
+    ],
+    "atlas": {
+      "surface": "#102b45",
+      "panel": "#173852",
+      "ink": "#fff7ed",
+      "muted": "#c0d0dc",
+      "stroke": "#496176",
+      "accent": "#f7a742",
+      "maxPoints": 48,
+      "listOnMobile": true,
+      "typingFadeMs": 180,
+      "themeSource": "https://uiverse.io/RiccardoRapelli/jolly-chicken-91"
+    }
   },
   "components": [
     {
@@ -422,8 +434,8 @@
     }
   ],
   "narrative": {
-    "northStar": "Catálogo editorial contemporâneo",
-    "overview": "Um catálogo editorial contemporâneo em que capas, títulos e autores conduzem a leitura. Creme, marinho e laranja preservam a identidade e o logotipo BiblioConnect; tipografia expressiva e margens generosas dão presença aos livros, enquanto os controles permanecem discretos.\n\nA mesma linguagem acompanha descoberta, catálogo, compra, aluguel, reserva e acompanhamento de pedidos. A home oferece a expressão mais cênica; conta e administração adotam densidade operacional, navegação clara e estados explícitos. Tema escuro, foco visível e alternativas sem movimento fazem parte do sistema.",
+    "northStar": "Atlas editorial contemporâneo",
+    "overview": "Biblioteca editorial com Atlas de livros reais, relações verificáveis de autor/categoria e lista equivalente. Paleta creme, marinho e laranja preservada. Nova marca BC, proposta03 aplicada provisoriamente à prévia, com escolha do usuário aberta. Fluxos e banco existentes preservados.",
     "keyCharacteristics": [
       "Livros e informação real antes de ornamento.",
       "Títulos serifados; operações em sans local.",
@@ -448,7 +460,7 @@
       }
     ],
     "dos": [
-      "Do preservar logotipo, paleta original e alternância de tema.",
+      "Do preservar nome, paleta e tema, com nova marca BC em avaliação.",
       "Do dar prioridade a capa, título e autor e permitir quebra de títulos longos.",
       "Do usar pequenos rótulos de seção e divisores quando organizarem a leitura.",
       "Do manter rótulos, foco visível e estados de carregamento, erro, vazio e indisponibilidade.",
@@ -463,4 +475,3 @@
     ]
   }
 }
-
