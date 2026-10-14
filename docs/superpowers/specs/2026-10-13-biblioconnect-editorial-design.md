@@ -1,6 +1,6 @@
 # BiblioConnect — repaginação editorial contemporânea
 
-Data: 13/10/2026. Estado: proposta visual aprovada em conversa; especificação escrita para revisão do usuário.
+Data: 13/10/2026. Estado: especificação escrita aprovada pelo usuário; Uiverse incluído por solicitação explícita na mesma revisão.
 
 ## 1. Objetivo e limites
 
@@ -127,10 +127,16 @@ Aplicar `emil-design-eng` ao acabamento, `animate` às decisões de movimento e 
 
 Migrar estilos por área, mantendo uma camada temporária de compatibilidade para telas ainda não convertidas. Remover cada regra legada após migrar e verificar seus consumidores. Ao final, Tailwind será a base de layout e estilo; CSS residual fica limitado a tokens, estilos globais necessários e efeitos específicos documentados.
 
-Usar 21st.dev para estudar componentes, React Bits para efeitos pontuais e as documentações oficiais de GSAP/Three.js para integração. Selecionar peças que se encaixem na identidade aprovada, adaptando estilo e comportamento. Conferir licença e compatibilidade antes de incorporar código ou assets. A seleção não é determinada pela popularidade de um vídeo.
+Usar Uiverse e 21st.dev para estudar e selecionar componentes, React Bits para efeitos pontuais e as documentações oficiais de GSAP/Three.js para integração. Selecionar peças que se encaixem na identidade aprovada, adaptando estilo e comportamento. Conferir licença e compatibilidade antes de incorporar código ou assets. A seleção não é determinada pela popularidade de um vídeo.
+
+O Uiverse será fonte de componentes Tailwind, especialmente botões, campos, controles de seleção e carregamento. Incorporar somente as peças escolhidas como componentes React locais, adaptadas à paleta, à semântica e aos estados de teclado, erro, desabilitado e carregamento. Para código efetivamente copiado, registrar URL da peça, autor e texto da licença MIT em um arquivo de atribuições. O site não acrescenta uma dependência de execução obrigatória ao sistema.
 
 Referências:
 
+- [Uiverse](https://uiverse.io/)
+- [Uiverse — campos](https://uiverse.io/ui/input-fields)
+- [Uiverse — botões animados](https://uiverse.io/ui/animated-buttons)
+- [Uiverse — carregamento em Tailwind](https://uiverse.io/ui/tailwind-loaders)
 - [21st.dev — componentes GSAP](https://21st.dev/community/components/explore/gsap-components)
 - [React Bits](https://reactbits.dev/)
 - [GSAP em React](https://gsap.com/resources/React/)
@@ -164,4 +170,4 @@ Usar token-efficiency, RTK e CodeGraph para consultas delimitadas, sem leituras 
 
 A divisão recomendada é GPT-6.1 Sol em esforço medium para implementação cotidiana e GPT-6 Astra em esforço high para direção detalhada e implementação isolada da cena 3D. GPT-6 Luna pode executar tarefas pequenas e bem especificadas. Delegação será restrita a tarefas independentes, com contexto mínimo e responsabilidade clara por arquivos.
 
-Após a revisão desta especificação, elaborar o plano de implementação com arquivos, tarefas e verificações concretas. A aprovação do desenho em conversa autorizou esta especificação; a revisão do documento é o próximo estágio do brainstorming.
+A especificação escrita foi aprovada. O próximo estágio é revisar o plano de implementação com arquivos, tarefas e verificações concretas e escolher o método de execução antes de implementar.

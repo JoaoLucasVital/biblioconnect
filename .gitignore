@@ -12,3 +12,6 @@ frontend/.env
 .emails/
 .env
 *.incompativel
+
+# Índice local de navegação de código
+.codegraph/
