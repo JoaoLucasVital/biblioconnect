@@ -6,7 +6,7 @@ Data: 13/10/2026. Base: `d17fdb0`. Branch: `codex/biblioconnect-editorial`.
 
 - Frontend: **54/54** testes Vitest.
 - Integração isolada: **15/15**, incluindo 39 respostas HTTP e concorrência de estoque.
-- Navegador: **38/38** Playwright/Chromium, contra o frontend compilado em produção e API/banco temporários.
+- Navegador: **41/41** Playwright/Chromium, contra o frontend compilado em produção e API/banco temporários.
 - ESLint e build: aprovados.
 - Auditoria npm do frontend após atualizações compatíveis: **zero vulnerabilidades**.
 - Detector Impeccable: uma execução sobre `frontend/src` e `frontend/index.html`, resultado `[]`, exit 0.
@@ -40,14 +40,14 @@ Tamanhos em kB decimais, obtidos dos arquivos compilados:
 
 | Artefato | Baseline | Redesign |
 | --- | ---: | ---: |
-| CSS principal | 75,58 | 37,32 |
+| CSS principal | 75,58 | 37,39 |
 | Entrada JavaScript | 277,14 | 292,40 |
 | Home, carregada por rota | — | 84,77 |
 | BookScene, carregada sob demanda | — | 915,65 |
 
-O CSS ficou cerca de 50,6% menor em bytes sem compressão. A entrada JavaScript cresceu cerca de 5,5%, incluindo navegação/componentes e atualizações de segurança compatíveis. O aviso de chunk acima de 500 kB refere-se ao módulo 3D lazy; ele permanece fora das rotas operacionais. Não houve afirmação de economia de tokens medida.
+O CSS ficou cerca de 50,5% menor em bytes sem compressão. A entrada JavaScript cresceu cerca de 5,5%, incluindo navegação/componentes e atualizações de segurança compatíveis. O aviso de chunk acima de 500 kB refere-se ao módulo 3D lazy; ele permanece fora das rotas operacionais. Não houve afirmação de economia de tokens medida.
 
-Amostra reproduzível em Chromium, 1440×1000, build de produção, sem throttling: DOMContentLoaded/load aproximadamente **101,4 ms**, **21** recursos e **317.564 bytes** transferidos; preencher filtro e confirmar o resultado via Playwright: **50,42 ms**. Consulte `editorial-metrics.json`. Essa amostra inclui o ambiente local/automação, não mede INP de campo e não permite afirmar ganho de velocidade sobre a baseline, cujo tempo não foi medido.
+Amostra reproduzível em Chromium, 1440×1000, build de produção, sem throttling: DOMContentLoaded/load aproximadamente **74,5 ms**, **21** recursos e **317.585 bytes** transferidos; preencher filtro e confirmar o resultado via Playwright: **49,71 ms**. Consulte `editorial-metrics.json`. Essa amostra inclui o ambiente local/automação, não mede INP de campo e não permite afirmar ganho de velocidade sobre a baseline, cujo tempo não foi medido.
 
 ## Evidências e decisões
 
@@ -61,6 +61,10 @@ Decisões de execução relevantes:
 4. O tema escuro existente foi preservado apesar da ambiguidade inicial da especificação; implica validação dos dois temas.
 5. A direção e o plano já aprovados orientaram a implementação em código, sem reabrir a seleção de conceitos; menos alternativas novas, compensadas pela validação visual.
 6. Os ajustes de casos extremos foram feitos dentro do hardening já aprovado; evita uma microaprovação por correção e mantém revisão independente ao final.
+7. Integrações externas reais não homologadas: preservar os contratos e declarar o limite da integração isolada; credenciais ou provedores reais ainda podem revelar falhas específicas do ambiente.
+8. Aparelhos físicos/Safari/Firefox não homologados: a evidência disponível é Chromium com emulação responsiva; diferenças próprias dessas plataformas permanecem possíveis.
+9. Escala de catálogos grandes: manter a lista inteira porque paginação não faz parte deste redesign; o custo original para grandes acervos permanece.
+10. Reset administrativo: preservar senha, texto exato e confirmação e revisar o código sem executar a ação destrutiva; não há nova evidência de execução desse fluxo.
 
 ## Limites
 
@@ -68,4 +72,12 @@ Não houve homologação em aparelho físico, Safari/Firefox, serviços reais de
 
 O comportamento de catálogos muito grandes continua sendo o da aplicação original: carregamento da lista inteira, sem paginação nova nesta etapa. Não foram alterados servidor, schema, regras de preço/estoque ou estratégia de autenticação.
 
-Revisão independente do conjunto: pendente de registro antes da entrega final.
+## Revisão independente
+
+O Astra revisou por amostragem o intervalo completo `d17fdb0..9b432f5`, os requisitos aprovados e as sete capturas obrigatórias. O parecer inicial foi `fix`: contraste do hover primário, contraste de texto secundário e separação dos resumos administrativos. Não encontrou achados críticos na amostra. A separação, inicialmente classificada como menor no relatório técnico, foi tratada como importante por prejudicar a leitura de título/gênero e quantidade e constar nos ajustes visuais materiais.
+
+Os três casos foram reproduzidos em testes de navegador antes de alterar o código: contraste de hover **3,8628:1**, texto secundário **4,4822:1** e elementos de resumo encostados. Após a correção (`1f1d1cf`), hover alcança **4,714:1**; texto secundário alcança **5,125:1** sobre creme e **4,748:1** sobre a superfície suave; título/gênero e quantidade ocupam linhas separadas. Foram preservadas as cores da marca, com ajuste dos tons funcionais de texto.
+
+As capturas suplementares do painel foram corrigidas para aguardar o título real da página, evitando registrar o fallback de carregamento. As mesmas capturas foram regeneradas pela suíte completa, agora **41/41**, e enviadas ao mesmo revisor para pontuar exclusivamente as três correções. O parecer dessa conferência foi **`ship`**, com os três pontos resolvidos e nenhuma regressão decorrente das correções observada. Esse parecer tem o escopo dos ajustes avaliados; não equivale a uma auditoria exaustiva do sistema. Nenhum achado menor foi adiado.
+
+A documentação visual em `DESIGN.md` descreve o código final. Os limites de integrações externas, navegadores e ação destrutiva permanecem os registrados acima.

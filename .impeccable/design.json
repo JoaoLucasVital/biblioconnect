@@ -1,0 +1,466 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T02:49:37.005Z",
+  "title": "Design System: BiblioConnect",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "brand",
+        "tonalRamp": [
+          "oklch(15% 0.0736 256.04)",
+          "oklch(26% 0.0736 256.04)",
+          "oklch(38% 0.0736 256.04)",
+          "oklch(49% 0.0736 256.04)",
+          "oklch(61% 0.0736 256.04)",
+          "oklch(72% 0.0736 256.04)",
+          "oklch(84% 0.0736 256.04)",
+          "oklch(95% 0.0736 256.04)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "accent",
+        "tonalRamp": [
+          "oklch(15% 0.1655 58.44)",
+          "oklch(26% 0.1655 58.44)",
+          "oklch(38% 0.1655 58.44)",
+          "oklch(49% 0.1655 58.44)",
+          "oklch(61% 0.1655 58.44)",
+          "oklch(72% 0.1655 58.44)",
+          "oklch(84% 0.1655 58.44)",
+          "oklch(95% 0.1655 58.44)"
+        ]
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "accent-hover",
+        "tonalRamp": [
+          "oklch(15% 0.1514 56.52)",
+          "oklch(26% 0.1514 56.52)",
+          "oklch(38% 0.1514 56.52)",
+          "oklch(49% 0.1514 56.52)",
+          "oklch(61% 0.1514 56.52)",
+          "oklch(72% 0.1514 56.52)",
+          "oklch(84% 0.1514 56.52)",
+          "oklch(95% 0.1514 56.52)"
+        ]
+      },
+      "primary-foreground": {
+        "role": "neutral",
+        "displayName": "primary-foreground",
+        "tonalRamp": [
+          "oklch(15% 0.0398 265.75)",
+          "oklch(26% 0.0398 265.75)",
+          "oklch(38% 0.0398 265.75)",
+          "oklch(49% 0.0398 265.75)",
+          "oklch(61% 0.0398 265.75)",
+          "oklch(72% 0.0398 265.75)",
+          "oklch(84% 0.0398 265.75)",
+          "oklch(95% 0.0398 265.75)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "paper",
+        "tonalRamp": [
+          "oklch(15% 0.0158 73.68)",
+          "oklch(26% 0.0158 73.68)",
+          "oklch(38% 0.0158 73.68)",
+          "oklch(49% 0.0158 73.68)",
+          "oklch(61% 0.0158 73.68)",
+          "oklch(72% 0.0158 73.68)",
+          "oklch(84% 0.0158 73.68)",
+          "oklch(95% 0.0158 73.68)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "surface",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(26% 0.0000 89.88)",
+          "oklch(38% 0.0000 89.88)",
+          "oklch(49% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(72% 0.0000 89.88)",
+          "oklch(84% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "ink",
+        "tonalRamp": [
+          "oklch(15% 0.0368 260.03)",
+          "oklch(26% 0.0368 260.03)",
+          "oklch(38% 0.0368 260.03)",
+          "oklch(49% 0.0368 260.03)",
+          "oklch(61% 0.0368 260.03)",
+          "oklch(72% 0.0368 260.03)",
+          "oklch(84% 0.0368 260.03)",
+          "oklch(95% 0.0368 260.03)"
+        ]
+      },
+      "muted": {
+        "role": "secondary",
+        "displayName": "muted",
+        "tonalRamp": [
+          "oklch(15% 0.0385 255.33)",
+          "oklch(26% 0.0385 255.33)",
+          "oklch(38% 0.0385 255.33)",
+          "oklch(49% 0.0385 255.33)",
+          "oklch(61% 0.0385 255.33)",
+          "oklch(72% 0.0385 255.33)",
+          "oklch(84% 0.0385 255.33)",
+          "oklch(95% 0.0385 255.33)"
+        ]
+      },
+      "stroke": {
+        "role": "neutral",
+        "displayName": "stroke",
+        "tonalRamp": [
+          "oklch(15% 0.0729 70.70)",
+          "oklch(26% 0.0729 70.70)",
+          "oklch(38% 0.0729 70.70)",
+          "oklch(49% 0.0729 70.70)",
+          "oklch(61% 0.0729 70.70)",
+          "oklch(72% 0.0729 70.70)",
+          "oklch(84% 0.0729 70.70)",
+          "oklch(95% 0.0729 70.70)"
+        ]
+      },
+      "soft": {
+        "role": "neutral",
+        "displayName": "soft",
+        "tonalRamp": [
+          "oklch(15% 0.0372 75.16)",
+          "oklch(26% 0.0372 75.16)",
+          "oklch(38% 0.0372 75.16)",
+          "oklch(49% 0.0372 75.16)",
+          "oklch(61% 0.0372 75.16)",
+          "oklch(72% 0.0372 75.16)",
+          "oklch(84% 0.0372 75.16)",
+          "oklch(95% 0.0372 75.16)"
+        ]
+      },
+      "dark-paper": {
+        "role": "neutral",
+        "displayName": "dark-paper",
+        "tonalRamp": [
+          "oklch(15% 0.0398 265.75)",
+          "oklch(26% 0.0398 265.75)",
+          "oklch(38% 0.0398 265.75)",
+          "oklch(49% 0.0398 265.75)",
+          "oklch(61% 0.0398 265.75)",
+          "oklch(72% 0.0398 265.75)",
+          "oklch(84% 0.0398 265.75)",
+          "oklch(95% 0.0398 265.75)"
+        ]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "dark-surface",
+        "tonalRamp": [
+          "oklch(15% 0.0368 260.03)",
+          "oklch(26% 0.0368 260.03)",
+          "oklch(38% 0.0368 260.03)",
+          "oklch(49% 0.0368 260.03)",
+          "oklch(61% 0.0368 260.03)",
+          "oklch(72% 0.0368 260.03)",
+          "oklch(84% 0.0368 260.03)",
+          "oklch(95% 0.0368 260.03)"
+        ]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "dark-ink",
+        "tonalRamp": [
+          "oklch(15% 0.0034 247.86)",
+          "oklch(26% 0.0034 247.86)",
+          "oklch(38% 0.0034 247.86)",
+          "oklch(49% 0.0034 247.86)",
+          "oklch(61% 0.0034 247.86)",
+          "oklch(72% 0.0034 247.86)",
+          "oklch(84% 0.0034 247.86)",
+          "oklch(95% 0.0034 247.86)"
+        ]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "dark-muted",
+        "tonalRamp": [
+          "oklch(15% 0.0198 252.89)",
+          "oklch(26% 0.0198 252.89)",
+          "oklch(38% 0.0198 252.89)",
+          "oklch(49% 0.0198 252.89)",
+          "oklch(61% 0.0198 252.89)",
+          "oklch(72% 0.0198 252.89)",
+          "oklch(84% 0.0198 252.89)",
+          "oklch(95% 0.0198 252.89)"
+        ]
+      },
+      "dark-stroke": {
+        "role": "neutral",
+        "displayName": "dark-stroke",
+        "tonalRamp": [
+          "oklch(15% 0.0392 257.29)",
+          "oklch(26% 0.0392 257.29)",
+          "oklch(38% 0.0392 257.29)",
+          "oklch(49% 0.0392 257.29)",
+          "oklch(61% 0.0392 257.29)",
+          "oklch(72% 0.0392 257.29)",
+          "oklch(84% 0.0392 257.29)",
+          "oklch(95% 0.0392 257.29)"
+        ]
+      },
+      "dark-soft": {
+        "role": "neutral",
+        "displayName": "dark-soft",
+        "tonalRamp": [
+          "oklch(15% 0.0388 264.35)",
+          "oklch(26% 0.0388 264.35)",
+          "oklch(38% 0.0388 264.35)",
+          "oklch(49% 0.0388 264.35)",
+          "oklch(61% 0.0388 264.35)",
+          "oklch(72% 0.0388 264.35)",
+          "oklch(84% 0.0388 264.35)",
+          "oklch(95% 0.0388 264.35)"
+        ]
+      },
+      "danger": {
+        "role": "neutral",
+        "displayName": "danger",
+        "tonalRamp": [
+          "oklch(15% 0.1905 27.52)",
+          "oklch(26% 0.1905 27.52)",
+          "oklch(38% 0.1905 27.52)",
+          "oklch(49% 0.1905 27.52)",
+          "oklch(61% 0.1905 27.52)",
+          "oklch(72% 0.1905 27.52)",
+          "oklch(84% 0.1905 27.52)",
+          "oklch(95% 0.1905 27.52)"
+        ]
+      },
+      "danger-hover": {
+        "role": "neutral",
+        "displayName": "danger-hover",
+        "tonalRamp": [
+          "oklch(15% 0.1613 26.90)",
+          "oklch(26% 0.1613 26.90)",
+          "oklch(38% 0.1613 26.90)",
+          "oklch(49% 0.1613 26.90)",
+          "oklch(61% 0.1613 26.90)",
+          "oklch(72% 0.1613 26.90)",
+          "oklch(84% 0.1613 26.90)",
+          "oklch(95% 0.1613 26.90)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Abertura editorial",
+        "purpose": "Título principal da home."
+      },
+      "headline": {
+        "displayName": "Título de seção",
+        "purpose": "Estrutura editorial."
+      },
+      "title": {
+        "displayName": "Título de livro",
+        "purpose": "Livros e diálogos."
+      },
+      "body": {
+        "displayName": "Texto funcional",
+        "purpose": "Leitura e operação."
+      },
+      "label": {
+        "displayName": "Rótulo",
+        "purpose": "Campos e navegação."
+      }
+    },
+    "shadows": [
+      {
+        "name": "cover-large",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Capas do catálogo."
+      },
+      {
+        "name": "cover-xl",
+        "value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        "purpose": "Capa estática da abertura."
+      },
+      {
+        "name": "dialog",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "Elevação modal."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Pressão dos botões."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+        "purpose": "Token global existente; não impõe movimento a novas superfícies."
+      },
+      {
+        "name": "control-duration",
+        "value": "140ms",
+        "purpose": "Transformação e mudança de fundo dos botões; foco e movimento reduzido são imediatos."
+      },
+      {
+        "name": "hero-title",
+        "value": "480ms power3.out; y:18px; stagger:60ms",
+        "purpose": "Entrada pontual dos títulos da home."
+      },
+      {
+        "name": "hero-detail",
+        "value": "400ms power3.out; y:10px; delay:120ms",
+        "purpose": "Entrada dos detalhes da home."
+      },
+      {
+        "name": "featured-rotation",
+        "value": "6000ms",
+        "purpose": "Troca de destaque pausável."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Ação principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Controle com altura mínima de 44 px, foco visível e pressão discreta.",
+      "html": "<button class=\"ds-button ds-button-primary\">Comprar</button>",
+      "css": ".ds-button{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border-radius:6px;border:1px solid transparent;padding:10px 16px;font:600 14px/20px 'IBM Plex Sans','Segoe UI',sans-serif;cursor:pointer;transition:transform 140ms cubic-bezier(.23,1,.32,1),background-color 140ms ease}.ds-button:focus-visible{outline:2px solid var(--text,#1e293b);outline-offset:4px;transition:none}.ds-button:disabled{opacity:.6;cursor:not-allowed}@media(hover:hover) and (pointer:fine){.ds-button:active:not(:disabled):not(:focus-visible){transform:scale(.98)}}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}.ds-button:active{transform:none}}.ds-button-primary{background:var(--accent,#e67e00);color:#0f172a}.ds-button-primary:hover:not(:disabled){background:var(--accent-dark,#c96a00)}"
+    },
+    {
+      "name": "Ação secundária",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Controle com altura mínima de 44 px, foco visível e pressão discreta.",
+      "html": "<button class=\"ds-button ds-button-secondary\">Alugar</button>",
+      "css": ".ds-button{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border-radius:6px;border:1px solid transparent;padding:10px 16px;font:600 14px/20px 'IBM Plex Sans','Segoe UI',sans-serif;cursor:pointer;transition:transform 140ms cubic-bezier(.23,1,.32,1),background-color 140ms ease}.ds-button:focus-visible{outline:2px solid var(--text,#1e293b);outline-offset:4px;transition:none}.ds-button:disabled{opacity:.6;cursor:not-allowed}@media(hover:hover) and (pointer:fine){.ds-button:active:not(:disabled):not(:focus-visible){transform:scale(.98)}}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}.ds-button:active{transform:none}}.ds-button-secondary{background:var(--card,#ffffff);color:var(--text,#1e293b);border-color:var(--muted,#5b6b80)}.ds-button-secondary:hover:not(:disabled){background:var(--soft,#ffedd5)}"
+    },
+    {
+      "name": "Ação discreta",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Controle com altura mínima de 44 px, foco visível e pressão discreta.",
+      "html": "<button class=\"ds-button ds-button-ghost\">Limpar filtros</button>",
+      "css": ".ds-button{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border-radius:6px;border:1px solid transparent;padding:10px 16px;font:600 14px/20px 'IBM Plex Sans','Segoe UI',sans-serif;cursor:pointer;transition:transform 140ms cubic-bezier(.23,1,.32,1),background-color 140ms ease}.ds-button:focus-visible{outline:2px solid var(--text,#1e293b);outline-offset:4px;transition:none}.ds-button:disabled{opacity:.6;cursor:not-allowed}@media(hover:hover) and (pointer:fine){.ds-button:active:not(:disabled):not(:focus-visible){transform:scale(.98)}}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}.ds-button:active{transform:none}}.ds-button-ghost{background:transparent;color:var(--text,#1e293b)}.ds-button-ghost:hover:not(:disabled){background:var(--soft,#ffedd5)}"
+    },
+    {
+      "name": "Ação destrutiva",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Controle com altura mínima de 44 px, foco visível e pressão discreta.",
+      "html": "<button class=\"ds-button ds-button-danger\">Excluir</button>",
+      "css": ".ds-button{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:8px;border-radius:6px;border:1px solid transparent;padding:10px 16px;font:600 14px/20px 'IBM Plex Sans','Segoe UI',sans-serif;cursor:pointer;transition:transform 140ms cubic-bezier(.23,1,.32,1),background-color 140ms ease}.ds-button:focus-visible{outline:2px solid var(--text,#1e293b);outline-offset:4px;transition:none}.ds-button:disabled{opacity:.6;cursor:not-allowed}@media(hover:hover) and (pointer:fine){.ds-button:active:not(:disabled):not(:focus-visible){transform:scale(.98)}}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}.ds-button:active{transform:none}}.ds-button-danger{background:#b91c1c;color:white}.ds-button-danger:hover:not(:disabled){background:#991b1b}"
+    },
+    {
+      "name": "Campo de busca",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Label visível, borda funcional e foco no grupo.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-search\">Buscar no acervo</label><div class=\"ds-field-frame\"><input id=\"ds-search\" type=\"search\" placeholder=\"Título, autor ou categoria\"></div></div>",
+      "css": ".ds-field{display:grid;gap:8px;font:400 16px/1.55 'IBM Plex Sans','Segoe UI',sans-serif;color:var(--text,#1e293b)}.ds-field label{font-size:14px;font-weight:500}.ds-field-frame{display:flex;overflow:hidden;border:1px solid var(--muted,#5b6b80);border-radius:6px;background:var(--card,#ffffff)}.ds-field-frame:focus-within{border-color:var(--text,#1e293b);box-shadow:0 0 0 2px color-mix(in srgb,var(--text,#1e293b) 20%,transparent)}.ds-field input{min-height:44px;width:100%;min-width:0;border:0;background:transparent;padding:10px 12px;font:inherit;color:inherit;outline:none}.ds-field input::placeholder{color:var(--muted,#5b6b80)}.ds-field input:disabled{opacity:.6;cursor:not-allowed}"
+    },
+    {
+      "name": "Navegação",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Link ativo com linha laranja, demais links em tom secundário.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Exemplo de navegação\"><a href=\"#inicio\" aria-current=\"page\">Início</a><a href=\"#catalogo\">Catálogo</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:24px;font:500 14px/20px 'IBM Plex Sans','Segoe UI',sans-serif}.ds-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;border-bottom:2px solid transparent;color:var(--muted,#5b6b80);text-decoration:none}.ds-nav a[aria-current]{border-color:var(--accent,#e67e00);color:var(--text,#1e293b)}.ds-nav a:hover{color:var(--text,#1e293b)}.ds-nav a:focus-visible{outline:2px solid var(--text,#1e293b);outline-offset:4px}"
+    },
+    {
+      "name": "Badge neutro",
+      "kind": "chip",
+      "refersTo": "status-badge",
+      "description": "Etiqueta informativa compacta para destaque ou estado.",
+      "html": "<span class=\"ds-badge\">Destaque</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;border-radius:4px;padding:4px 8px;background:var(--soft,#ffedd5);color:var(--text,#1e293b);font:500 12px/16px 'IBM Plex Sans','Segoe UI',sans-serif}"
+    },
+    {
+      "name": "Artigo do catálogo",
+      "kind": "card",
+      "refersTo": "catalog-book",
+      "description": "Capa, título e autor em estrutura plana com divisor.",
+      "html": "<article class=\"ds-book\"><div class=\"ds-book-cover\"><span>Capa do acervo</span></div><p class=\"ds-book-category\">Categoria</p><h2>Título do livro</h2><p class=\"ds-book-author\">Nome do autor</p><details class=\"ds-book-details\"><summary>Sobre o livro</summary><p>Sinopse recebida do catálogo.</p></details></article>",
+      "css": ".ds-book{min-width:0;border-bottom:1px solid var(--border,#fed7aa);padding-bottom:32px;color:var(--text,#1e293b);font:400 14px/1.55 'IBM Plex Sans','Segoe UI',sans-serif}.ds-book-cover{display:flex;align-items:center;justify-content:center;min-height:256px;padding:24px;background:var(--soft,#ffedd5);margin-bottom:20px}.ds-book-cover span{color:var(--muted,#5b6b80)}.ds-book-category{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted,#5b6b80);margin:0 0 8px}.ds-book h2{overflow-wrap:anywhere;margin:0;font:400 24px/1.25 'Source Serif 4',Georgia,serif}.ds-book-author{margin:8px 0 16px;color:var(--muted,#5b6b80)}.ds-book-details summary{min-height:32px;cursor:pointer;text-decoration:underline;text-underline-offset:.2em}.ds-book-details summary:focus-visible{outline:2px solid var(--text,#1e293b);outline-offset:4px}"
+    },
+    {
+      "name": "Superfície de diálogo",
+      "kind": "custom",
+      "refersTo": "dialog",
+      "description": "Amostra visual da superfície modal; foco e abertura são controlados pelo Dialog React.",
+      "html": "<section class=\"ds-dialog\" aria-labelledby=\"ds-dialog-title\"><header><h2 id=\"ds-dialog-title\">Confirmar pedido</h2></header><div>Confira os dados antes de confirmar.</div><footer>Resumo da operação</footer></section>",
+      "css": ".ds-dialog{max-width:640px;max-height:85dvh;overflow-y:auto;border-radius:8px;background:var(--card,#ffffff);color:var(--text,#1e293b);box-shadow:0 25px 50px -12px rgb(0 0 0 / .25);font:400 16px/1.55 'IBM Plex Sans','Segoe UI',sans-serif}.ds-dialog header{padding:16px 20px;border-bottom:1px solid var(--border,#fed7aa)}.ds-dialog h2{margin:0;font:400 24px/1.375 'Source Serif 4',Georgia,serif}.ds-dialog>div{padding:20px}.ds-dialog footer{padding:16px 20px;border-top:1px solid var(--border,#fed7aa)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Catálogo editorial contemporâneo",
+    "overview": "Um catálogo editorial contemporâneo em que capas, títulos e autores conduzem a leitura. Creme, marinho e laranja preservam a identidade e o logotipo BiblioConnect; tipografia expressiva e margens generosas dão presença aos livros, enquanto os controles permanecem discretos.\n\nA mesma linguagem acompanha descoberta, catálogo, compra, aluguel, reserva e acompanhamento de pedidos. A home oferece a expressão mais cênica; conta e administração adotam densidade operacional, navegação clara e estados explícitos. Tema escuro, foco visível e alternativas sem movimento fazem parte do sistema.",
+    "keyCharacteristics": [
+      "Livros e informação real antes de ornamento.",
+      "Títulos serifados; operações em sans local.",
+      "Superfícies quentes, divisores finos e controles compactos.",
+      "Movimento pontual com alternativa estática."
+    ],
+    "rules": [
+      {
+        "name": "The Books Lead Rule",
+        "body": "Capas, títulos e autores definem a hierarquia; controles e metadados apoiam a escolha.",
+        "section": "typography"
+      },
+      {
+        "name": "The Theme Roles Rule",
+        "body": "Superfícies, texto, texto secundário e divisores seguem os papéis do tema; marca e acento preservam a identidade.",
+        "section": "colors"
+      },
+      {
+        "name": "The Selective Depth Rule",
+        "body": "Capas e diálogos podem receber sombra; a estrutura editorial se organiza por espaço, tom e divisores.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preservar logotipo, paleta original e alternância de tema.",
+      "Do dar prioridade a capa, título e autor e permitir quebra de títulos longos.",
+      "Do usar pequenos rótulos de seção e divisores quando organizarem a leitura.",
+      "Do manter rótulos, foco visível e estados de carregamento, erro, vazio e indisponibilidade.",
+      "Do apresentar valores e confirmações de pedido/pagamento conforme a resposta do servidor.",
+      "Do oferecer imagem estática na home em telas pequenas, movimento reduzido ou falha da cena."
+    ],
+    "donts": [
+      "Don't inventar depoimentos, parceiros, estoque ou números comerciais.",
+      "Don't transformar toda seção editorial em cartão elevado.",
+      "Don't usar efeitos permanentes ou animação que bloqueie uma tarefa.",
+      "Don't reutilizar o antigo texto secundário claro de baixo contraste nem texto branco sobre o botão laranja."
+    ]
+  }
+}
+
