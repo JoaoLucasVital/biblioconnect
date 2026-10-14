@@ -59,7 +59,7 @@ Representar a paleta por tokens Tailwind. Escolher combinações de texto e fund
 - Usar grade editorial, margens generosas, linhas divisórias finas e legendas curtas. Capas, títulos e autores orientam a composição.
 - Manter hierarquia consistente; evitar que cada bloco concorra com o conteúdo principal.
 - Cards com proporção de capa consistente, título legível, espaçamento adequado e indicação de disponibilidade. Preservar acesso aos metadados e à sinopse existentes, inclusive em títulos longos.
-- A interface permanece clara nesta etapa; alternância de tema não será adicionada.
+- Claro permanece o padrão. A alternância escura já existente será preservada, com a mesma preferência `theme` e classe `body.dark`; não se trata de uma nova funcionalidade.
 
 ## 4. Home
 

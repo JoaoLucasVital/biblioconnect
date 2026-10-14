@@ -7,5 +7,6 @@ export default mergeConfig(viteConfig, defineConfig({
     setupFiles: ["src/test/setup.js"],
     include: ["src/**/*.test.{js,jsx}"],
     maxWorkers: 1,
+    pool: "vmThreads",
   },
 }));

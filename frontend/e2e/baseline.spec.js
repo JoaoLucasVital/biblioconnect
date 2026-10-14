@@ -36,3 +36,13 @@ test("administrador entra e acessa o acervo administrativo", async ({ page }) =>
   await expect(page.getByText(livro.titulo, { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: /novo livro/i }).first()).toBeVisible();
 });
+
+test("alternância de tema existente continua lembrada ao recarregar", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /escuro/i }).click();
+  await expect(page.locator("body")).toHaveClass(/dark/);
+  await page.reload();
+  await expect(page.locator("body")).toHaveClass(/dark/);
+  await page.getByRole("button", { name: /claro/i }).click();
+  await expect(page.locator("body")).not.toHaveClass(/dark/);
+});
