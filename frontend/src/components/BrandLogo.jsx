@@ -1,31 +1,9 @@
-function BrandLogo({ className = "" }) {
-  return (
-    <svg
-      className={className}
-      width="42"
-      height="42"
-      viewBox="0 0 42 42"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="BiblioConnect"
-    >
-      <rect x="4" y="7" width="14" height="20" rx="3.5" fill="#1E3A5F" />
-      <rect x="14" y="10" width="14" height="20" rx="3.5" fill="#E67E00" />
-      <rect x="24" y="13" width="14" height="20" rx="3.5" fill="#4A90E2" />
-      <path
-        d="M8 30.5C10.2 29.6 12.1 29.2 14.7 29.2C17.3 29.2 19.4 29.8 21 30.5C22.6 31.2 24.7 31.8 27.3 31.8C29.9 31.8 31.8 31.3 34 30.5"
-        stroke="#F8FAFC"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 34C10.2 33.1 12.1 32.7 14.7 32.7C17.3 32.7 19.4 33.3 21 34C22.6 34.7 24.7 35.3 27.3 35.3C29.9 35.3 31.8 34.8 34 34"
-        stroke="#F8FAFC"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
+/** Geometric BC / collection connections. Proposal 03, applied provisionally. */
+export default function BrandLogo({className=""}) {
+  return <svg className={`text-brand dark:text-[#fff7ed] ${className}`} width="42" height="42" viewBox="0 0 112 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="BiblioConnect" role="img">
+    <path fill="currentColor" fillRule="evenodd" d="M8 8h22c15 0 23 7 23 18 0 8-4 13-11 16 9 3 14 9 14 18 0 13-10 20-26 20H8V8Zm12 11v18h10c7 0 11-3 11-9s-4-9-11-9H20Zm0 30v20h11c8 0 13-3 13-10s-4-10-13-10H20Z"/>
+    <path d="M102 17C84 17 68 31 68 48s16 31 34 31" stroke="#e67e00" strokeWidth="10"/>
+    <path d="m102 17-34 31 34 31" stroke="currentColor" strokeWidth="3"/>
+    {[{x:102,y:17},{x:68,y:48},{x:102,y:79}].map(p=><circle key={p.y} cx={p.x} cy={p.y} r="5.5" fill="#e67e00" stroke="var(--bg,#fff7ed)" strokeWidth="1.5"/>)}
+  </svg>;
 }
-
-export default BrandLogo;
