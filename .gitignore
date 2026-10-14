@@ -15,3 +15,4 @@ frontend/.env
 
 # Índice local de navegação de código
 .codegraph/
+.worktrees/
