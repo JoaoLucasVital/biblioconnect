@@ -4,29 +4,12 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/api.js";
 import { useAuth } from "../context/auth.js";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-function montarUrlImagem(imagemUrl) {
-  if (!imagemUrl) return "";
-
-  if (imagemUrl.startsWith("http://") || imagemUrl.startsWith("https://")) {
-    return imagemUrl;
-  }
-
-  return `${API_URL}${imagemUrl}`;
-}
-
-function formatarMoeda(valor) {
-  return Number(valor || 0).toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-}
-
-function formatarData(data) {
-  if (!data) return "Não informado";
-  return new Date(data).toLocaleDateString("pt-BR");
-}
+import CatalogFilters from "../features/catalog/CatalogFilters.jsx";
+import CatalogBookCard from "../features/catalog/CatalogBookCard.jsx";
+import PurchaseDialog from "../features/catalog/PurchaseDialog.jsx";
+import RentalDialog from "../features/catalog/RentalDialog.jsx";
+import ReservationDialog from "../features/catalog/ReservationDialog.jsx";
+import StatusMessage from "../components/ui/StatusMessage.jsx";
 
 function calcularMultaReserva(dataRetirada) {
   if (!dataRetirada) {
@@ -83,31 +66,6 @@ function calcularAluguel(livro, dias) {
   };
 }
 
-function BookCover({ livro, variant = "catalog" }) {
-  const imagem = montarUrlImagem(livro.imagemUrl);
-
-  return (
-    <div className={`catalog-book-cover-v2 real-book-cover ${variant}`}>
-      {imagem ? (
-        <img
-          src={imagem}
-          alt={`Capa do livro ${livro.titulo}`}
-          loading="lazy"
-          onError={(event) => {
-            event.currentTarget.style.display = "none";
-            event.currentTarget.nextElementSibling?.classList.remove("hidden");
-          }}
-        />
-      ) : null}
-
-      <div className={imagem ? "book-cover-fallback hidden" : "book-cover-fallback"}>
-        <span>{livro.titulo?.slice(0, 2)?.toUpperCase()}</span>
-        <small>{livro.categoria}</small>
-      </div>
-    </div>
-  );
-}
-
 function Books() {
   const { isAuthenticated, usuario } = useAuth();
   const navigate = useNavigate();
@@ -136,6 +94,8 @@ function Books() {
   const [loadingCotacao, setLoadingCotacao] = useState(false);
 
   const carregarLivros = useCallback(async () => {
+    setLoading(true);
+    setFeedback({type:"",text:""});
     try {
 
       const response = await api.get("/livros");
@@ -202,7 +162,7 @@ function Books() {
   }
 
   async function confirmarCompra() {
-    if (!livroCompra) return;
+    if (!livroCompra || loadingCompra) return;
 
     try {
       setLoadingCompra(true);
@@ -241,7 +201,7 @@ function Books() {
   }
 
   async function confirmarAluguel() {
-    if (!livroAluguel) return;
+    if (!livroAluguel || loadingAluguel) return;
 
     const dias = Number(diasAluguel);
 
@@ -285,6 +245,7 @@ function Books() {
   }
 
   async function confirmarReserva() {
+    if (!livroReserva || loadingReserva) return;
     if (!dataRetirada) {
       setFeedback({
         type: "error",
@@ -362,441 +323,19 @@ function Books() {
   const reservaCalculada = calcularMultaReserva(dataRetirada);
   const aluguelCalculado = calcularAluguel(livroAluguel, diasAluguel);
 
-  if (loading) {
-    return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Carregando catálogo...</p>
-        </div>
-      </main>
-    );
-  }
-
-  return (
-    <main className="page catalog-page-v2">
-      <div className="container">
-        <section className="catalog-header-v2">
-          <div>
-            <span className="section-kicker">Catálogo operacional</span>
-            <h1>Livros disponíveis</h1>
-            <p>
-              Consulte o acervo ativo, compare valores e escolha entre compra,
-              aluguel ou reserva.
-            </p>
-          </div>
-
-          <div className="catalog-counter-card">
-            <span>Livros encontrados</span>
-            <strong>{livrosVisiveis.length}</strong>
-          </div>
-        </section>
-
-        {feedback.text && (
-          <p className={`feedback-banner ${feedback.type}`}>{feedback.text}</p>
-        )}
-
-        <section className="catalog-filter-panel-v2">
-          <div className="form-group">
-            <label>Buscar no acervo</label>
-            <input
-              type="text"
-              value={busca}
-              onChange={(event) => setBusca(event.target.value)}
-              placeholder="Título, autor, categoria ou sinopse"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Categoria</label>
-            <select
-              value={categoria}
-              onChange={(event) => setCategoria(event.target.value)}
-            >
-              {categorias.map((item) => (
-                <option key={item} value={item}>
-                  {item === "todas" ? "Todas as categorias" : item}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Tipo</label>
-            <select
-              value={tipoFiltro}
-              onChange={(event) => setTipoFiltro(event.target.value)}
-            >
-              <option value="todos">Todos</option>
-              <option value="compra">Compra</option>
-              <option value="aluguel">Aluguel</option>
-              <option value="destaque">Destaques</option>
-            </select>
-          </div>
-
-          <button className="btn btn-outline" onClick={limparFiltros}>
-            Limpar
-          </button>
-        </section>
-
-        {livrosVisiveis.length === 0 ? (
-          <div className="empty-state">
-            <h2>Nenhum livro encontrado</h2>
-            <p>
-              Ajuste os filtros ou aguarde novos livros serem liberados no
-              catálogo.
-            </p>
-          </div>
-        ) : (
-          <div className="catalog-grid-v2">
-            {livrosVisiveis.map((livro) => (
-              <article className="catalog-book-card-v2" key={livro.id}>
-                <BookCover livro={livro} variant="catalog" />
-
-                <div className="catalog-book-body-v2">
-                  <div className="catalog-book-heading">
-                    <div>
-                      <h2>{livro.titulo}</h2>
-                      <p>{livro.autor}</p>
-                    </div>
-
-                    {livro.destaque && (
-                      <span className="book-badge">Destaque</span>
-                    )}
-                  </div>
-
-                  <p className="book-synopsis">{livro.sinopse}</p>
-
-                  <div className="catalog-price-row">
-                    <div>
-                      <span>Compra</span>
-                      <strong>{formatarMoeda(livro.precoCompra)}</strong>
-                    </div>
-
-                    <div>
-                      <span>Aluguel</span>
-                      <strong>{formatarMoeda(livro.precoAluguel)}</strong>
-                    </div>
-                  </div>
-
-                  <div className="catalog-meta-row">
-                    <span>{livro.diasInclusos} dias inclusos</span>
-                    <span>Extra: {formatarMoeda(livro.precoDiaExtra)}/dia</span>
-                    <span>Estoque: {livro.estoque}</span>
-                  </div>
-
-                  <div className="catalog-actions-v2">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => abrirCompra(livro)}
-                      disabled={livro.estoque <= 0}
-                    >
-                      Comprar
-                    </button>
-
-                    <button
-                      className="btn btn-dark"
-                      onClick={() => abrirAluguel(livro)}
-                      disabled={livro.estoque <= 0}
-                    >
-                      Alugar
-                    </button>
-
-                    <button
-                      className="btn btn-outline"
-                      onClick={() => abrirReserva(livro)}
-                      disabled={livro.estoque <= 0 || livro.isDoado}
-                    >
-                      Reservar
-                    </button>
-
-                    <button
-                      className="btn btn-outline"
-                      onClick={() => navigate(`/livros/${livro.id}/avaliacoes`)}
-                    >
-                      Avaliações
-                    </button>
-                  </div>
-
-                  {livro.estoque <= 0 && (
-                    <p className="stock-warning">Livro sem estoque.</p>
-                  )}
-
-                  {livro.isDoado && (
-                    <p className="stock-warning">
-                      Livro doado: reserva bloqueada.
-                    </p>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {livroCompra && (
-        <div className="popup-overlay final-modal-overlay">
-          <div className="popup-card final-modal-card">
-            <h2>Confirmar compra</h2>
-
-            <p>
-              Você está comprando o livro{" "}
-              <strong>{livroCompra.titulo}</strong>.
-            </p>
-
-            <div className="popup-book-resume">
-              <BookCover livro={livroCompra} variant="modal" />
-
-              <div className="popup-details">
-                <span>Autor: {livroCompra.autor}</span>
-                <span>Categoria: {livroCompra.categoria}</span>
-                <span>Valor: {formatarMoeda(livroCompra.precoCompra)}</span>
-                <span>Retirada: até 7 dias após a compra</span>
-              </div>
-            </div>
-
-            <div className="delivery-choice">
-              <h3>Como deseja receber?</h3>
-              <div className="delivery-options" role="radiogroup" aria-label="Como deseja receber o livro">
-                <label className={`delivery-option ${modalidadeEntrega === "retirada" ? "is-selected" : ""}`}>
-                  <input
-                    type="radio"
-                    name="modalidadeEntrega"
-                    value="retirada"
-                    checked={modalidadeEntrega === "retirada"}
-                    onChange={() => { setModalidadeEntrega("retirada"); setCotacaoEntrega(null); }}
-                  />
-                  <span className="delivery-option-copy"><strong>Buscar na loja</strong><small>Sem frete. Retire em até 7 dias.</small></span>
-                </label>
-                <label className={`delivery-option ${modalidadeEntrega === "entrega" ? "is-selected" : ""}`}>
-                  <input
-                    type="radio"
-                    name="modalidadeEntrega"
-                    value="entrega"
-                    checked={modalidadeEntrega === "entrega"}
-                    onChange={() => setModalidadeEntrega("entrega")}
-                  />
-                  <span className="delivery-option-copy"><strong>Receber em casa</strong><small>Calcule o frete para seu endereço.</small></span>
-                </label>
-              </div>
-
-              {modalidadeEntrega === "entrega" && (
-                <div className="delivery-quote-box">
-                  <div className="form-group">
-                    <label htmlFor="endereco-entrega">Endereço de entrega</label>
-                    <textarea
-                      id="endereco-entrega"
-                      value={enderecoEntrega}
-                      onChange={(event) => { setEnderecoEntrega(event.target.value); setCotacaoEntrega(null); }}
-                      placeholder="Rua, número, bairro, cidade, estado e CEP"
-                    />
-                  </div>
-                  <button type="button" className="btn btn-outline" onClick={cotarEntrega} disabled={loadingCotacao}>
-                    {loadingCotacao ? "Calculando..." : "Calcular frete"}
-                  </button>
-                  {cotacaoEntrega && (
-                    <div className="delivery-quote-result">
-                      <span>Distância: {cotacaoEntrega.distanciaKm} km</span>
-                      <span>Frete: {formatarMoeda(cotacaoEntrega.valorEntrega)}</span>
-                      <strong>Total: {formatarMoeda(Number(livroCompra.precoCompra) + Number(cotacaoEntrega.valorEntrega))}</strong>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={() => setLivroCompra(null)}
-                disabled={loadingCompra}
-              >
-                Cancelar
-              </button>
-
-              <button
-                className="btn btn-primary"
-                onClick={confirmarCompra}
-                disabled={loadingCompra}
-              >
-                {loadingCompra ? "Comprando..." : "Confirmar compra"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {livroAluguel && (
-        <div className="popup-overlay final-modal-overlay">
-          <div className="popup-card popup-card-large final-modal-card">
-            <h2>Confirmar aluguel</h2>
-
-            <p>
-              Escolha por quantos dias deseja alugar{" "}
-              <strong>{livroAluguel.titulo}</strong>.
-            </p>
-
-            <div className="popup-book-resume">
-              <BookCover livro={livroAluguel} variant="modal" />
-
-              <div className="reservation-info">
-                <div>
-                  <span>Livro</span>
-                  <strong>{livroAluguel.titulo}</strong>
-                </div>
-
-                <div>
-                  <span>Estoque atual</span>
-                  <strong>{livroAluguel.estoque}</strong>
-                </div>
-
-                <div>
-                  <span>Valor base</span>
-                  <strong>{formatarMoeda(livroAluguel.precoAluguel)}</strong>
-                </div>
-
-                <div>
-                  <span>Dias inclusos</span>
-                  <strong>{livroAluguel.diasInclusos} dias</strong>
-                </div>
-
-                <div>
-                  <span>Dia extra</span>
-                  <strong>{formatarMoeda(livroAluguel.precoDiaExtra)}</strong>
-                </div>
-
-                <div>
-                  <span>Dias extras</span>
-                  <strong>{aluguelCalculado.diasExtras}</strong>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Quantidade de dias</label>
-              <input
-                type="number"
-                min="1"
-                value={diasAluguel}
-                onChange={(event) => setDiasAluguel(event.target.value)}
-              />
-            </div>
-
-            <div className="rent-preview">
-              <div>
-                <span>Valor final</span>
-                <strong>{formatarMoeda(aluguelCalculado.valorFinal)}</strong>
-              </div>
-
-              <div>
-                <span>Devolução prevista</span>
-                <strong>
-                  {formatarData(aluguelCalculado.devolucaoPrevista)}
-                </strong>
-              </div>
-            </div>
-
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={() => setLivroAluguel(null)}
-                disabled={loadingAluguel}
-              >
-                Cancelar
-              </button>
-
-              <button
-                className="btn btn-primary"
-                onClick={confirmarAluguel}
-                disabled={loadingAluguel}
-              >
-                {loadingAluguel ? "Alugando..." : "Confirmar aluguel"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {livroReserva && (
-        <div className="popup-overlay final-modal-overlay">
-          <div className="popup-card popup-card-large final-modal-card">
-            <h2>Confirmar reserva</h2>
-
-            <p>
-              Selecione a data em que deseja retirar o livro{" "}
-              <strong>{livroReserva.titulo}</strong>.
-            </p>
-
-            <div className="popup-book-resume">
-              <BookCover livro={livroReserva} variant="modal" />
-
-              <div className="reservation-info">
-                <div>
-                  <span>Livro</span>
-                  <strong>{livroReserva.titulo}</strong>
-                </div>
-
-                <div>
-                  <span>Estoque atual</span>
-                  <strong>{livroReserva.estoque}</strong>
-                </div>
-
-                <div>
-                  <span>Prazo sem multa</span>
-                  <strong>Até 7 dias</strong>
-                </div>
-
-                <div>
-                  <span>Multa por dia após prazo</span>
-                  <strong>R$ 2,00</strong>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Data de retirada</label>
-              <input
-                type="date"
-                value={dataRetirada}
-                onChange={(event) => setDataRetirada(event.target.value)}
-              />
-            </div>
-
-            {dataRetirada && (
-              <div className="reservation-calculation">
-                <p>
-                  Dias após prazo gratuito:{" "}
-                  <strong>{reservaCalculada.diasAtraso}</strong>
-                </p>
-
-                <p>
-                  Multa calculada:{" "}
-                  <strong>{formatarMoeda(reservaCalculada.multa)}</strong>
-                </p>
-              </div>
-            )}
-
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={() => setLivroReserva(null)}
-                disabled={loadingReserva}
-              >
-                Cancelar
-              </button>
-
-              <button
-                className="btn btn-primary"
-                onClick={confirmarReserva}
-                disabled={loadingReserva}
-              >
-                {loadingReserva ? "Reservando..." : "Confirmar reserva"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </main>
-  );
+  if (loading) return <main className="mx-auto max-w-7xl px-5 py-16 sm:px-8"><p role="status" className="text-muted">Carregando catálogo...</p></main>;
+  const dialogError = feedback.type==="error" ? feedback.text : "";
+  return <main className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
+    <header className="mb-8 flex flex-wrap items-end justify-between gap-6">
+      <div><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">O acervo</p><h1 className="font-display text-4xl leading-tight sm:text-5xl">Livros disponíveis</h1><p className="mt-4 max-w-xl text-muted">Encontre a sua próxima leitura. Compre, alugue ou reserve um livro para retirar.</p></div>
+      <p role="status" className="text-sm text-muted"><strong className="text-xl font-medium text-ink">{livrosVisiveis.length}</strong> {livrosVisiveis.length===1?"livro encontrado":"livros encontrados"}</p>
+    </header>
+    {feedback.text && !livroCompra && !livroAluguel && !livroReserva && <div className="mb-6"><StatusMessage type={feedback.type==="error"?"error":"info"} onRetry={feedback.text==="Erro ao carregar catálogo de livros."?carregarLivros:undefined}>{feedback.text}</StatusMessage></div>}
+    <CatalogFilters busca={busca} categoria={categoria} tipoFiltro={tipoFiltro} categorias={categorias} onBusca={setBusca} onCategoria={setCategoria} onTipo={setTipoFiltro} onClear={limparFiltros}/>
+    {livrosVisiveis.length===0 ? <section className="border-b border-stroke py-16"><h2 className="font-display text-3xl">Nenhum livro encontrado</h2><p className="mt-3 text-muted">Ajuste os filtros ou volte para descobrir novas leituras no acervo.</p></section> : <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{livrosVisiveis.map(livro=><CatalogBookCard key={livro.id} livro={livro} onComprar={abrirCompra} onAlugar={abrirAluguel} onReservar={abrirReserva} onAvaliacoes={item=>navigate(`/livros/${item.id}/avaliacoes`)}/>)}</div>}
+    <PurchaseDialog livro={livroCompra} modalidadeEntrega={modalidadeEntrega} enderecoEntrega={enderecoEntrega} cotacaoEntrega={cotacaoEntrega} loadingCotacao={loadingCotacao} loadingCompra={loadingCompra} error={dialogError} onClose={()=>setLivroCompra(null)} onConfirmar={confirmarCompra} onCotar={cotarEntrega} onModalidadeChange={value=>{setModalidadeEntrega(value);if(value==="retirada")setCotacaoEntrega(null);}} onEnderecoChange={value=>{setEnderecoEntrega(value);setCotacaoEntrega(null);}}/>
+    <RentalDialog livro={livroAluguel} dias={diasAluguel} calculo={aluguelCalculado} busy={loadingAluguel} error={dialogError} onDiasChange={setDiasAluguel} onConfirmar={confirmarAluguel} onClose={()=>setLivroAluguel(null)}/>
+    <ReservationDialog livro={livroReserva} dataRetirada={dataRetirada} calculo={reservaCalculada} busy={loadingReserva} error={dialogError} onDataChange={setDataRetirada} onConfirmar={confirmarReserva} onClose={()=>setLivroReserva(null)}/>
+  </main>;
 }
-
 export default Books;
