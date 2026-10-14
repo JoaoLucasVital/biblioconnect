@@ -205,35 +205,35 @@ function AdminDashboard() {
         {erro && <StatusMessage type={"error"}>{erro}</StatusMessage>}
         {mensagem && <StatusMessage type={"info"}>{mensagem}</StatusMessage>}
 
-        <section  className="my-6 flex flex-wrap gap-3 text-sm">
-          <div>
-            <span  className="bg-soft px-3 py-2 text-sm">Livro mais vendido</span>
+        <section  className="my-6 flex flex-wrap gap-6 text-sm">
+          <div className="grid min-w-0 flex-1 basis-64 content-start gap-2">
+            <span  className="w-fit bg-soft px-3 py-2 text-sm">Livro mais vendido</span>
 
-            <strong>
+            <strong className="wrap-anywhere font-display text-xl">
               {stats.livroMaisVendido
                 ? stats.livroMaisVendido.titulo
                 : "Sem vendas registradas"}
             </strong>
 
             {stats.livroMaisVendido && (
-              <small>
+              <small className="text-muted">
                 {stats.livroMaisVendido.quantidadeVendas} venda
                 {stats.livroMaisVendido.quantidadeVendas !== 1 ? "s" : ""}
               </small>
             )}
           </div>
 
-          <div>
-            <span  className="bg-soft px-3 py-2 text-sm">Gênero mais vendido</span>
+          <div className="grid min-w-0 flex-1 basis-64 content-start gap-2">
+            <span  className="w-fit bg-soft px-3 py-2 text-sm">Gênero mais vendido</span>
 
-            <strong>
+            <strong className="wrap-anywhere font-display text-xl">
               {stats.generoMaisVendido
                 ? stats.generoMaisVendido.genero
                 : "Sem gêneros ranqueados"}
             </strong>
 
             {stats.generoMaisVendido && (
-              <small>
+              <small className="text-muted">
                 {stats.generoMaisVendido.quantidadeVendas} venda
                 {stats.generoMaisVendido.quantidadeVendas !== 1 ? "s" : ""}
               </small>

@@ -96,7 +96,7 @@ function OrderSuccess() {
     return (
       <main  className="py-10 sm:py-14"><div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
         {feedback.text && <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>}
-        <Link to="/livros" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#1e293b] hover:bg-accent-hover">Voltar ao catálogo</Link>
+        <Link to="/livros" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#0f172a] hover:bg-accent-hover">Voltar ao catálogo</Link>
       </div></main>
     );
   }
@@ -179,7 +179,7 @@ function OrderSuccess() {
             )}
 
             <div  className="mt-3 flex flex-wrap gap-3">
-              <Link to={`/comprovante/${pedido.id}`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#1e293b] hover:bg-accent-hover">Ver comprovante</Link>
+              <Link to={`/comprovante/${pedido.id}`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#0f172a] hover:bg-accent-hover">Ver comprovante</Link>
               <Link to="/meus-pedidos" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">Ver meus pedidos</Link>
               <Link to="/livros" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">Voltar ao catálogo</Link>
             </div>

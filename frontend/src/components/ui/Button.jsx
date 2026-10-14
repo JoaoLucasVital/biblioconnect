@@ -1,7 +1,7 @@
 import { LoaderCircle } from "lucide-react";
 
 const variants = {
-  primary: "border-transparent bg-accent text-[#1e293b] hover:bg-accent-hover",
+  primary: "border-transparent bg-accent text-[#0f172a] hover:bg-accent-hover",
   secondary: "border-muted bg-surface text-ink hover:bg-soft",
   ghost: "border-transparent bg-transparent text-ink hover:bg-soft",
   danger: "border-transparent bg-red-700 text-white hover:bg-red-800",

@@ -80,7 +80,7 @@ function BookReviews() {
         ) : (
           <div  className="min-w-0 border-t border-stroke py-6">
             <p>Entre na sua conta para publicar uma avaliação.</p>
-            <Link to="/login" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#1e293b] hover:bg-accent-hover">Fazer login</Link>
+            <Link to="/login" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#0f172a] hover:bg-accent-hover">Fazer login</Link>
           </div>
         )}
 

@@ -155,7 +155,7 @@ function OrderReceipt() {
             </StatusMessage>
           )}
 
-          <Link to="/meus-pedidos" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#1e293b] hover:bg-accent-hover">
+          <Link to="/meus-pedidos" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#0f172a] hover:bg-accent-hover">
             Voltar para meus pedidos
           </Link>
         </div>

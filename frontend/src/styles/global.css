@@ -14,7 +14,7 @@
 
 @layer base {
   :root {
-    --bg: #fff7ed; --card: #ffffff; --text: #1e293b; --muted: #64748b;
+    --bg: #fff7ed; --card: #ffffff; --text: #1e293b; --muted: #5b6b80;
     --primary: #1e3a5f; --accent: #e67e00; --accent-dark: #c96a00;
     --border: #fed7aa; --soft: #ffedd5;
     color-scheme: light;
