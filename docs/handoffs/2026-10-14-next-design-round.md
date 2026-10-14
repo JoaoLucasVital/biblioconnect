@@ -2,7 +2,7 @@
 
 **Última etapa:** acesso local conferido, conta do usuário confirmada pelo fluxo normal após autorização explícita, navegação administrativa “Pedidos” e cliente “Meus pedidos”. As 22 capas foram atualizadas para WebP, com 30 variantes responsivas; banco persistente aplicado, sem alterar estoque, preços ou outros campos dos livros. Veja `docs/verification/2026-10-14-access-covers.md`. Não repetir confirmação, seed ou atualização das capas.
 
-**Em espera:** perfil com foto, nome e cartão de identificação de biblioteca. O usuário pediu somente registrar a ideia e aguardar sua referência; não implementar nesta rodada.
+**Próxima etapa solicitada:** perfil agora autorizado como parte de uma nova rodada, junto de avaliação Peek Rating, favoritos Pulse Heart com contagem em tempo real, Hold Button, Google, lembrar de mim, e-mail real, Stripe e deploy Vercel. O usuário exige escolher os formulários antes da implementação. Pesquisa, links e limites em `docs/design-references/2026-10-14/account-checkout-shortlist.md`. Nada desta nova rodada foi implementado ainda. Começar recebendo a escolha A/B e U1/U2; preservar as referências já escolhidas explicitamente.
 
 **Etapa anterior concluída:** widgets financeiros escolhidos e implementados (1, 2, 4, 5, com referências 7/8). Veja `docs/verification/2026-10-14-finance-widgets.md`. A seleção aprovada já está no código; não repetir brainstorming ou a implementação desses componentes na retomada.
 
