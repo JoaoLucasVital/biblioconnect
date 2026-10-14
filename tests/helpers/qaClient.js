@@ -5,11 +5,11 @@ export function createQaClient(baseUrl,{origin=baseUrl}={}){
   if(!["localhost","127.0.0.1"].includes(base.hostname) || base.protocol!=="http:")throw new Error("Cliente QA exige API HTTP local.");
   const cookies=new Map();
   let csrfToken=null;
-  async function fetchResponse(route,{method="GET",body}={}){
+  async function fetchResponse(route,{method="GET",body,form}={}){
     const url=new URL(route,base);
     if(url.origin!==base.origin)throw new Error("Cliente QA não envia credenciais para outra origem.");
     const cookieHeader=[...cookies.values()].filter(cookie=>(!cookie.expires || cookie.expires>Date.now()) && (url.pathname===cookie.path || url.pathname.startsWith(cookie.path.endsWith("/")?cookie.path:`${cookie.path}/`))).map(cookie=>`${cookie.name}=${cookie.value}`).join("; ");
-    const response=await fetch(url,{method,redirect:"manual",headers:{Origin:origin,...(body!==undefined?{"Content-Type":"application/json"}:{}),...(cookieHeader?{Cookie:cookieHeader}:{}),...(!["GET","HEAD","OPTIONS"].includes(method.toUpperCase())&&csrfToken?{"X-CSRF-Token":csrfToken}:{})},body:body!==undefined?JSON.stringify(body):undefined});
+    const response=await fetch(url,{method,redirect:"manual",headers:{Origin:origin,...(body!==undefined?{"Content-Type":"application/json"}:{}),...(cookieHeader?{Cookie:cookieHeader}:{}),...(!["GET","HEAD","OPTIONS"].includes(method.toUpperCase())&&csrfToken?{"X-CSRF-Token":csrfToken}:{})},body:form??(body!==undefined?JSON.stringify(body):undefined)});
     for(const raw of response.headers.getSetCookie()){
       const [pair,...attributes]=raw.split(";");
       const index=pair.indexOf("=");

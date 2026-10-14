@@ -2,10 +2,10 @@ import {createHash,randomBytes} from "node:crypto";
 
 const DAY=86400000;
 export const publicUserSelect={id:true,nome:true,email:true,role:true,emailConfirmado:true,telefone:true,endereco:true,cep:true,rua:true,bairro:true,cidade:true,estado:true,numero:true,complemento:true,pontoReferencia:true};
-const userSelect={...publicUserSelect,bloqueado:true};
+const userSelect={...publicUserSelect,bloqueado:true,avatarKey:true};
 export const hashSessionSecret=secret=>createHash("sha256").update(secret).digest("hex");
 const allowed=user=>user && !user.bloqueado && (user.role==="ADMIN"||user.emailConfirmado);
-const safeUser=user=>Object.fromEntries(Object.keys(publicUserSelect).map(key=>[key,user[key]]));
+const safeUser=user=>({...Object.fromEntries(Object.keys(publicUserSelect).map(key=>[key,user[key]])),avatarUrl:user.avatarKey?`/me/foto?v=${hashSessionSecret(user.avatarKey).slice(0,12)}`:null});
 const validSecret=secret=>typeof secret==="string"&&/^[A-Za-z0-9_-]{43}$/.test(secret);
 
 export async function createSession(prisma,{usuarioId,lembrar=false,now=new Date()}){

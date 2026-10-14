@@ -63,6 +63,7 @@ describe("navegação por papel", () => {
   });
   it("preserva a matriz de URLs e parâmetros", () => {
     expect(routePaths).toEqual(expect.arrayContaining(["/","/livros","/login","/cadastro","/esqueci-senha","/redefinir-senha/:token","/livros/:id/avaliacoes","/chat","/meus-pedidos","/pedido-confirmado/:id","/comprovante/:id","/admin","/admin/livros","/admin/pedidos","/admin/financeiro","/admin/usuarios","/admin/atrasos","/admin/avaliacoes","/admin/chat","/admin/entregas","/adicionar-livro","/editar-livro/:id","*"]));
-    expect(routePaths).toHaveLength(23);
+    expect(routePaths).toContain("/perfil");
+    expect(routePaths).toHaveLength(24);
   });
 });

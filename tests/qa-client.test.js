@@ -21,7 +21,7 @@ test("cliente QA mantém cookies e CSRF independentes entre duas sessões",async
       res.setHeader("Set-Cookie",["bc_session=opaque; HttpOnly; Path=/", "nonce=local; Path=/"]);
       res.end(JSON.stringify({csrfToken:"csrf-for-test"}));
     }else{
-      res.end(JSON.stringify({cookie:req.headers.cookie??null,csrf:req.headers["x-csrf-token"]??null,origin:req.headers.origin??null}));
+      res.end(JSON.stringify({cookie:req.headers.cookie??null,csrf:req.headers["x-csrf-token"]??null,origin:req.headers.origin??null,type:req.headers["content-type"]??null}));
     }
   });
   await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
@@ -39,4 +39,6 @@ test("cliente QA mantém cookies e CSRF independentes entre duas sessões",async
   const raw=await one.fetch("/change",{method:"POST",body:{ok:true}});
   assert.equal(raw.status,200);assert.equal((await raw.json()).csrf,"csrf-for-test");
   await assert.rejects(one.fetch("https://example.com/write",{method:"POST"}),/origem/i);
+  const form=new FormData();form.append("foto",new Blob(["test"],{type:"image/webp"}),"avatar.webp");
+  const multipart=await one.fetch("/change",{method:"POST",form});assert.match((await multipart.json()).type,/multipart\/form-data/);
 });

@@ -23,6 +23,7 @@ test("QA neutraliza destinos e credenciais herdados antes de iniciar a API", () 
     FRONTEND_URL: "https://forbidden.example",
     EMAIL_PROVIDER: "smtp",
     EMAIL_PASS: "foreign-secret",
+    AVATAR_STORAGE_DIR: path.resolve(".local/persistent-avatars"),
     MERCADO_PAGO_ACCESS_TOKEN: "foreign-payment-key",
     STRIPE_SECRET_KEY: "foreign-stripe-key", STRIPE_PUBLISHABLE_KEY: "foreign-publishable",
     STRIPE_WEBHOOK_SECRET: "foreign-webhook", GOOGLE_CLIENT_ID: "foreign-oauth-client",
@@ -40,6 +41,7 @@ test("QA neutraliza destinos e credenciais herdados antes de iniciar a API", () 
     assert.equal(env.FRONTEND_URL, "http://127.0.0.1:3377");
     assert.equal(env.EMAIL_PROVIDER, "file");
     assert.equal(env.EMAIL_OUTPUT_DIR, options.emailDir);
+    assert.equal(env.AVATAR_STORAGE_DIR,path.join(path.dirname(options.emailDir),"avatars"));
     assert.equal(env.EMAIL_PASS, "");
     assert.equal(env.MERCADO_PAGO_ACCESS_TOKEN, "");
     assert.equal(env.GOOGLE_MAPS_API_KEY, "");

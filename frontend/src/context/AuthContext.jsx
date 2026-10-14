@@ -7,6 +7,7 @@ import { AuthContext } from "./auth.js";
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
+  const updateUser = useCallback(next => setUsuario(current => current?.id === next.id ? next : current), []);
   const acceptSession = useCallback(({usuario,csrfToken}) => {
     api.setCsrfToken(csrfToken);
     setUsuario(usuario);
@@ -77,6 +78,7 @@ export function AuthProvider({ children }) {
         resendConfirmation,
         logout,
         acceptSession,
+        updateUser,
       }}
     >
       {children}

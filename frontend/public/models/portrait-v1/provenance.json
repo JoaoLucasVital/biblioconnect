@@ -1,0 +1,13 @@
+{
+  "package": "@mediapipe/tasks-vision",
+  "version": "1.1.1",
+  "modelVersion": 1,
+  "modelSource": "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/1/selfie_multiclass_256x256.tflite",
+  "modelSha256": "c6748b1253a99067ef71f7e26ca71096cd449baefa8f101900ea23016507e0e0",
+  "modelLicense": "Apache-2.0",
+  "modelCard": "https://storage.googleapis.com/mediapipe-assets/Model%20Card%20Multiclass%20Segmentation.pdf",
+  "runtimeFiles": [
+    "wasm/vision_wasm_module_internal.js",
+    "wasm/vision_wasm_module_internal.wasm"
+  ]
+}

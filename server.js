@@ -1,3 +1,4 @@
+import {createProfileRoutes} from "./src/routes/profileRoutes.js";
 import {issueAccountToken,consumeAccountToken} from "./src/services/accountTokenService.js";
 import { origensPermitidas } from "./src/utils/corsOrigins.js";
 import { assinaturaValida, aplicarPagamento } from "./src/services/paymentWebhook.js";
@@ -749,43 +750,7 @@ app.post("/login", async (req,res) => {
 // ======================
 // ME
 // ======================
-app.get("/me", autenticar, async (req, res) => {
-  try {
-    const usuario = await prisma.usuario.findUnique({
-      where: { id: Number(req.usuario.id) },
-      select: {
-        id: true,
-        nome: true,
-        email: true,
-        role: true,
-        emailConfirmado: true,
-        telefone: true,
-        endereco: true,
-        cep: true,
-        rua: true,
-        bairro: true,
-        cidade: true,
-        estado: true,
-        numero: true,
-        complemento: true,
-        pontoReferencia: true,
-      },
-    });
-
-    if (!usuario) {
-      return res.status(404).json({ erro: "Usuário não encontrado" });
-    }
-
-    res.json(usuario);
-  } catch (error) {
-    console.error("Erro ao buscar usuário logado:", error);
-
-    res.status(error.status || 500).json({
-      erro: "Erro ao buscar usuário logado",
-      detalhe: error.message,
-    });
-  }
-});
+app.use(createProfileRoutes({prisma,auth}));
 // ======================
 // ADMIN - LISTAR USUÁRIOS
 // ======================

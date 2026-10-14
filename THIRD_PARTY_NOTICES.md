@@ -92,3 +92,9 @@ Atualização das 22 capas para WebP: fontes individuais, dimensões, variantes 
 Rodada de widgets financeiros: Stats Widget e Donut Chart de Ravi Katiyar no 21st.dev; Financial Score Cards de Ali Imam no 21st.dev; Sales Card de Yaya12085 no Uiverse; Bar Charts de shadcn/ui e Analytics de React Bits Pro. São referências visuais para implementação local com React, Recharts e Lucide já presentes. Não houve importação do código desses registros nem incorporação de código pago do React Bits Pro. Links, correspondência e limites em `docs/design-references/2026-10-14/finance-components-selected.md`.
 
 shadcn/ui dashboard-01 (https://ui.shadcn.com/blocks) e Tremor (https://www.tremor.so/) são referências de composição; o painel usa implementação própria, Recharts e Lucide já presentes. Proveniência das capas e metadados adicionados: `docs/catalog/2026-10-14-contemporary-acervo.md` e `docs/catalog/youth-cover-provenance.json`. Capas editoriais mantêm os direitos dos respectivos titulares; não são cobertas pela licença do código.
+
+## Account/profile additions (2026-10-14)
+
+Profile Card source and CSS adapted from [React Bits / David Haz](https://github.com/DavidHDev/react-bits/tree/main/src/content/Components/ProfileCard), MIT + Commons Clause; full notice at frontend/src/features/account/vendor/LICENSE.react-bits.md. Existing Lucide icons replace additional icon dependencies; reduced motion, restrained tilt and library identity are applied.
+
+MediaPipe Tasks Vision 1.1.1 and Google SelfieMulticlass 256x256 model version 1: Apache-2.0. Model source, SHA256 and model card: frontend/public/models/portrait-v1/provenance.json. Runtime files are copied unmodified from the pinned official npm package. Inference runs in a local browser worker; photos are not sent to Google. Sharp 0.35.5: Apache-2.0; dependencies retain their respective package notices.

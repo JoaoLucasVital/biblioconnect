@@ -35,6 +35,7 @@ export function buildQaEnv({ apiPort, frontendPort, databasePort, emailDir, jwtS
     ADMIN_PASSWORD: "admin123",
     EMAIL_PROVIDER: "file",
     EMAIL_OUTPUT_DIR: safeQaPath(emailDir),
+    AVATAR_STORAGE_DIR: safeQaPath(path.join(path.dirname(safeQaPath(emailDir)),"avatars")),
     EMAIL_USER: "", EMAIL_PASS: "", EMAIL_HOST: "",
     MERCADO_PAGO_ACCESS_TOKEN: "", MERCADO_PAGO_WEBHOOK_SECRET: "",
     GOOGLE_MAPS_API_KEY: "", GOOGLE_BOOKS_API_KEY: "",
