@@ -51,7 +51,7 @@ Split Text e Blur Text do React Bits foram consultados como referências visuais
 
 Copyright (c) 2025 Ruixen UI. Licença MIT reproduzida acima.
 
-Fonte oficial consultada em 14/10/2026: https://ruixen.com/r/image-stream-hero ; documentação: https://ruixen.com/docs/components/image-stream-hero ; referência escolhida: https://21st.dev/@ruixen.ui/components/image-stream-hero . Geometria das duas fileiras em perspectiva adaptada em `streamGeometry.js`/`ImageStreamHero.jsx`, com livros da API, pausa manual/por foco/visibilidade, tema e alternativa sem movimento. Licença: https://github.com/ruixenui/ruixen.com/blob/main/LICENSE.md .
+Fonte oficial consultada em 14/10/2026: https://ruixen.com/r/image-stream-hero ; documentação: https://ruixen.com/docs/components/image-stream-hero ; referência escolhida: https://21st.dev/@ruixen.ui/components/image-stream-hero . Geometria das duas fileiras em perspectiva adaptada em `streamGeometry.js`/`ImageStreamHero.jsx`, com livros da API, movimento contínuo durante hover/foco, proteção de visibilidade, tema e alternativa sem movimento. Licença: https://github.com/ruixenui/ruixen.com/blob/main/LICENSE.md .
 
 ## React Bits — Card Nav e referências de movimento
 

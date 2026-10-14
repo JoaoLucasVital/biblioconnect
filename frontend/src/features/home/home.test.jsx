@@ -51,16 +51,18 @@ it("destaque troca em 6000ms e limpa o timer ao desmontar",()=>{
   act(()=>vi.advanceTimersByTime(1));expect(onSelect).toHaveBeenCalledExactlyOnceWith(1);
   unmount();act(()=>vi.advanceTimersByTime(12000));expect(onSelect).toHaveBeenCalledTimes(1);
 });
-it("foco no hero pausa o destaque",()=>{
+it("foco e mouse no hero conservam o avanço automático sem botão de pausa",()=>{
   vi.useFakeTimers();const change=hero();
   act(()=>screen.getByRole("link",{name:/Ver catálogo/}).focus());
-  act(()=>vi.advanceTimersByTime(6000));expect(change).not.toHaveBeenCalled();
+  fireEvent.pointerEnter(screen.getByRole("region",{name:"Descubra sua próxima leitura"}),{pointerType:"mouse"});
+  act(()=>vi.advanceTimersByTime(6000));expect(change).toHaveBeenCalledExactlyOnceWith(1);
+  expect(screen.queryByRole("button",{name:/Pausar|Retomar/})).not.toBeInTheDocument();
 });
-it("interação manual pausa o avanço automático",()=>{
+it("interação manual conserva o avanço automático",()=>{
   vi.useFakeTimers();const change=hero();
   fireEvent.click(screen.getByRole("button",{name:"Próximo destaque"}));
   expect(change).toHaveBeenCalledExactlyOnceWith(1);
-  change.mockClear();act(()=>vi.advanceTimersByTime(6000));expect(change).not.toHaveBeenCalled();
+  change.mockClear();act(()=>vi.advanceTimersByTime(6000));expect(change).toHaveBeenCalledExactlyOnceWith(1);
 });
 it("aba oculta pausa o destaque",()=>{
   vi.useFakeTimers();const change=hero();

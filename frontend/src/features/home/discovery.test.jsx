@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { beforeEach, expect, it, vi } from "vitest";
 import Home from "../../pages/Home.jsx";
 import Books from "../../pages/Books.jsx";
@@ -19,8 +19,7 @@ it("home abre com a hero de capas destacadas e deixa o Atlas no catálogo",async
   expect(hero.querySelectorAll('[data-book-id="7"]').length).toBeGreaterThan(0);
   expect(hero.querySelector('[data-book-id="99"]')).toBeNull();
   expect(screen.queryByRole("region",{name:"Atlas do Acervo"})).not.toBeInTheDocument();
-  fireEvent.click(within(hero).getByRole("button",{name:"Pausar capas"}));
-  expect(within(hero).getByRole("button",{name:"Retomar capas"})).toBeVisible();
+  expect(within(hero).queryByRole("button",{name:/Pausar|Retomar/})).not.toBeInTheDocument();
 });
 it("catálogo mantém Atlas acima dos livros e preserva os clássicos",async()=>{
   mount(Books);

@@ -235,13 +235,13 @@ FadeInput usa o input nativo como fonte de valor, caret, seleção e eventos. Na
 
 ### Editorial book feature
 
-A abertura da home usa duas fileiras de capas em perspectiva, com geometria adaptada da Image Stream Hero da Ruixen UI. O percurso é amostrado em 24 passos e animado por transform CSS em 26s, sem ciclo JS por quadro. Até 12 livros disponíveis e destacados pela API alimentam a composição. Os gêneros são intercalados na seleção para romance, fantasia, suspense e dark romance terem presença na vitrine; clássicos continuam disponíveis no catálogo. Pausa manual, hover de mouse, foco, aba oculta, saída do viewport e movimento reduzido congelam as capas. A lista para leitores de tela contém texto, sem links invisíveis no percurso de Tab.
+A abertura da home usa duas fileiras de capas em perspectiva, com geometria adaptada da Image Stream Hero da Ruixen UI. O percurso é amostrado em 24 passos e animado por transform CSS em 26s, sem ciclo JS por quadro. Até 12 livros disponíveis e destacados pela API alimentam a composição. Os gêneros são intercalados na seleção para romance, fantasia, suspense e dark romance terem presença na vitrine; clássicos continuam disponíveis no catálogo. Por solicitação do usuário, não há botões de pausa e hover/foco não interrompem a animação. Aba oculta, saída do viewport e movimento reduzido continuam congelando as capas. A lista para leitores de tela contém texto, sem links invisíveis no percurso de Tab.
 
 A vitrine mostra até oito destaques com capas de 140–180px em composição alternada e links que abrem a busca do catálogo. Scroll Expand amplia o conjunto de 0.88 a 1 apenas no desktop sem preferência de redução; Animated Content revela seções por opacity/translate em 480ms. Click Spark oferece feedback pontual no CTA por 320ms, com no máximo oito partículas temporárias e nenhum efeito em acionamento por teclado. Star Border contorna o convite ao Atlas com ciclo CSS de 8s e alternativa estática. Abaixo, permanece a cena de livro já existente.
 
 A seção secundária da home reúne título, acesso ao catálogo e livro real. A cena 3D é carregada sob demanda apenas na home a partir de 768 px e sem movimento reduzido; capa estática atende telas pequenas, redução de movimento, carregamento e falha de textura/WebGL. O conteúdo permanece utilizável sem a animação.
 
-A entrada dos títulos usa 480 ms e deslocamento de 18 px; detalhes usam 400 ms e 10 px, com easing power3.out. A troca automática de destaques ocorre em 6 segundos e pausa por foco, hover de mouse, aba oculta ou controle manual. Essa composição pertence à home, não é um molde obrigatório para páginas operacionais.
+A entrada dos títulos usa 480 ms e deslocamento de 18 px; detalhes usam 400 ms e 10 px, com easing power3.out. A troca automática de destaques ocorre em 6 segundos, inclusive durante hover, foco ou após seleção manual; aba oculta e movimento reduzido impedem o avanço automático. Botões de pausa foram removidos por solicitação do usuário. Essa composição pertence à home, não é um molde obrigatório para páginas operacionais.
 
 ## Do's and Don'ts
 

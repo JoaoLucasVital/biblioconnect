@@ -34,7 +34,7 @@ test("troca manual de destaque funciona por teclado",async({page})=>{
   await page.getByRole("button",{name:`Ir para ${other.titulo}`}).focus();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("region",{name:"Descubra sua próxima leitura"}).getByRole("heading",{name:other.titulo,exact:true})).toBeVisible();
-  await expect(page.getByRole("button",{name:"Retomar destaques"})).toBeVisible();
+  await expect(page.getByRole("button",{name:/Pausar|Retomar/})).toHaveCount(0);
   await page.getByRole("link",{name:"Ver catálogo",exact:true}).click();
   await expect(page).toHaveURL(/\/livros$/);
 });

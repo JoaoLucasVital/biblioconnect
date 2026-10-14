@@ -9,15 +9,17 @@ const books=[
 test.beforeEach(async({page})=>{
   await page.route(`${process.env.QA_API_URL}/livros`,route=>route.fulfill({json:books}));
 });
-test("hero usa somente destaques reais, pausa e leva da capa ao livro filtrado",async({page})=>{
+test("hero continua com mouse e foco e leva da capa ao livro filtrado",async({page})=>{
   await page.goto("/");
   const hero=page.getByRole("region",{name:"Histórias em movimento"});
   await expect(hero.getByRole("heading",{level:1})).toHaveText(/Sua próxima obsessão literária/);
   expect(await hero.locator('[data-book-id="204"]').count()).toBe(0);
-  await hero.getByRole("button",{name:"Pausar capas"}).click();
-  await expect(hero).toHaveAttribute("data-paused","true");
-  await expect(hero.locator(".stream-book").first()).toHaveCSS("animation-play-state","paused");
+  await expect(page.getByRole("button",{name:/Pausar|Retomar/})).toHaveCount(0);
+  await hero.hover();
+  await expect(hero.locator(".stream-book").first()).toHaveCSS("animation-play-state","running");
   await hero.getByRole("link",{name:"Ver leituras em destaque"}).focus();
+  const firstFrame=await hero.locator(".stream-book").first().evaluate(el=>getComputedStyle(el).transform);
+  await expect.poll(()=>hero.locator(".stream-book").first().evaluate(el=>getComputedStyle(el).transform)).not.toBe(firstFrame);
   await page.keyboard.press("Tab");
   await expect(page.getByRole("region",{name:"Só mais um capítulo."}).getByRole("link",{name:"Explorar o acervo",exact:true})).toBeFocused();
   await page.getByRole("link",{name:`Encontrar ${books[1].titulo} no catálogo`}).click();

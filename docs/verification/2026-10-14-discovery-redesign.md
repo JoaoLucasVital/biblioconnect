@@ -1,5 +1,11 @@
 # Rodada de descoberta — BiblioConnect
 
+## Ajuste posterior: animação contínua
+
+Após a entrega da rodada, o usuário pediu a remoção de todos os botões de pausa das animações e a continuidade durante hover. Removidos os controles de capas/destaques, as interrupções por hover/foco e a pausa permanente após seleção manual. A borda do convite ao Atlas também continua durante foco. Movimento reduzido, aba oculta e a proteção fora do viewport permanecem. Este ajuste substitui a descrição de controles de pausa da rodada original abaixo.
+
+Verificação do ajuste: 15 testes de home/descoberta aprovados após três falhas esperadas antes da alteração; lint completo aprovado; dez cenários Chromium com build de produção e banco isolado aprovados. O cenário de hover/foco mede a transformação das capas e confirma que ela continua mudando, além de verificar a ausência de botões de pausa.
+
 Implementação autorizada pelo usuário em 14/10/2026 após revisão da composição. Branch `codex/biblioconnect-editorial`, baseada na rodada anterior `7e30ec9`. React/Tailwind, Express, contratos da API, Prisma e regras de negócio preservados.
 
 ## Resultado

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import BookCover from "../../components/ui/BookCover.jsx";
 import Button from "../../components/ui/Button.jsx";
 import SceneBoundary from "./SceneBoundary.jsx";
@@ -12,12 +12,9 @@ export default function EditorialHero({livro,destaques,selectedIndex,onSelect,ac
   const desktop=useMediaQuery("(min-width: 768px)");
   const reduced=useMediaQuery("(prefers-reduced-motion: reduce)");
   const [hidden,setHidden]=useState(()=>document.hidden);
-  const [focused,setFocused]=useState(false);
-  const [hovered,setHovered]=useState(false);
-  const [manualPause,setManualPause]=useState(false);
   const [failedCover,setFailedCover]=useState(null);
   const unavailable=useCallback(()=>setFailedCover(livro?.imagemUrl),[livro?.imagemUrl]);
-  const paused=hidden || focused || hovered || manualPause || reduced;
+  const paused=hidden || reduced;
   useHeroMotion(ref,{enabled:!reduced});
   useEffect(()=>{
     const update=()=>setHidden(document.hidden);
@@ -29,12 +26,10 @@ export default function EditorialHero({livro,destaques,selectedIndex,onSelect,ac
     const timeout=setTimeout(()=>onSelect((selectedIndex+1)%destaques.length),6000);
     return ()=>clearTimeout(timeout);
   },[paused,destaques.length,selectedIndex,onSelect]);
-  const select=index=>{setManualPause(true);onSelect(index);};
+  const select=onSelect;
   const cover=<div className="grid h-full place-items-center"><BookCover livro={livro} className="mx-auto w-44 shadow-xl sm:w-52"/></div>;
   const scene=desktop && !reduced && livro?.imagemUrl && failedCover!==livro.imagemUrl;
-  return <section ref={ref} aria-label="Descubra sua próxima leitura" onFocusCapture={()=>setFocused(true)}
-    onBlurCapture={event=>{if(!event.currentTarget.contains(event.relatedTarget))setFocused(false);}}
-    onPointerEnter={event=>{if(event.pointerType==="mouse")setHovered(true);}} onPointerLeave={()=>setHovered(false)}
+  return <section ref={ref} aria-label="Descubra sua próxima leitura"
     className="grid gap-10 py-12 md:grid-cols-[1.15fr_1fr] md:items-center md:gap-12 md:py-16">
     <div><p data-hero-detail className="mb-6 flex items-center gap-3 text-xs uppercase tracking-[0.17em] text-muted"><span className="h-px w-9 bg-accent" aria-hidden="true"/>Biblioteca online</p>
       {compact?<h2 className="max-w-md font-display text-[clamp(2.5rem,4.5vw,4.5rem)] leading-[1.05] tracking-[-0.035em]"><span data-hero-line className="block">Uma leitura em</span><span data-hero-line className="block text-accent-hover dark:text-accent">perspectiva.</span></h2>:<h1 className="font-display text-[clamp(3.2rem,7vw,6.1rem)] font-normal leading-[1.04] tracking-[-0.045em]"><span data-hero-line className="block">Encontre a sua</span><span data-hero-line className="block">próxima <span className="text-accent-hover dark:text-accent">leitura.</span></span></h1>}
@@ -50,7 +45,6 @@ export default function EditorialHero({livro,destaques,selectedIndex,onSelect,ac
       {livro && <div className="mt-5 flex items-start justify-between gap-5"><div className="min-w-0"><p className="mb-1 text-xs text-muted">{livro.categoria} · {String(selectedIndex+1).padStart(2,"0")} / {String(destaques.length).padStart(2,"0")}</p><h2 className="wrap-anywhere font-display text-2xl leading-tight">{livro.titulo}</h2><p className="mt-1 text-sm text-muted">{livro.autor}</p></div>
       {destaques.length>1 && <div className="flex shrink-0 gap-1"><Button variant="secondary" className="px-2" aria-label="Destaque anterior" onClick={()=>select((selectedIndex+destaques.length-1)%destaques.length)}><ArrowLeft size={18} aria-hidden="true"/></Button><Button variant="secondary" className="px-2" aria-label="Próximo destaque" onClick={()=>select((selectedIndex+1)%destaques.length)}><ArrowRight size={18} aria-hidden="true"/></Button></div>}</div>}
       {destaques.length>1 && <div className="mt-4 flex min-w-0 flex-wrap items-center justify-between gap-3"><div role="group" aria-label="Escolher destaque" className="flex min-w-0 max-w-full gap-1 overflow-x-auto overscroll-x-contain">{destaques.map((book,index)=><button key={book.id} type="button" onClick={()=>select(index)} aria-label={`Ir para ${book.titulo}`} aria-pressed={index===selectedIndex} className="grid h-11 w-8 shrink-0 place-items-center"><span aria-hidden="true" className={`h-1 w-5 ${index===selectedIndex?"bg-ink":"bg-muted/40"}`}/></button>)}</div>
-        {!reduced && <Button variant="ghost" className="px-2 text-xs" aria-label={manualPause?"Retomar destaques":"Pausar destaques"} onClick={()=>setManualPause(value=>!value)}>{manualPause?<Play size={14} aria-hidden="true"/>:<Pause size={14} aria-hidden="true"/>}{manualPause?"Retomar":"Pausar"}</Button>}
       </div>}
     </div>
   </section>;
