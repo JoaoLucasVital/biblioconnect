@@ -1,6 +1,6 @@
 # Conta, comunidade e checkout — seleção para aprovação
 
-Pedido de 14/10/2026. Estado: pesquisa e proposta; não implementado. O usuário pediu receber os formulários primeiro e escolher antes de iniciar o restante. Preservar React/Tailwind, cores, logo Elo aprovada, Prisma, dados e funcionalidades existentes. Esta rodada autoriza planejar novas funções de backend; o limite do primeiro redesign exclusivamente visual não se aplica ao novo pedido.
+Pedido de 14/10/2026. Escolha aprovada: combinar A + B com o formulário atual e usar U1 com texto **Importar foto**. Usuário também incluiu frete Google Maps e origem provisória UNINASSAU Maceió; ainda precisa configurar Google Cloud. Especificação consolidada em `docs/superpowers/specs/2026-10-14-account-community-checkout-design.md`, aguardando revisão escrita. Não implementado. Preservar React/Tailwind, cores, logo Elo aprovada, Prisma, dados e funcionalidades existentes. Esta rodada autoriza planejar novas funções de backend; o limite do primeiro redesign exclusivamente visual não se aplica ao novo pedido.
 
 ## Seleção visual
 
@@ -37,4 +37,4 @@ Para validar serviços reais serão necessárias contas/configurações autoriza
 
 ## Próximo passo
 
-Receber escolha de formulário A/B e importação U1/U2. A combinação recomendada é A + U1, com o fluxo de recorte inspirado em Efferd. Depois consolidar o desenho técnico e os critérios acima em especificação revisável e plano de execução, preservando a orientação do usuário de iniciar o restante após sua escolha. Esta página é a pesquisa para escolha, não aprovação de uma implementação ainda inexistente.
+Escolha visual já recebida; não perguntar novamente. Revisar a especificação consolidada e depois preparar o plano de implementação. A referência U2 não foi selecionada. O usuário autorizou execução do escopo, mas ainda não revisou a especificação escrita/um plano técnico, artefatos exigidos pelo workflow de brainstorming ativo. Stripe e Vercel foram sugeridos; verificar conexão atual antes de tratá-los como conectados.
