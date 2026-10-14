@@ -53,7 +53,7 @@ export default function DashboardOverview({ stats }) {
   return <>
     <header className="dashboard-header">
       <div><p className="dashboard-breadcrumb">Administração <span aria-hidden="true">/</span> Painel</p><h1>Visão geral da biblioteca<span>.</span></h1><p className="dashboard-intro">O acervo, os leitores e a operação, em perspectiva.</p></div>
-      <Link className="dashboard-primary-link" to="/admin/pedidos">Gerenciar pedidos <ArrowUpRight size={17} aria-hidden="true" /></Link>
+      <div className="dashboard-header-actions"><Link className="dashboard-secondary-link" to="/admin/financeiro">Ver financeiro<ArrowUpRight size={16} aria-hidden="true"/></Link><Link className="dashboard-primary-link" to="/admin/pedidos">Gerenciar pedidos <ArrowUpRight size={17} aria-hidden="true" /></Link></div>
     </header>
 
     <section className="dashboard-kpis" aria-label="Indicadores da biblioteca">

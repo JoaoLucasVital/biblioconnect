@@ -1,5 +1,7 @@
 # Novas direções da marca
 
+**Decisão posterior:** o usuário escolheu **02 — Elo**. Aplicação vetorial em `elo-selected.md`; o texto abaixo preserva a etapa de exploração anterior à escolha.
+
 Prancha de conceitos gerada em 14/10/2026 com a ferramenta integrada Imagegen, orientada pelas skills Brandkit e Imagegen. Arquivo: `logo-new-directions.png`. Apresenta três direções para avaliação: Entrelinhas (wordmark serifada), Elo (fita de conexão), Margem (tipografia em duas linhas com aba de página). Nenhuma foi escolhida nem aplicada ao produto. Todas as propostas antigas foram rejeitadas; esta prancha explora um estilo novo.
 
 As aplicações na prancha são ilustrações de identidade, não telas implementadas ou dados do sistema. Depois da escolha, o desenho deve ser reconstruído em SVG para o site e favicon.

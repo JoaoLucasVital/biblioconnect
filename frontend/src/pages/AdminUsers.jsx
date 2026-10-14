@@ -267,12 +267,12 @@ function AdminUsers() {
                     {usuario.nome?.charAt(0)?.toUpperCase() || "U"}
                   </div>
 
-                  <div>
+                  <div className="min-w-0 flex-1 wrap-anywhere">
                     <h2  className="font-display text-2xl leading-snug">{usuario.nome}</h2>
                     <p>{usuario.email}</p>
                   </div>
 
-                  <span  className="rounded bg-soft px-2 py-1 text-xs">
+                  <span  className="shrink-0 rounded bg-soft px-2 py-1 text-xs">
                     {usuario.bloqueado ? "Congelado" : "Ativo"}
                   </span>
                 </div>

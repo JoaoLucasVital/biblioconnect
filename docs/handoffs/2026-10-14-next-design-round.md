@@ -1,6 +1,6 @@
 # Retomada do BiblioConnect — nova direção de apresentação
 
-**Status atualizado:** retomada autorizada e rodada de descoberta implementada em 14/10/2026. Consulte `docs/verification/2026-10-14-discovery-redesign.md` para o resultado e verificações. Acervo persistente: 22 livros. A nova logo aguarda escolha entre Entrelinhas/Elo/Margem; nenhuma foi aplicada. Os registros abaixo preservam a conversa de planejamento, não indicam trabalho ainda pausado.
+**Status atualizado:** descoberta implementada e marca 02 — Elo escolhida e aplicada em SVG. O usuário priorizou os painéis administrativo e financeiro, agora integrados aos dados reais. Acervo persistente: 22 livros. Consulte `docs/verification/2026-10-14-elo-dashboards.md` para esta etapa e `docs/verification/2026-10-14-discovery-redesign.md` para a anterior. Os registros abaixo preservam a conversa histórica de planejamento, não indicam trabalho ainda pausado.
 
 Pedido de 14/10/2026: guardar estas decisões e abrir somente a versão atual para mostrar aos amigos. Implementação adiada até o usuário voltar após a renovação do limite. Nenhuma destas mudanças foi implementada neste intervalo.
 

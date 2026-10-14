@@ -43,9 +43,9 @@ export default function Navbar() {
   return <header className="relative z-20 border-b border-stroke bg-paper text-ink">
     <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-50 focus:bg-surface focus:p-3">Pular para conteúdo</a>
     <div className="mx-auto flex min-h-22 max-w-7xl items-center justify-between gap-2 px-5 sm:gap-5 sm:px-8">
-      <Link to="/" aria-label="BiblioConnect — início" className="flex shrink-0 items-center gap-2">
-        <BrandLogo className="h-8 w-8 sm:h-10 sm:w-10"/>
-        <span className="font-display text-[20px] font-semibold tracking-[-0.03em] sm:text-[23px]">BiblioConnect<span className="block font-sans text-[9px] font-medium uppercase tracking-[0.15em] text-muted sm:text-[10px] sm:tracking-[0.2em]">Sua próxima leitura</span></span>
+      <Link to="/" aria-label="BiblioConnect — início" className="flex min-h-11 shrink-0 items-center gap-2 sm:gap-2.5">
+        <BrandLogo className="h-6 w-9 sm:h-8 sm:w-12"/>
+        <span className="font-sans text-[18px] font-semibold leading-tight tracking-[-0.055em] sm:text-[22px]">BiblioConnect<span className="mt-1 block text-[8px] font-medium uppercase tracking-[0.13em] text-muted sm:text-[9px] sm:tracking-[0.17em]">Sua próxima leitura</span></span>
       </Link>
       <div className="hidden items-center gap-6 xl:flex">{links()}</div>
       <div className="flex shrink-0 items-center gap-1"><ThemeToggle/>

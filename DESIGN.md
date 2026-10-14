@@ -114,7 +114,7 @@ components:
 
 **Creative North Star: "Atlas editorial contemporâneo"**
 
-Uma biblioteca editorial contemporânea em que capas, títulos e autores conduzem a leitura. A home recebe o público de jovens adultos com a Image Stream Hero de livros reais; o Atlas no catálogo torna visíveis relações reais de categoria e autor. Creme, marinho e laranja preservam a identidade BiblioConnect. As três propostas antigas de marca foram rejeitadas; a nova prancha Entrelinhas/Elo/Margem aguarda escolha. A BC03 continua provisoriamente no código, sem aprovação definitiva.
+Uma biblioteca editorial contemporânea em que capas, títulos e autores conduzem a leitura. A home recebe o público de jovens adultos com a Image Stream Hero de livros reais; o Atlas no catálogo torna visíveis relações reais de categoria e autor. Creme, marinho e laranja preservam a identidade BiblioConnect. A marca 02 — Elo foi escolhida pelo usuário e aplicada em SVG, com wordmark IBM Plex Sans e favicon correspondente.
 
 A mesma linguagem acompanha descoberta, catálogo, compra, aluguel, reserva e acompanhamento de pedidos. A home oferece a expressão mais cênica; conta e administração adotam densidade operacional, navegação clara e estados explícitos. Tema escuro, foco visível e alternativas sem movimento fazem parte do sistema.
 
@@ -217,7 +217,7 @@ Campos têm label visível, superfície, contorno secundário e raio médio. O c
 
 ### Navigation
 
-Cabeçalho com marca BiblioConnect, wordmark serifada e links sans de peso médio. O seletor sol/lua escolhido pelo usuário mantém localStorage.theme e body.dark, possui nome acessível e alvo 60×44 px. Link ativo recebe sublinhado laranja; há link para pular ao conteúdo. Abaixo de xl, Card Nav usa três painéis adaptados ao papel do usuário em diálogo nativo, com foco protegido, Escape, retorno ao acionador e rolagem própria. Entrada por ponteiro usa 250ms, cartões 190ms com stagger de 30ms; teclado e movimento reduzido abrem imediatamente. Administração mantém sidebar marinho e acesso ao Atlas em /livros.
+Cabeçalho com marca Elo BiblioConnect, wordmark IBM Plex Sans e links sans de peso médio. O seletor sol/lua escolhido pelo usuário mantém localStorage.theme e body.dark, possui nome acessível e alvo 60×44 px. Link ativo recebe sublinhado laranja; há link para pular ao conteúdo. Abaixo de xl, Card Nav usa três painéis adaptados ao papel do usuário em diálogo nativo, com foco protegido, Escape, retorno ao acionador e rolagem própria. Entrada por ponteiro usa 250ms, cartões 190ms com stagger de 30ms; teclado e movimento reduzido abrem imediatamente. Administração mantém sidebar marinho e acesso ao Atlas em /livros.
 
 ### Dialogs
 

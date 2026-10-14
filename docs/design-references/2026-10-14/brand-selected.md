@@ -1,5 +1,7 @@
 # Marca BC — aplicação provisória da proposta 03
 
+**Registro histórico substituído:** o usuário rejeitou as propostas desta prancha e posteriormente escolheu **Elo (02)** da nova prancha. A aplicação atual está documentada em `elo-selected.md`.
+
 O usuário solicitou criar uma nova logo. Foram geradas três alternativas e perguntada a preferência. Sem resposta a essa preferência durante a execução, a proposta 03 recomendada foi aplicada **provisoriamente à prévia**, com essa suposição comunicada. Isso não registra uma escolha ou aprovação do usuário; as alternativas 01/02 continuam disponíveis para substituir a marca.
 
 ## Construção

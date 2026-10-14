@@ -435,7 +435,7 @@
   ],
   "narrative": {
     "northStar": "Atlas editorial contemporâneo",
-    "overview": "Biblioteca editorial para jovens adultos: Image Stream Hero com capas reais na home, vitrine de gêneros intercalados e Atlas no topo do catálogo, acima da listagem convencional. Card Nav compacto por papel e painel administrativo com métricas reais. Paleta creme, marinho e laranja preservada. As propostas antigas de logo foram rejeitadas; Entrelinhas/Elo/Margem aguardam escolha, sem substituição definitiva. Fluxos e banco existentes preservados; acervo persistente ampliado para 22 livros por autorização do usuário.",
+    "overview": "Biblioteca editorial para jovens adultos: Image Stream Hero com capas reais na home, vitrine de gêneros intercalados e Atlas no topo do catálogo, acima da listagem convencional. Card Nav compacto por papel e painéis administrativo e financeiro com métricas reais. Paleta creme, marinho e laranja preservada. Marca 02 — Elo escolhida pelo usuário e aplicada em SVG com wordmark IBM Plex Sans. Fluxos e banco existentes preservados; acervo persistente ampliado para 22 livros por autorização do usuário.",
     "keyCharacteristics": [
       "Livros e informação real antes de ornamento.",
       "Títulos serifados; operações em sans local.",
@@ -460,7 +460,7 @@
       }
     ],
     "dos": [
-      "Do preservar nome, paleta e tema; a nova direção da marca aguarda escolha do usuário.",
+      "Do preservar nome, paleta e tema; usar a marca Elo escolhida pelo usuário.",
       "Do dar prioridade a capa, título e autor e permitir quebra de títulos longos.",
       "Do usar pequenos rótulos de seção e divisores quando organizarem a leitura.",
       "Do manter rótulos, foco visível e estados de carregamento, erro, vazio e indisponibilidade.",

@@ -5,11 +5,11 @@
     "height": 1000
   },
   "navigation": {
-    "domContentLoadedMs": 77.20000000111759,
-    "loadMs": 77.20000000111759,
-    "transferBytes": 334496,
+    "domContentLoadedMs": 92.29999999888241,
+    "loadMs": 92.29999999888241,
+    "transferBytes": 295063,
     "requests": 26
   },
-  "filterRoundTripMs": 77.63,
+  "filterRoundTripMs": 99.39,
   "note": "Sem throttling; tempo do filtro inclui automação Playwright."
 }

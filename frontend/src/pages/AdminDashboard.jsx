@@ -26,6 +26,7 @@ function AdminDashboard() {
 
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
+  const [erroCarga, setErroCarga] = useState("");
   const [mensagem, setMensagem] = useState("");
 
   const [mostrarResetRestrito, setMostrarResetRestrito] = useState(false);
@@ -35,6 +36,8 @@ function AdminDashboard() {
   const [resetando, setResetando] = useState(false);
 
   const carregarDashboard = useCallback(async () => {
+    setLoading(true);
+    setErroCarga("");
     try {
 
       const response = await api.get("/admin/dashboard");
@@ -54,7 +57,7 @@ function AdminDashboard() {
         generoMaisVendido: response.data.generoMaisVendido || null,
       });
     } catch (error) {
-      setErro(
+      setErroCarga(
         error.response?.data?.erro ||
           "Erro ao carregar dados do painel administrativo."
       );
@@ -111,6 +114,9 @@ function AdminDashboard() {
 
   if (loading) {
     return <main className="bc-dashboard"><BookLoader label="Carregando painel administrativo…" /></main>;
+  }
+  if(erroCarga){
+    return <main className="bc-dashboard"><header className="dashboard-header"><div><p className="dashboard-breadcrumb">Administração / Painel</p><h1>Visão geral da biblioteca.</h1><p className="dashboard-intro">Os indicadores estarão disponíveis após a conexão ser restabelecida.</p></div></header><StatusMessage type="error" onRetry={carregarDashboard}>{erroCarga}</StatusMessage></main>;
   }
 
   return (
