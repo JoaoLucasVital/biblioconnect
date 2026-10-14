@@ -3,6 +3,18 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { expect } from "@playwright/test";
 
+export async function sessionCredentials(response){
+  expect(response.ok()).toBe(true);
+  const {csrfToken}=await response.json();
+  const raw=(await response.headersArray()).find(header=>header.name.toLowerCase()==="set-cookie"&&header.value.startsWith("bc_session="))?.value;
+  if(!raw || !csrfToken)throw new Error("Cookie ou CSRF ausente no login QA.");
+  return {cookie:raw.split(";")[0],csrfToken};
+}
+export function authHeaders(credentials){
+  if(!credentials?.cookie || !credentials?.csrfToken)throw new Error("Sessão QA ausente.");
+  return {Cookie:credentials.cookie,"X-CSRF-Token":credentials.csrfToken,Origin:process.env.QA_BASE_URL};
+}
+
 export async function loginUi(page, { email, senha }) {
   await page.goto("/login");
   await page.getByLabel("Email", {exact:true}).fill(email);
@@ -15,7 +27,7 @@ export async function createConfirmedClient({ request, emailDir = process.env.EM
   const before = new Set(await fs.readdir(emailDir));
   const email = `leitor-${crypto.randomUUID()}@example.test`;
   const senha = "TesteLocal123!";
-  const response = await request.post(`${process.env.QA_API_URL}/usuarios`, { data: {
+  const response = await request.post(`${process.env.QA_API_URL}/usuarios`, { headers:{Origin:process.env.QA_BASE_URL}, data: {
     nome: "Leitor QA", email, senha, cep: "57000000", rua: "Rua de teste", bairro: "Centro",
     cidade: "Maceió", estado: "AL", numero: "10",
   } });
@@ -33,15 +45,16 @@ export async function createConfirmedClient({ request, emailDir = process.env.EM
   }
   if (!link || new URL(link).origin !== process.env.QA_API_URL) throw new Error("Confirmação QA não encontrada no e-mail local.");
   expect((await request.get(link)).status()).toBe(200);
-  const login = await request.post(`${process.env.QA_API_URL}/login`, { data: { email, senha } });
+  const login = await request.post(`${process.env.QA_API_URL}/login`, { headers:{Origin:process.env.QA_BASE_URL}, data: { email, senha } });
   expect(login.ok()).toBe(true);
-  const { token, usuario } = await login.json();
+  const { usuario } = await login.json();
+  const token=await sessionCredentials(login);
   return { token, usuario, email, senha };
 }
 
 export async function createBook({ request, adminToken, overrides = {} }) {
   const response = await request.post(`${process.env.QA_API_URL}/livros`, {
-    headers: { Authorization: `Bearer ${adminToken}` },
+    headers: authHeaders(adminToken),
     data: { titulo: `Livro QA ${crypto.randomUUID().slice(0, 8)}`, autor: "Autora QA", redator: "Editora QA",
       ano: 2025, categoria: "Romance", sinopse: "Obra utilizada somente no banco isolado de QA.",
       precoCompra: 20, precoAluguel: 5, diasInclusos: 7, precoDiaExtra: 2, estoque: 2, destaque: true,

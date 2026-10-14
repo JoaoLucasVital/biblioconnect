@@ -1,3 +1,4 @@
+import {sessionCredentials,authHeaders} from "./helpers.js";
 import fs from "node:fs/promises";
 import path from "node:path";
 import {test,expect} from "@playwright/test";
@@ -54,10 +55,10 @@ test("texto a 200% mantém ações e formulário alcançáveis",async({page})=>{
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 test("comprovante impresso oculta navegação e conserva os dados",async({page,request},info)=>{
-  const admin=await request.post(`${process.env.QA_API_URL}/login`,{data:credentials});
-  const book=await createBook({request,adminToken:(await admin.json()).token});
+  const admin=await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL},data:credentials});
+  const book=await createBook({request,adminToken:await sessionCredentials(admin)});
   const client=await createConfirmedClient({request});
-  const purchase=await request.post(`${process.env.QA_API_URL}/comprar`,{headers:{Authorization:`Bearer ${client.token}`},data:{livroId:book.id}});
+  const purchase=await request.post(`${process.env.QA_API_URL}/comprar`,{headers:authHeaders(client.token),data:{livroId:book.id}});
   const order=await purchase.json();await loginUi(page,client);await page.goto(`/comprovante/${order.id}`);
   await expect(page.getByText(book.titulo,{exact:true})).toBeVisible();
   await page.emulateMedia({media:"print"});

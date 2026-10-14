@@ -6,7 +6,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import {createAuth} from "./src/middleware/auth.js";
+import {revokeUserSessions} from "./src/services/authSessionService.js";
 import crypto from "crypto";
 import multer from "multer";
 import path from "path";
@@ -48,10 +49,10 @@ app.disable("x-powered-by");
 app.use((req, res, next) => {
   const json = res.json.bind(res);
   res.json = dados => json(JSON.parse(JSON.stringify(dados, (campo, valor) =>
-    ["senha", "tokenResetSenha", "tokenResetSenhaExpira", "tokenConfirmacaoEmail", "tokenConfirmacaoExpira"].includes(campo) ? undefined : valor)));
+    ["senha", "tokenResetSenha", "tokenResetSenhaExpira", "tokenConfirmacaoEmail", "tokenConfirmacaoExpira", "tokenConfirmacaoHash", "tokenResetSenhaHash", "tokenHash", "previousTokenHash", "secret"].includes(campo) ? undefined : valor)));
   next();
 });
-app.use(cors({ origin: origensPermitidas(process.env.FRONTEND_URL || "http://localhost:5173", process.env.NODE_ENV) }));
+app.use(cors({ credentials: true, origin: origensPermitidas(process.env.FRONTEND_URL || "http://localhost:5173", process.env.NODE_ENV) }));
 app.use(express.json({ limit: "100kb" }));
 // Garante erros JSON para IDs inválidos antes de consultar o banco.
 app.param("id", (req, res, next, id) => {
@@ -67,16 +68,24 @@ app.use((req, res, next) => {
   next();
 });
 
-const JWT_SECRET =
-  process.env.JWT_SECRET ||
-  (process.env.NODE_ENV === "production" ? null : "biblioconnect_secret_dev");
-
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET é obrigatório quando NODE_ENV=production");
-}
-
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const auth = createAuth({
+  prisma,
+  secret: process.env.AUTH_SECRET || (process.env.NODE_ENV !== "production" ? process.env.JWT_SECRET : null),
+  production: process.env.NODE_ENV === "production",
+  allowedOrigins: [...origensPermitidas(FRONTEND_URL, process.env.NODE_ENV), new URL(BACKEND_URL).origin],
+});
+const emailKey = req => typeof req.body.email === "string" ? req.body.email.trim().toLowerCase().slice(0,254) : "invalid";
+const quarterHour = 15 * 60 * 1000;
+app.use(["/login", "/usuarios", "/reenviar-confirmacao", "/esqueci-senha", "/redefinir-senha"], (req,res,next) => {
+  if (["POST","PATCH"].includes(req.method)) return auth.requireOrigin(req,res,next);
+  next();
+});
+app.use("/login", auth.rateLimit("login-ip",{limit:20,windowMs:quarterHour}), auth.rateLimit("login-account",{limit:5,windowMs:quarterHour,key:emailKey}));
+app.use(["/reenviar-confirmacao","/esqueci-senha"], auth.rateLimit("email-ip",{limit:20,windowMs:quarterHour}), auth.rateLimit("email-account",{limit:3,windowMs:quarterHour,key:emailKey}));
+app.get("/auth/session", auth.sessionResponse);
+app.post("/auth/logout", auth.authenticate, auth.signOut);
 
 // ======================
 // UPLOADS - IMAGENS DOS LIVROS
@@ -237,64 +246,7 @@ app.get("/public/home-insights", async (req, res) => {
 // ======================
 // MIDDLEWARE AUTH
 // ======================
-async function autenticar(req, res, next) {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(401).json({ erro: "Token não enviado" });
-  }
-
-  const parts = authHeader.split(" ");
-
-  if (parts.length !== 2 || parts[0] !== "Bearer") {
-    return res.status(401).json({ erro: "Token mal formatado" });
-  }
-
-  const token = parts[1];
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    const usuario = await prisma.usuario.findUnique({
-      where: {
-        id: Number(decoded.id),
-      },
-      select: {
-        id: true,
-        nome: true,
-        email: true,
-        role: true,
-        emailConfirmado: true,
-        bloqueado: true,
-      },
-    });
-
-    if (!usuario) {
-      return res.status(401).json({
-        erro: "Usuário do token não encontrado",
-      });
-    }
-
-    if (usuario.role !== "ADMIN" && usuario.bloqueado) {
-      return res.status(403).json({
-        erro: "Usuário bloqueado. Entre em contato com a biblioteca.",
-      });
-    }
-
-    if (usuario.role !== "ADMIN" && !usuario.emailConfirmado) {
-      return res.status(403).json({
-        erro: "Confirme seu email antes de acessar sua conta.",
-        precisaConfirmarEmail: true,
-        email: usuario.email,
-      });
-    }
-
-    req.usuario = usuario;
-    next();
-  } catch (error) {
-    return res.status(401).json({ erro: "Token inválido" });
-  }
-}
+const autenticar = auth.authenticate;
 
 function somenteAdmin(req, res, next) {
   if (!req.usuario) {
@@ -916,7 +868,8 @@ app.patch("/redefinir-senha/:token", async (req, res) => {
 
     const senhaCriptografada = await bcrypt.hash(novaSenha, 10);
 
-    await prisma.usuario.update({
+    await prisma.$transaction(async tx => {
+    await tx.usuario.update({
       where: {
         id: usuario.id,
       },
@@ -925,6 +878,9 @@ app.patch("/redefinir-senha/:token", async (req, res) => {
         tokenResetSenha: null,
         tokenResetSenhaExpira: null,
       },
+    });
+
+    await revokeUserSessions(tx,usuario.id);
     });
 
     res.json({
@@ -1011,68 +967,18 @@ app.post("/reenviar-confirmacao", async (req, res) => {
 // ======================
 // LOGIN
 // ======================
-app.post("/login", async (req, res) => {
+const dummyPasswordHash = await bcrypt.hash(crypto.randomBytes(32).toString("hex"),10);
+app.post("/login", async (req,res) => {
   try {
-    const { email, senha } = req.body;
-
-    if (!email || !senha) {
-      return res.status(400).json({
-        erro: "Email e senha são obrigatórios",
-      });
-    }
-
-    const emailNormalizado = String(email).trim().toLowerCase();
-
-    const usuario = await prisma.usuario.findUnique({
-      where: { email: emailNormalizado },
-    });
-
-    if (!usuario) {
-      return res.status(404).json({ erro: "Usuário não encontrado" });
-    }
-
-    const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
-
-    if (!senhaCorreta) {
-      return res.status(401).json({ erro: "Senha incorreta" });
-    }
-
-    if (usuario.role !== "ADMIN" && !usuario.emailConfirmado) {
-      return res.status(403).json({
-        erro: "Confirme seu email antes de fazer login.",
-        precisaConfirmarEmail: true,
-        email: usuario.email,
-      });
-    }
-
-    const token = jwt.sign(
-      {
-        id: usuario.id,
-        nome: usuario.nome,
-        email: usuario.email,
-        role: usuario.role,
-      },
-      JWT_SECRET,
-      { expiresIn: "1d" },
-    );
-
-    res.json({
-      token,
-      usuario: {
-        id: usuario.id,
-        nome: usuario.nome,
-        email: usuario.email,
-        role: usuario.role,
-        emailConfirmado: usuario.emailConfirmado,
-      },
-    });
-  } catch (error) {
-    console.error("Erro no login:", error);
-
-    res.status(error.status || 500).json({
-      erro: "Erro no login",
-      detalhe: error.message,
-    });
+    const {email,senha,lembrar=false}=req.body;
+    if(typeof email!=="string" || typeof senha!=="string" || !email.trim() || !senha || Buffer.byteLength(senha)>72) return res.status(400).json({erro:"Informe email e senha válidos."});
+    const usuario=await prisma.usuario.findUnique({where:{email:email.trim().toLowerCase()}});
+    const correct=await bcrypt.compare(senha,usuario?.senha || dummyPasswordHash);
+    if(!usuario || !usuario.senha || !correct || usuario.bloqueado) return res.status(401).json({erro:"Email ou senha inválidos."});
+    if(usuario.role!=="ADMIN" && !usuario.emailConfirmado) return res.status(403).json({erro:"Confirme seu email antes de fazer login.",precisaConfirmarEmail:true,email:usuario.email});
+    return await auth.signIn(res,{usuarioId:usuario.id,lembrar});
+  } catch {
+    res.status(500).json({erro:"Não foi possível entrar. Tente novamente."});
   }
 });
 
@@ -1228,7 +1134,8 @@ app.patch(
         });
       }
 
-      const usuarioAtualizado = await prisma.usuario.update({
+      const usuarioAtualizado = await prisma.$transaction(async tx => {
+      const updated=await tx.usuario.update({
         where: {
           id: Number(id),
         },
@@ -1243,6 +1150,9 @@ app.patch(
         },
       });
 
+      if(updated.bloqueado) await revokeUserSessions(tx,updated.id);
+      return updated;
+      });
       res.json(usuarioAtualizado);
     } catch (error) {
       console.error("Erro ao alterar bloqueio:", error);

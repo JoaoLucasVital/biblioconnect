@@ -1,8 +1,9 @@
+import {sessionCredentials} from "./helpers.js";
 import { test, expect } from "@playwright/test";
 import { createConfirmedClient, createBook, loginUi } from "./helpers.js";
 async function bookFor(request,overrides={}) {
-  const login=await request.post(`${process.env.QA_API_URL}/login`,{data:{email:"admin@biblioconnect.com",senha:"admin123"}});
-  return createBook({request,adminToken:(await login.json()).token,overrides});
+  const login=await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL},data:{email:"admin@biblioconnect.com",senha:"admin123"}});
+  return createBook({request,adminToken:await sessionCredentials(login),overrides});
 }
 for (const [action,endpoint,payload] of [
   ["compra","/comprar",livro=>({livroId:livro.id,modalidadeEntrega:"retirada"})],

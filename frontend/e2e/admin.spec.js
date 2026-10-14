@@ -1,7 +1,8 @@
+import {sessionCredentials,authHeaders} from "./helpers.js";
 import {test,expect} from "@playwright/test";
 import {createBook,createConfirmedClient,loginUi} from "./helpers.js";
 const credentials={email:"admin@biblioconnect.com",senha:"admin123"};
-async function adminToken(request){const r=await request.post(`${process.env.QA_API_URL}/login`,{data:credentials});expect(r.ok()).toBe(true);return (await r.json()).token;}
+async function adminToken(request){const r=await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL},data:credentials});expect(r.ok()).toBe(true);return await sessionCredentials(r);}
 test("criar livro por ISBN e editar estoque reflete no catálogo",async({page,request},info)=>{
   await loginUi(page,credentials);await page.goto("/adicionar-livro");
   await page.route("**/isbn/9788535914849",route=>route.fulfill({json:{isbn:"9788535914849",titulo:"Obra cadastrada pela interface",autor:"Autora QA",redator:"Editora QA",ano:2025,categoria:"Romance",sinopse:"Uma obra para validar o cadastro da biblioteca."}}));
@@ -26,16 +27,16 @@ test("criar livro por ISBN e editar estoque reflete no catálogo",async({page,re
 });
 test("pagamento aprovado permite concluir pedido e financeiro mantém dados reais",async({page,request},info)=>{
   const token=await adminToken(request),book=await createBook({request,adminToken:token}),client=await createConfirmedClient({request});
-  const purchase=await request.post(`${process.env.QA_API_URL}/comprar`,{headers:{Authorization:`Bearer ${client.token}`},data:{livroId:book.id}});
+  const purchase=await request.post(`${process.env.QA_API_URL}/comprar`,{headers:authHeaders(client.token),data:{livroId:book.id}});
   const order=await purchase.json();
   await loginUi(page,credentials);await page.goto("/admin/pedidos");
   await page.getByLabel("Buscar",{exact:true}).fill(book.titulo);
   await expect(page.getByRole("button",{name:"Marcar concluído",exact:true})).toBeDisabled();
-  expect((await request.patch(`${process.env.QA_API_URL}/pedidos/${order.id}/simular-pagamento`,{headers:{Authorization:`Bearer ${client.token}`}})).ok()).toBe(true);
+  expect((await request.patch(`${process.env.QA_API_URL}/pedidos/${order.id}/simular-pagamento`,{headers:authHeaders(client.token)})).ok()).toBe(true);
   await page.reload();await page.getByLabel("Buscar",{exact:true}).fill(book.titulo);
   await page.getByRole("button",{name:"Marcar concluído",exact:true}).click();
   await page.getByRole("dialog").getByRole("button",{name:"Confirmar",exact:true}).click();
-  await expect.poll(async()=>(await(await request.get(`${process.env.QA_API_URL}/pedidos/${order.id}`,{headers:{Authorization:`Bearer ${token}`}})).json()).status).toBe("concluido");
+  await expect.poll(async()=>(await(await request.get(`${process.env.QA_API_URL}/pedidos/${order.id}`,{headers:authHeaders(token)})).json()).status).toBe("concluido");
   await page.goto("/admin/financeiro");await expect(page.getByRole("heading",{level:1})).toBeVisible();
   await page.screenshot({path:info.outputPath("financeiro-1440.png"),fullPage:true});
 });
@@ -52,7 +53,7 @@ test("gestão de usuário conserva congelar e descongelar",async({page,request})
 });
 test("administrador aprova avaliação e responde atendimento",async({page,request})=>{
   const token=await adminToken(request),book=await createBook({request,adminToken:token}),client=await createConfirmedClient({request});
-  const headers={Authorization:`Bearer ${client.token}`};
+  const headers=authHeaders(client.token);
   const purchase=await request.post(`${process.env.QA_API_URL}/comprar`,{headers,data:{livroId:book.id}});
   expect(purchase.ok()).toBe(true);
   expect((await request.post(`${process.env.QA_API_URL}/livros/${book.id}/avaliacoes`,{headers,data:{nota:5,comentario:"Comentário aguardando revisão editorial."}})).ok()).toBe(true);

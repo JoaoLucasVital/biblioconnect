@@ -1,13 +1,13 @@
+import {sessionCredentials} from "./helpers.js";
 import { test, expect } from "@playwright/test";
 import { createBook, createConfirmedClient, loginUi } from "./helpers.js";
 
 let adminToken;
 let livro;
 test.beforeAll(async ({ request }) => {
-  const response = await request.post(`${process.env.QA_API_URL}/login`,
-    { data: { email: "admin@biblioconnect.com", senha: "admin123" } });
+  const response = await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL}, data: { email: "admin@biblioconnect.com", senha: "admin123" } });
   expect(response.ok()).toBe(true);
-  adminToken = (await response.json()).token;
+  adminToken = await sessionCredentials(response);
   livro = await createBook({ request, adminToken });
 });
 

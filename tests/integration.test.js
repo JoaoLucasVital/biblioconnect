@@ -2,24 +2,22 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
+import {createQaClient} from "./helpers/qaClient.js";
 
 // Execute somente contra uma instância local criada para testes, com EMAIL_PROVIDER=file.
 test("fluxos integrados de autenticação, acervo, pedidos, moderação e chat", { skip: !process.env.API_TEST_URL }, async () => {
   const base = process.env.API_TEST_URL;
   assert.ok(["localhost", "127.0.0.1"].includes(new URL(base).hostname));
   let verificacoes = 0;
+  const anonymous=createQaClient(base);
   async function api(rota, { method = "GET", body, token, status = 200 } = {}) {
-    const res = await fetch(base + rota, { method, headers: {
-      ...(body ? { "Content-Type": "application/json" } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    }, body: body ? JSON.stringify(body) : undefined });
-    const dados = await res.json().catch(() => ({}));
-    assert.equal(res.status, status, `${method} ${rota}: ${JSON.stringify(dados)}`);
-    verificacoes++;
-    return dados;
+    const dados=await (token||anonymous).request(rota,{method,body,status});
+    verificacoes++;return dados;
   }
   const email = `teste-${Date.now()}@example.test`;
   const senha = "TesteLocal123!";
-  const admin = (await api("/login", { method: "POST", body: { email: "admin@biblioconnect.com", senha: "admin123" } })).token;
+  const admin=createQaClient(base);
+  await api("/login", {method:"POST",token:admin,body:{email:"admin@biblioconnect.com",senha:"admin123"}});
   await api("/usuarios", { method: "POST", status: 201, body: { nome: "Leitor de teste", email, senha,
     cep: "57000000", rua: "Rua de teste", bairro: "Centro", cidade: "Maceió", estado: "AL", numero: "10" } });
   await api("/login", { method: "POST", status: 403, body: { email, senha } });
@@ -28,7 +26,8 @@ test("fluxos integrados de autenticação, acervo, pedidos, moderação e chat",
   const html = await fs.readFile(path.join(dir, nomes[0]), "utf8");
   const link = html.match(/https?:[^"\s<>]*\/confirmar-email\/[a-f0-9]+/)[0];
   assert.equal((await fetch(link)).status, 200);
-  const cliente = (await api("/login", { method: "POST", body: { email, senha } })).token;
+  const cliente=createQaClient(base);
+  await api("/login", {method:"POST",token:cliente,body:{email,senha}});
   await api("/admin/usuarios", { token: cliente, status: 403 });
   await api("/livros/abc", { status: 400 });
   await api("/livros", { method: "POST", token: admin, body: { titulo: "Inválido" }, status: 400 });
@@ -50,12 +49,12 @@ test("fluxos integrados de autenticação, acervo, pedidos, moderação e chat",
   assert.equal((await api(`/livros/${livro.id}`)).estoque, 1);
   // Mesmo com cliques concorrentes só uma unidade pode ser vendida e reposta.
   const comprasParalelas = await Promise.all(Array.from({ length: 4 }, async () => {
-    const r = await fetch(base + "/comprar", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + cliente }, body: JSON.stringify({ livroId: livro.id }) });
+    const r = await cliente.fetch("/comprar", { method: "POST", body: { livroId: livro.id } });
     return { status: r.status, dados: await r.json() };
   }));
   assert.equal(comprasParalelas.filter(r => r.status === 200).length, 1);
   const unica = comprasParalelas.find(r => r.status === 200).dados;
-  const cancels = await Promise.all(Array.from({ length: 3 }, () => fetch(base + `/me/pedidos/${unica.id}/cancelar`, { method: "PATCH", headers: { Authorization: "Bearer " + cliente } })));
+  const cancels = await Promise.all(Array.from({ length: 3 }, () => cliente.fetch(`/me/pedidos/${unica.id}/cancelar`, { method: "PATCH" })));
   assert.equal(cancels.filter(r => r.status === 200).length, 1);
   assert.equal((await api(`/livros/${livro.id}`)).estoque, 1);
   const data = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
@@ -80,6 +79,13 @@ test("fluxos integrados de autenticação, acervo, pedidos, moderação e chat",
   const tokenReset = resetHtml.match(/\/redefinir-senha\/([a-f0-9]+)/)[1];
   await api(`/redefinir-senha/${tokenReset}`, { method: "PATCH", body: { novaSenha: "NovaSenha123!" } });
   await api(`/redefinir-senha/${tokenReset}`, { method: "PATCH", body: { novaSenha: "NovaSenha123!" }, status: 400 });
+  await api("/me",{token:cliente,status:401});
   await api("/login", { method: "POST", body: { email, senha: "NovaSenha123!" } });
+  const fresh=createQaClient(base);await fresh.request("/login",{method:"POST",body:{email,senha:"NovaSenha123!"}});
+  const me=await fresh.request("/me");
+  await api(`/admin/usuarios/${me.id}/bloqueio`,{token:admin,method:"PATCH",body:{bloqueado:true}});
+  await api("/me",{token:fresh,status:401});
+  await api(`/admin/usuarios/${me.id}/bloqueio`,{token:admin,method:"PATCH",body:{bloqueado:false}});
+  await api("/me",{token:fresh,status:401});
   console.log(`${verificacoes} respostas HTTP verificadas, além das regras de estoque e visibilidade.`);
 });

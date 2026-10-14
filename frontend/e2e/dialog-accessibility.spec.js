@@ -1,8 +1,9 @@
+import {sessionCredentials} from "./helpers.js";
 import {test,expect} from "@playwright/test";
 import {createBook,createConfirmedClient,loginUi} from "./helpers.js";
 test("diálogo contém foco, fecha com Escape e suporta título extenso a 360px",async({page,request},info)=>{
-  const admin=await request.post(`${process.env.QA_API_URL}/login`,{data:{email:"admin@biblioconnect.com",senha:"admin123"}});
-  const livro=await createBook({request,adminToken:(await admin.json()).token,overrides:{titulo:"Uma história de encontros, memórias e descobertas que continua muito além das margens de uma página",imagemUrl:null}});
+  const admin=await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL},data:{email:"admin@biblioconnect.com",senha:"admin123"}});
+  const livro=await createBook({request,adminToken:await sessionCredentials(admin),overrides:{titulo:"Uma história de encontros, memórias e descobertas que continua muito além das margens de uma página",imagemUrl:null}});
   const client=await createConfirmedClient({request});
   await loginUi(page,client); await page.setViewportSize({width:360,height:800});await page.goto("/livros");
   await page.getByLabel("Buscar no acervo").fill(livro.titulo);

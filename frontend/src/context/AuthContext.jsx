@@ -6,51 +6,36 @@ import { AuthContext } from "./auth.js";
 
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
-  const [loadingAuth, setLoadingAuth] = useState(() => Boolean(localStorage.getItem("@biblioconnect:token")));
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   const carregarUsuarioLogado = useCallback(async () => {
-    const token = localStorage.getItem("@biblioconnect:token");
-
-    if (!token) {
-      return;
-    }
-
+    localStorage.removeItem("@biblioconnect:token");
+    localStorage.removeItem("@biblioconnect:usuario");
     try {
-      const response = await api.get("/me");
-      setUsuario(response.data);
+      const {data} = await api.get("/auth/session");
+      api.setCsrfToken(data.csrfToken);
+      setUsuario(data.usuario);
     } catch {
       localStorage.removeItem("@biblioconnect:token");
       localStorage.removeItem("@biblioconnect:usuario");
+      api.setCsrfToken(null);
       setUsuario(null);
     } finally {
       setLoadingAuth(false);
     }
   }, []);
 
-  async function login(email, senha) {
+  async function login(email, senha, lembrar = false) {
     const response = await api.post("/login", {
       email,
       senha,
+      lembrar,
     });
 
-    const { token, usuario } = response.data;
-
-    localStorage.setItem("@biblioconnect:token", token);
-
-    // Depois de salvar o token, busca o perfil completo (incluindo endereço),
-    // usado pela cotação de entrega sem obrigar o cliente a digitar tudo de novo.
-    let usuarioCompleto = usuario;
-    try {
-      const meResponse = await api.get("/me");
-      usuarioCompleto = meResponse.data;
-    } catch {
-      // O login continua válido mesmo se a consulta complementar falhar.
-    }
-
-    localStorage.setItem("@biblioconnect:usuario", JSON.stringify(usuarioCompleto));
-    setUsuario(usuarioCompleto);
-
-    return usuarioCompleto;
+    const { usuario, csrfToken } = response.data;
+    api.setCsrfToken(csrfToken);
+    setUsuario(usuario);
+    return usuario;
   }
 
   async function register(dados) {
@@ -63,7 +48,9 @@ export function AuthProvider({ children }) {
     return response.data;
   }
 
-  function logout() {
+  async function logout() {
+    await api.post("/auth/logout");
+    api.setCsrfToken(null);
     localStorage.removeItem("@biblioconnect:token");
     localStorage.removeItem("@biblioconnect:usuario");
     setUsuario(null);

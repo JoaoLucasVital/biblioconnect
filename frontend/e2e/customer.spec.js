@@ -1,15 +1,16 @@
+import {sessionCredentials,authHeaders} from "./helpers.js";
 import fs from "node:fs/promises";
 import path from "node:path";
 import {test,expect} from "@playwright/test";
 import {createBook,createConfirmedClient,loginUi} from "./helpers.js";
 async function setup(request){
-  const login=await request.post(`${process.env.QA_API_URL}/login`,{data:{email:"admin@biblioconnect.com",senha:"admin123"}});
-  const book=await createBook({request,adminToken:(await login.json()).token,overrides:{estoque:10}});
+  const login=await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL},data:{email:"admin@biblioconnect.com",senha:"admin123"}});
+  const book=await createBook({request,adminToken:await sessionCredentials(login),overrides:{estoque:10}});
   const client=await createConfirmedClient({request});
   return {book,client};
 }
 async function orderFor(request,book,client){
-  const response=await request.post(`${process.env.QA_API_URL}/comprar`,{headers:{Authorization:`Bearer ${client.token}`},data:{livroId:book.id,modalidadeEntrega:"retirada"}});
+  const response=await request.post(`${process.env.QA_API_URL}/comprar`,{headers:authHeaders(client.token),data:{livroId:book.id,modalidadeEntrega:"retirada"}});
   expect(response.ok()).toBe(true);return response.json();
 }
 test("cliente acompanha pagamento demonstrativo, comprovante, avaliação e atendimento",async({page,request},info)=>{

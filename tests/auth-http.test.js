@@ -1,0 +1,45 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import express from "express";
+import {createTestDatabase} from "./helpers/database.js";
+let createAuth;
+try{({createAuth}=await import("../src/middleware/auth.js"));}catch(error){if(error.code!=="ERR_MODULE_NOT_FOUND")throw error;}
+
+test("cookie HttpOnly, origem, CSRF e revogação protegem a sessão HTTP sem Bearer",async t=>{
+  assert.equal(typeof createAuth,"function","Middleware precisa existir");
+  const {prisma}=await createTestDatabase(t);
+  const user=await prisma.usuario.create({data:{nome:"Leitor",email:"http@example.test",senha:"hidden",emailConfirmado:true}});
+  const auth=createAuth({prisma,secret:"a-secret-with-at-least-thirty-two-bytes",allowedOrigins:["https://biblioteca.example"],production:true});
+  const app=express();app.use(express.json());
+  app.post("/login",auth.requireOrigin,async(req,res)=>auth.signIn(res,{usuarioId:user.id,lembrar:req.body?.lembrar}));
+  app.get("/auth/session",auth.sessionResponse);
+  app.post("/write",auth.authenticate,(req,res)=>res.json({id:req.usuario.id}));
+  app.post("/auth/logout",auth.authenticate,auth.signOut);
+  app.post("/limited",auth.rateLimit("http-test",{limit:2,windowMs:60000}),(req,res)=>res.json({ok:true}));
+  const server=app.listen(0,"127.0.0.1");await new Promise(resolve=>server.once("listening",resolve));
+  t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const url=`http://127.0.0.1:${server.address().port}`;
+  const request=(path,options={})=>fetch(url+path,{...options,headers:{Origin:"https://biblioteca.example",...options.headers}});
+  await request("/limited",{method:"POST"});await request("/limited",{method:"POST"});
+  const limited=await request("/limited",{method:"POST"});assert.equal(limited.status,429);assert.ok(Number(limited.headers.get("retry-after"))>0);
+  assert.equal((await request("/login",{method:"POST",headers:{Origin:"https://evil.example"}})).status,403);
+  const login=await request("/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({lembrar:true})});
+  assert.equal(login.status,200);
+  const rawCookie=login.headers.get("set-cookie"),cookie=rawCookie.split(";")[0],data=await login.json();
+  assert.match(rawCookie,/HttpOnly/i);assert.match(rawCookie,/Secure/i);assert.match(rawCookie,/SameSite=Lax/i);assert.match(rawCookie,/Max-Age=/i);
+  assert.equal(login.headers.get("cache-control"),"no-store");
+  assert.equal(data.usuario.id,user.id);assert.equal(data.token,undefined);assert.equal(data.secret,undefined);assert.ok(data.csrfToken);
+  const headers={Cookie:cookie};
+  assert.equal((await request("/write",{method:"POST",headers})).status,403);
+  assert.equal((await request("/write",{method:"POST",headers:{...headers,"X-CSRF-Token":"wrong"}})).status,403);
+  assert.equal((await request("/write",{method:"POST",headers:{...headers,"X-CSRF-Token":data.csrfToken,Origin:"https://evil.example"}})).status,403);
+  assert.equal((await request("/write",{method:"POST",headers:{...headers,"X-CSRF-Token":data.csrfToken}})).status,200);
+  assert.equal((await request("/write",{method:"POST",headers:{Authorization:"Bearer old-token"}})).status,401);
+  const session=await request("/auth/session",{headers});assert.equal((await session.json()).csrfToken,data.csrfToken);
+  const logout=await request("/auth/logout",{method:"POST",headers:{...headers,"X-CSRF-Token":data.csrfToken}});
+  assert.equal(logout.status,200);assert.match(logout.headers.get("set-cookie"),/Expires=Thu, 01 Jan 1970/i);
+  assert.equal((await (await request("/auth/session",{headers})).json()).usuario,null);
+  const short=await request("/login",{method:"POST"});assert.doesNotMatch(short.headers.get("set-cookie"),/Max-Age=/i);
+  await prisma.usuario.update({where:{id:user.id},data:{bloqueado:true}});
+  assert.equal((await request("/write",{method:"POST",headers:{Cookie:short.headers.get("set-cookie").split(";")[0],"X-CSRF-Token":(await short.json()).csrfToken}})).status,401);
+});

@@ -1,9 +1,10 @@
+import {sessionCredentials} from "./helpers.js";
 import {test,expect} from "@playwright/test";
 import {loginUi,createBook} from "./helpers.js";
 import {captureReview} from "./capture-review.js";
 test("capturas finais de conta catálogo e administração nos dois temas",async({page,request})=>{
-  const response=await request.post(`${process.env.QA_API_URL}/login`,{data:{email:"admin@biblioconnect.com",senha:"admin123"}});
-  await createBook({request,adminToken:(await response.json()).token,overrides:{titulo:"Uma história de encontros, memórias e descobertas além das margens da página",autor:"Aleksandra Wiśniewska-Kowalczyk"}});
+  const response=await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL},data:{email:"admin@biblioconnect.com",senha:"admin123"}});
+  await createBook({request,adminToken:await sessionCredentials(response),overrides:{titulo:"Uma história de encontros, memórias e descobertas além das margens da página",autor:"Aleksandra Wiśniewska-Kowalczyk"}});
   for(const width of [1440,360]){
     await page.setViewportSize({width,height:1000});await page.goto("/livros");await expect(page.getByRole("heading",{name:"Livros disponíveis"})).toBeVisible();
     await captureReview(page,`catalogo-${width}`);

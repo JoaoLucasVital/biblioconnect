@@ -13,11 +13,16 @@ export default function Navbar() {
   const {usuario,isAuthenticated,isAdmin,loadingAuth,logout} = useAuth();
   const navigate = useNavigate();
   const [open,setOpen] = useState(false);
+  const [logoutError,setLogoutError] = useState("");
   const [menuMotion,setMenuMotion] = useState("instant");
   const accountItems = clientItems.map(item => isAdmin && item.to === "/meus-pedidos" ? {label:"Pedidos",to:"/admin/pedidos"} : item);
   const items = [...publicItems,...(!loadingAuth && isAuthenticated ? accountItems : []),...(!loadingAuth && isAdmin ? [{label:"Painel",to:"/admin"}] : [])];
   const close = useCallback(() => setOpen(false), []);
-  const leave = () => startTransition(() => { logout(); close(); navigate("/"); });
+  const leave = async () => {
+    setLogoutError("");
+    try { await logout(); startTransition(() => { close(); navigate("/"); }); }
+    catch { setLogoutError("Não foi possível encerrar a sessão. Tente novamente."); }
+  };
   const groups = [{title:"Descubra", eyebrow:"Explore", tone:"cream", links:publicItems}];
   if (!loadingAuth) {
     if (isAuthenticated) groups.push(
@@ -54,5 +59,6 @@ export default function Navbar() {
       </div>
     </div>
     <CardNav open={open} motion={menuMotion} groups={groups} onClose={close}/>
+    {logoutError && <p role="alert" className="mx-auto max-w-7xl px-5 pb-3 text-sm text-danger">{logoutError}</p>}
   </header>;
 }

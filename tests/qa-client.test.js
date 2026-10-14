@@ -36,4 +36,7 @@ test("cliente QA mantém cookies e CSRF independentes entre duas sessões",async
   assert.equal(own.origin,base);
   assert.equal(other.cookie,null);
   assert.equal(other.csrf,null);
+  const raw=await one.fetch("/change",{method:"POST",body:{ok:true}});
+  assert.equal(raw.status,200);assert.equal((await raw.json()).csrf,"csrf-for-test");
+  await assert.rejects(one.fetch("https://example.com/write",{method:"POST"}),/origem/i);
 });
