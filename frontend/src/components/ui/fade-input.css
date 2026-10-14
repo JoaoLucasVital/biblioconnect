@@ -1,0 +1,7 @@
+.bc-fade-field { position:relative; display:grid; flex:1; width:100%; min-width:0; }
+.bc-fade-field > input { width:100%; min-width:0; }
+.bc-input-mirror { position:absolute; inset:0; box-sizing:border-box; pointer-events:none; overflow:hidden; white-space:pre; user-select:none; }
+.bc-input-new-letter { animation:bc-input-letter 180ms var(--ease-out) both; }
+@keyframes bc-input-letter { from { opacity:0; } to { opacity:1; } }
+@media (prefers-reduced-motion:reduce) { .bc-input-mirror { display:none; } .bc-fade-field input[data-fading] { color:var(--text)!important; -webkit-text-fill-color:var(--text)!important; } }
+@media (forced-colors:active) { .bc-input-mirror { display:none; } .bc-fade-field input[data-fading] { color:CanvasText!important; -webkit-text-fill-color:CanvasText!important; } }

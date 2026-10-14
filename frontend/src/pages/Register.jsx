@@ -3,6 +3,7 @@ import Button from "../components/ui/Button.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import FadeInput from "../components/ui/FadeInput.jsx";
 import { useAuth } from "../context/auth.js";
 
 function limparCep(valor) {
@@ -302,7 +303,7 @@ function Register() {
             <h2  className="font-display text-2xl leading-snug">Dados pessoais</h2>
 
             <div  className="grid gap-5 sm:grid-cols-2">
-              <div className="grid gap-2"><Field label={"Nome completo"}><input type="text" name="nome" placeholder="Digite seu nome" value={form.nome} onChange={handleChange} required/></Field></div>
+              <div className="grid gap-2"><Field label={"Nome completo"}><FadeInput type="text" name="nome" placeholder="Digite seu nome" value={form.nome} onChange={handleChange} required/></Field></div>
 
               <div className="grid gap-2"><Field label={"Email"}><input type="email" name="email" placeholder="Digite seu email" value={form.email} onChange={handleChange} required/></Field></div>
 

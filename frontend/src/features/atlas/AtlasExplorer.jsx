@@ -8,6 +8,7 @@ import BookLoader from "../../components/ui/BookLoader.jsx";
 import StatusMessage from "../../components/ui/StatusMessage.jsx";
 import InteractiveHoverLink from "../../components/ui/InteractiveHoverLink.jsx";
 import RevealText from "../../components/ui/RevealText.jsx";
+import FadeInput from "../../components/ui/FadeInput.jsx";
 import useMediaQuery from "../home/useMediaQuery.js";
 import "./atlas.css";
 
@@ -28,7 +29,7 @@ export default function AtlasExplorer({livros=[],loading=false,error="",onRetry}
       <div className="atlas-intro-note"><p>Cada livro abre<br/><em>um novo caminho.</em></p><InteractiveHoverLink to="/livros">Abrir catálogo</InteractiveHoverLink></div>
     </div>
     <div className="atlas-toolbar">
-      <label className="atlas-search"><Search size={19} aria-hidden="true"/><span className="sr-only">Buscar no Atlas</span><input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Um título, um autor, uma descoberta…"/></label>
+      <label className="atlas-search"><Search size={19} aria-hidden="true"/><span className="sr-only">Buscar no Atlas</span><FadeInput type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Um título, um autor, uma descoberta…"/></label>
       <div className="atlas-view-control" role="group" aria-label="Visualização do acervo">
         {desktop && <button type="button" aria-pressed={isMap} onClick={()=>setView("map")}><Compass size={16} aria-hidden="true"/>Mapa</button>}
         <button type="button" aria-pressed={!isMap} onClick={()=>setView("list")}><List size={16} aria-hidden="true"/>Lista</button>
