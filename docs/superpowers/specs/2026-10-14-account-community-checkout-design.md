@@ -1,6 +1,6 @@
 # BiblioConnect — conta, comunidade, frete e checkout
 
-Data: 14/10/2026. Estado: especificação escrita para revisão; implementação ainda não iniciada. Base local: branch `codex/biblioconnect-editorial`, commit de pesquisa `ec3de1b`.
+Data: 14/10/2026. Estado: especificação escrita aprovada pelo usuário em “pode seguir”; plano de implementação apresentado para revisão/escolha de execução. Implementação ainda não iniciada. Base local: branch `codex/biblioconnect-editorial`, commit de pesquisa `ec3de1b`.
 
 ## 1. Resultado esperado e escolhas confirmadas
 

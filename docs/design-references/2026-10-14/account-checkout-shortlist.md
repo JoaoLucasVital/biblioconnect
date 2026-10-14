@@ -1,6 +1,6 @@
 # Conta, comunidade e checkout — seleção para aprovação
 
-Pedido de 14/10/2026. Escolha aprovada: combinar A + B com o formulário atual e usar U1 com texto **Importar foto**. Usuário também incluiu frete Google Maps e origem provisória UNINASSAU Maceió; ainda precisa configurar Google Cloud. Especificação consolidada em `docs/superpowers/specs/2026-10-14-account-community-checkout-design.md`, aguardando revisão escrita. Não implementado. Preservar React/Tailwind, cores, logo Elo aprovada, Prisma, dados e funcionalidades existentes. Esta rodada autoriza planejar novas funções de backend; o limite do primeiro redesign exclusivamente visual não se aplica ao novo pedido.
+Pedido de 14/10/2026. Escolha aprovada: combinar A + B com o formulário atual e usar U1 com texto **Importar foto**. Usuário também incluiu frete Google Maps e origem provisória UNINASSAU Maceió; ainda precisa configurar Google Cloud. Especificação consolidada em `docs/superpowers/specs/2026-10-14-account-community-checkout-design.md` aprovada; plano em `docs/superpowers/plans/2026-10-14-account-community-checkout-plan.md` apresentado para revisão/escolha de execução. Não implementado. Preservar React/Tailwind, cores, logo Elo aprovada, Prisma, dados e funcionalidades existentes. Esta rodada autoriza planejar novas funções de backend; o limite do primeiro redesign exclusivamente visual não se aplica ao novo pedido.
 
 ## Seleção visual
 
@@ -37,4 +37,4 @@ Para validar serviços reais serão necessárias contas/configurações autoriza
 
 ## Próximo passo
 
-Escolha visual já recebida; não perguntar novamente. Revisar a especificação consolidada e depois preparar o plano de implementação. A referência U2 não foi selecionada. O usuário autorizou execução do escopo, mas ainda não revisou a especificação escrita/um plano técnico, artefatos exigidos pelo workflow de brainstorming ativo. Stripe e Vercel foram sugeridos; verificar conexão atual antes de tratá-los como conectados.
+Escolha visual e especificação escrita já aprovadas; não perguntar novamente. Plano técnico pronto, aguardando revisão e método de execução. A referência U2 não foi selecionada. Vercel fornece skills nesta sessão, mas a CLI consultada ainda precisa de autenticação; Stripe foi sugerido sem conexão confirmada. Guia de configuração: `docs/setup/2026-10-14-services.md`.
