@@ -1,3 +1,8 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import StatusBadge from "../components/ui/StatusBadge.jsx";
+import Button from "../components/ui/Button.jsx";
+import Field from "../components/ui/Field.jsx";
+import Dialog from "../components/ui/Dialog.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
@@ -85,7 +90,7 @@ function MyOrders() {
   }, []);
 
   async function confirmarCancelamento() {
-    if (!pedidoCancelamento) return;
+    if (!pedidoCancelamento || cancelando) return;
 
     try {
       setCancelando(true);
@@ -110,6 +115,7 @@ function MyOrders() {
   }
 
   async function iniciarPagamento(pedido) {
+    if (processandoAcao) return;
     try {
       setProcessandoAcao(true);
       const response = await api.post(`/pedidos/${pedido.id}/pagamento`);
@@ -121,7 +127,7 @@ function MyOrders() {
   }
 
   async function confirmarExtensao() {
-    if (!pedidoExtensao) return;
+    if (!pedidoExtensao || processandoAcao) return;
     try {
       setProcessandoAcao(true);
       const response = await api.post(`/me/pedidos/${pedidoExtensao.id}/estender-aluguel`, {
@@ -166,42 +172,42 @@ function MyOrders() {
 
   if (loading) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Carregando seus pedidos...</p>
+      <main  className="py-10 sm:py-14">
+        <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando seus pedidos...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="page">
-      <div className="container">
-        <h1 className="page-title">Meus Pedidos</h1>
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        <h1  className="font-display text-4xl leading-tight sm:text-5xl">Meus Pedidos</h1>
 
-        <p className="page-subtitle">
+        <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
           Acompanhe separadamente suas reservas, compras e aluguéis.
         </p>
 
         {feedback.text && (
-          <p className={`feedback-banner ${feedback.type}`}>{feedback.text}</p>
+          <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>
         )}
 
         {pedidos.length === 0 ? (
-          <div className="empty-state">
-            <h2>Nenhum pedido encontrado</h2>
+          <div  className="my-8 border-y border-stroke py-12 text-muted [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink">
+            <h2  className="font-display text-2xl leading-snug">Nenhum pedido encontrado</h2>
             <p>
               Quando você reservar, comprar ou alugar um livro, o pedido
               aparecerá aqui.
             </p>
           </div>
         ) : (
-          <div className="orders-groups">
+          <div  className="mt-10 grid gap-10">
             {grupos.map((grupo) => (
-              <section className="orders-group" key={grupo.titulo}>
-                <div className="orders-group-header">
+              <section key={grupo.titulo} className="min-w-0">
+                <div  className="mb-5 flex items-center justify-between gap-3 [&_h2]:font-display [&_h2]:text-2xl [&_p]:text-sm [&_p]:text-muted">
                   <div>
-                    <h2>{grupo.titulo}</h2>
+                    <h2  className="font-display text-2xl leading-snug">{grupo.titulo}</h2>
                     <p>{grupo.descricao}</p>
                   </div>
 
@@ -209,42 +215,38 @@ function MyOrders() {
                 </div>
 
                 {grupo.pedidos.length === 0 ? (
-                  <div className="orders-empty-small">
+                  <div  className="border-t border-stroke py-6 text-sm text-muted">
                     Nenhum pedido nesta categoria.
                   </div>
                 ) : (
-                  <div className="orders-list">
+                  <div  className="grid gap-6">
                     {grupo.pedidos.map((pedido) => (
-                      <div className="order-card" key={pedido.id}>
-                        <div className="order-main">
-                          <div className="order-icon">
+                      <div key={pedido.id} className="min-w-0 border border-stroke bg-surface p-5 sm:p-7">
+                        <div  className="flex min-w-0 items-start gap-4">
+                          <div  className="shrink-0 text-2xl">
                             {getPedidoIcon(pedido.tipo)}
                           </div>
 
                           <div>
-                            <div className="order-title-row">
-                              <h2>
+                            <div  className="flex flex-wrap items-center gap-2 [&_h2]:w-full [&_h2]:wrap-anywhere [&_h2]:font-display [&_h2]:text-2xl">
+                              <h2  className="font-display text-2xl leading-snug">
                                 {pedido.livro?.titulo ||
                                   "Livro não encontrado"}
                               </h2>
 
-                              <span className={`order-badge ${pedido.tipo}`}>
+                              <StatusBadge>
                                 {traduzirTipo(pedido.tipo)}
-                              </span>
+                              </StatusBadge>
 
-                              <span className={`status-badge ${pedido.status}`}>
+                              <StatusBadge>
                                 {traduzirStatus(pedido.status)}
-                              </span>
+                              </StatusBadge>
 
-                              <span
-                                className={`payment-mini-status ${
-                                  pedido.statusPagamento || "pendente"
-                                }`}
-                              >
+                              <StatusBadge>
                                 {traduzirPagamento(
                                   pedido.statusPagamento || "pendente"
                                 )}
-                              </span>
+                              </StatusBadge>
                             </div>
 
                             <p>
@@ -257,7 +259,7 @@ function MyOrders() {
                           </div>
                         </div>
 
-                        <div className="order-details">
+                        <div  className="my-6 grid grid-cols-2 gap-5 border-y border-stroke py-5 sm:grid-cols-3 [&_div]:grid [&_div]:gap-1 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:text-sm [&_strong]:font-medium">
                           <div>
                             <span>Tipo</span>
                             <strong>{traduzirTipo(pedido.tipo)}</strong>
@@ -312,51 +314,38 @@ function MyOrders() {
                           )}
                         </div>
 
-                        <div className="order-actions">
-                          <Link to={`/pedido-confirmado/${pedido.id}`} className="btn btn-outline">Detalhes e pagamento</Link>
-                          <Link
-                            to={`/comprovante/${pedido.id}`}
-                            className="btn btn-outline"
-                          >
+                        <div  className="flex flex-wrap gap-2">
+                          <Link to={`/pedido-confirmado/${pedido.id}`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">Detalhes e pagamento</Link>
+                          <Link to={`/comprovante/${pedido.id}`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">
                             Comprovante
                           </Link>
 
                           {pedido.statusPagamento !== "pago" && pedido.status !== "cancelado" && Number(pedido.valor) > 0 && (
-                            <button
-                              className="btn btn-primary"
-                              disabled={processandoAcao}
-                              onClick={() => iniciarPagamento(pedido)}
-                            >
+                            <Button disabled={processandoAcao} onClick={() => iniciarPagamento(pedido)} type="button" variant="primary">
                               Pagar pedido
-                            </button>
+                            </Button>
                           )}
 
                           {pedido.tipo === "aluguel" && pedido.statusPagamento === "pago" && pedido.status === "pendente" && (
-                            <button
-                              className="btn btn-dark"
-                              onClick={() => { setPedidoExtensao(pedido); setDiasExtras("7"); }}
-                            >
+                            <Button onClick={() => { setPedidoExtensao(pedido); setDiasExtras("7"); }} type="button" variant="secondary">
                               Estender aluguel
-                            </button>
+                            </Button>
                           )}
 
                           {pedido.status !== "cancelado" && (
-                            <Link to={`/livros/${pedido.livroId}/avaliacoes`} className="btn btn-outline">
+                            <Link to={`/livros/${pedido.livroId}/avaliacoes`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">
                               Avaliar livro
                             </Link>
                           )}
 
                           {pedido.status === "pendente" && !(pedido.statusPagamento === "pago" && Number(pedido.valor || 0) > 0) && (
-                            <button
-                              className="btn btn-danger"
-                              onClick={() => setPedidoCancelamento(pedido)}
-                            >
+                            <Button onClick={() => setPedidoCancelamento(pedido)} type="button" variant="danger">
                               Cancelar pedido
-                            </button>
+                            </Button>
                           )}
 
                           {pedido.statusPagamento === "pago" && Number(pedido.valor || 0) > 0 && pedido.status !== "cancelado" && (
-                            <Link to="/chat" className="btn btn-outline">
+                            <Link to="/chat" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">
                               Pedir cancelamento/estorno
                             </Link>
                           )}
@@ -372,39 +361,41 @@ function MyOrders() {
       </div>
 
       {pedidoExtensao && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <h2>Estender aluguel</h2>
+        <Dialog open title={"Estender aluguel"} onClose={() => setPedidoExtensao(null)} busy={processandoAcao} footer={<div  className="flex flex-wrap justify-end gap-3">
+              <Button onClick={() => setPedidoExtensao(null)} disabled={processandoAcao} type="button" variant="secondary">Cancelar</Button>
+              <Button onClick={confirmarExtensao} disabled={processandoAcao} type="button" variant="primary">
+                {processandoAcao ? "Abrindo pagamento..." : "Continuar para pagamento"}
+              </Button>
+            </div>}>
+            
             <p>Escolha quantos dias deseja adicionar ao aluguel de <strong>{pedidoExtensao.livro?.titulo}</strong>.</p>
-            <div className="form-group">
-              <label>Dias extras</label>
-              <input type="number" min="1" max="30" value={diasExtras} onChange={(event) => setDiasExtras(event.target.value)} />
-            </div>
-            <p className="page-subtitle">
+            <div className="grid gap-2"><Field label={"Dias extras"}><input type="number" min="1" max="30" value={diasExtras} onChange={(event) => setDiasExtras(event.target.value)}/></Field></div>
+            <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
               Valor estimado: {formatarMoeda(Number(diasExtras || 0) * Number(pedidoExtensao.livro?.precoDiaExtra || 0))}.
               O novo prazo só será aplicado depois que o pagamento for aprovado.
             </p>
-            <div className="popup-actions">
-              <button className="btn btn-outline" onClick={() => setPedidoExtensao(null)} disabled={processandoAcao}>Cancelar</button>
-              <button className="btn btn-primary" onClick={confirmarExtensao} disabled={processandoAcao}>
-                {processandoAcao ? "Abrindo pagamento..." : "Continuar para pagamento"}
-              </button>
-            </div>
-          </div>
-        </div>
+            
+          {feedback.type==="error" && feedback.text && <StatusMessage type="error">{feedback.text}</StatusMessage>}</Dialog>
       )}
 
       {pedidoCancelamento && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <h2>Cancelar pedido</h2>
+        <Dialog open title={"Cancelar pedido"} onClose={() => setPedidoCancelamento(null)} busy={cancelando} footer={<div  className="flex flex-wrap justify-end gap-3">
+              <Button onClick={() => setPedidoCancelamento(null)} disabled={cancelando} type="button" variant="secondary">
+                Voltar
+              </Button>
+
+              <Button onClick={confirmarCancelamento} disabled={cancelando} type="button" variant="danger">
+                {cancelando ? "Cancelando..." : "Confirmar cancelamento"}
+              </Button>
+            </div>}>
+            
 
             <p>
               Tem certeza que deseja cancelar este pedido de{" "}
               <strong>{traduzirTipo(pedidoCancelamento.tipo)}</strong>?
             </p>
 
-            <div className="popup-details">
+            <div  className="grid gap-2 text-sm text-muted">
               <span>Livro: {pedidoCancelamento.livro?.titulo}</span>
               <span>Valor: {formatarMoeda(pedidoCancelamento.valor)}</span>
               <span>
@@ -412,25 +403,8 @@ function MyOrders() {
               </span>
             </div>
 
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={() => setPedidoCancelamento(null)}
-                disabled={cancelando}
-              >
-                Voltar
-              </button>
-
-              <button
-                className="btn btn-danger"
-                onClick={confirmarCancelamento}
-                disabled={cancelando}
-              >
-                {cancelando ? "Cancelando..." : "Confirmar cancelamento"}
-              </button>
-            </div>
-          </div>
-        </div>
+            
+          {feedback.type==="error" && feedback.text && <StatusMessage type="error">{feedback.text}</StatusMessage>}</Dialog>
       )}
     </main>
   );

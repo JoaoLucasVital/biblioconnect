@@ -1,0 +1,20 @@
+import {screen} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import {it,expect,vi} from "vitest";
+import {Routes,Route} from "react-router-dom";
+import BookReviews from "../../pages/BookReviews.jsx";
+import {AuthContext} from "../../context/auth.js";
+import {renderWithRouter} from "../../test/renderWithRouter.jsx";
+import {livroDisponivel} from "../../test/fixtures.js";
+import api from "../../api/api.js";
+vi.mock("../../api/api.js",()=>({default:{get:vi.fn(),post:vi.fn()}}));
+it("avaliação pendente não envia duas submissões",async()=>{
+  api.get.mockImplementation(url=>Promise.resolve({data:url.endsWith("avaliacoes")?{media:0,total:0,avaliacoes:[]}:livroDisponivel}));
+  api.post.mockImplementation(()=>new Promise(()=>{}));
+  renderWithRouter(<AuthContext.Provider value={{isAuthenticated:true}}><Routes><Route path="/livros/:id/avaliacoes" element={<BookReviews/>}/></Routes></AuthContext.Provider>,{route:"/livros/7/avaliacoes"});
+  const user=userEvent.setup();await user.type(screen.getByLabelText("Comentário"),"Uma ótima leitura.");
+  const send=screen.getByRole("button",{name:"Enviar para moderação"});
+  await user.dblClick(send);
+  expect(api.post).toHaveBeenCalledExactlyOnceWith("/livros/7/avaliacoes",{nota:5,comentario:"Uma ótima leitura."});
+  expect(send).toBeDisabled();
+});

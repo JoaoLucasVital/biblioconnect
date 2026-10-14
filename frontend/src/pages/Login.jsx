@@ -1,3 +1,6 @@
+import Field from "../components/ui/Field.jsx";
+import Button from "../components/ui/Button.jsx";
+import StatusMessage from "../components/ui/StatusMessage.jsx";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth.js";
@@ -18,6 +21,7 @@ function Login() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (loading) return;
 
     setErro("");
     setMensagem("");
@@ -31,7 +35,7 @@ function Login() {
       const dadosErro = error.response?.data || {};
       setErro(dadosErro.erro || (error.response
         ? "Não foi possível entrar. Tente novamente."
-        : "Não foi possível conectar ao servidor. Confira se npm run demo está aberto e acesse http://localhost:5173/login."));
+        : "Não foi possível conectar ao servidor. Confira sua conexão e tente novamente."));
       setPrecisaConfirmarEmail(Boolean(dadosErro.precisaConfirmarEmail));
     } finally {
       setLoading(false);
@@ -39,6 +43,7 @@ function Login() {
   }
 
   async function handleReenviarConfirmacao() {
+    if (reenviandoEmail) return;
     if (!email.trim()) {
       setErro("Digite o email da conta antes de reenviar a confirmação.");
       return;
@@ -63,81 +68,44 @@ function Login() {
   }
 
   return (
-    <main className="auth-page">
-      <div className="auth-card">
-        <div className="auth-header">
-          <span className="auth-mark">BC</span>
-          <h1>Entrar na plataforma</h1>
+    <main  className="mx-auto max-w-3xl px-5 py-12 sm:py-20">
+      <div  className="mx-auto max-w-lg">
+        <div  className="mb-8 space-y-3">
+          <span  className="mb-4 inline-flex border-b-2 border-accent pb-2 font-display text-lg">BC</span>
+          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Entrar na plataforma</h1>
           <p>Acesse sua conta para reservar, alugar ou comprar livros.</p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="Digite seu email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="grid gap-5">
+          <div className="grid gap-2"><Field label={"Email"}><input type="email" placeholder="Digite seu email" value={email} onChange={(event) => setEmail(event.target.value)} required/></Field></div>
 
-          <div className="form-group">
-            <div className="password-label-row">
-              <label>Senha</label>
-
-              <Link to="/esqueci-senha" className="forgot-password-link">
-                Esqueci minha senha
-              </Link>
-            </div>
-
-            <div className="password-input-box">
-              <input
-                type={mostrarSenha ? "text" : "password"}
-                placeholder="Digite sua senha"
-                value={senha}
-                onChange={(event) => setSenha(event.target.value)}
-                required
-              />
-
-              <button
-                type="button"
-                className="password-eye-btn"
-                onClick={() => setMostrarSenha((prev) => !prev)}
-                aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
-              >
+          <div className="grid gap-2"><Field label={"Senha"} trailing={<Button type="button" onClick={() => setMostrarSenha((prev) => !prev)} aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"} variant="ghost" className="px-2 text-xs">
                 {mostrarSenha ? "Ocultar" : "Mostrar"}
-              </button>
-            </div>
-          </div>
+              </Button>}><input type={mostrarSenha ? "text" : "password"} placeholder="Digite sua senha" value={senha} onChange={(event) => setSenha(event.target.value)} required/></Field><Link to="/esqueci-senha" className="text-sm underline underline-offset-4">
+                Esqueci minha senha
+              </Link></div>
 
-          {erro && <p className="feedback-banner error">{erro}</p>}
-          {mensagem && <p className="feedback-banner success">{mensagem}</p>}
+          {erro && <StatusMessage type={"error"}>{erro}</StatusMessage>}
+          {mensagem && <StatusMessage type={"info"}>{mensagem}</StatusMessage>}
 
           {precisaConfirmarEmail && (
-            <button
-              type="button"
-              className="btn btn-secondary auth-btn"
-              onClick={handleReenviarConfirmacao}
-              disabled={reenviandoEmail}
-            >
+            <Button type="button" onClick={handleReenviarConfirmacao} disabled={reenviandoEmail} variant="secondary" className="w-full">
               {reenviandoEmail ? "Reenviando..." : "Reenviar email de confirmação"}
-            </button>
+            </Button>
           )}
 
-          <button className="btn btn-primary auth-btn" disabled={loading}>
+          <Button disabled={loading} type="submit" variant="primary" className="w-full">
             {loading ? "Entrando..." : "Entrar"}
-          </button>
+          </Button>
         </form>
 
-        {import.meta.env.DEV && <div className="admin-login-info">
+        {import.meta.env.DEV && <div  className="mt-7 grid gap-1 border-l-2 border-stroke pl-4 text-xs text-muted">
           <strong>Acesso administrativo de teste</strong>
           <span>admin@biblioconnect.com</span>
           <span>admin123</span>
         </div>}
 
-        <p className="auth-footer">
+        <p  className="mt-7 text-sm text-muted [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-4">
           Ainda não tem conta? <Link to="/cadastro">Criar cadastro</Link>
         </p>
       </div>

@@ -1,3 +1,6 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import Field from "../components/ui/Field.jsx";
+import Button from "../components/ui/Button.jsx";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/api.js";
@@ -9,6 +12,7 @@ function ForgotPassword() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (loading) return;
 
     try {
       setLoading(true);
@@ -37,11 +41,11 @@ function ForgotPassword() {
   }
 
   return (
-    <main className="auth-page">
-      <div className="auth-card">
-        <div className="auth-header">
-          <span className="auth-mark">BC</span>
-          <h1>Esqueci minha senha</h1>
+    <main  className="mx-auto max-w-3xl px-5 py-12 sm:py-20">
+      <div  className="mx-auto max-w-lg">
+        <div  className="mb-8 space-y-3">
+          <span  className="mb-4 inline-flex border-b-2 border-accent pb-2 font-display text-lg">BC</span>
+          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Esqueci minha senha</h1>
           <p>
             Informe o email cadastrado. Se ele existir no sistema, enviaremos um
             link para redefinir sua senha.
@@ -49,29 +53,20 @@ function ForgotPassword() {
         </div>
 
         {feedback.text && (
-          <p className={`feedback-banner ${feedback.type}`}>
+          <StatusMessage type={feedback.type}>
             {feedback.text}
-          </p>
+          </StatusMessage>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email cadastrado</label>
-            <input
-              type="email"
-              placeholder="Digite seu email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="grid gap-5">
+          <div className="grid gap-2"><Field label={"Email cadastrado"}><input type="email" placeholder="Digite seu email" value={email} onChange={(event) => setEmail(event.target.value)} required/></Field></div>
 
-          <button className="btn btn-primary auth-btn" disabled={loading}>
+          <Button disabled={loading} type="submit" variant="primary" className="w-full">
             {loading ? "Enviando..." : "Enviar link de redefinição"}
-          </button>
+          </Button>
         </form>
 
-        <p className="auth-footer">
+        <p  className="mt-7 text-sm text-muted [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-4">
           Lembrou sua senha? <Link to="/login">Voltar para login</Link>
         </p>
       </div>

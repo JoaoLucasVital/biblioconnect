@@ -1,3 +1,5 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import Button from "../components/ui/Button.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -50,6 +52,7 @@ function OrderSuccess() {
   }, [id]);
 
   async function iniciarPagamento() {
+    if (pagando) return;
     try {
       setPagando(true);
       setFeedback({ type: "", text: "" });
@@ -76,6 +79,7 @@ function OrderSuccess() {
   }, [id, pedido]);
 
   async function simularPagamento() {
+    if (pagando) return;
     setPagando(true);
     try {
       await api.patch(`/pedidos/${id}/simular-pagamento`);
@@ -85,14 +89,14 @@ function OrderSuccess() {
   }
 
   if (loading) {
-    return <main className="page"><div className="container"><p className="page-subtitle">Carregando pedido...</p></div></main>;
+    return <main  className="py-10 sm:py-14"><div  className="mx-auto w-full max-w-7xl px-5 sm:px-8"><p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando pedido...</p></div></main>;
   }
 
   if (!pedido) {
     return (
-      <main className="page"><div className="container">
-        {feedback.text && <p className={`feedback-banner ${feedback.type}`}>{feedback.text}</p>}
-        <Link to="/livros" className="btn btn-primary">Voltar ao catálogo</Link>
+      <main  className="py-10 sm:py-14"><div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        {feedback.text && <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>}
+        <Link to="/livros" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#1e293b] hover:bg-accent-hover">Voltar ao catálogo</Link>
       </div></main>
     );
   }
@@ -101,26 +105,26 @@ function OrderSuccess() {
   const precisaPagamento = !pagamentoPago && pedido.status !== "cancelado" && Number(pedido.valor) > 0;
 
   return (
-    <main className="page checkout-page">
-      <div className="container">
-        <section className="checkout-hero">
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        <section  className="mb-8 flex flex-wrap items-start justify-between gap-6 [&_h1]:font-display [&_h1]:text-4xl [&_p]:mt-3 [&_p]:text-sm [&_p]:text-muted">
           <div>
-            <span className="section-kicker">Pedido registrado</span>
-            <h1>Pedido #{pedido.id}</h1>
+            <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Pedido registrado</span>
+            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Pedido #{pedido.id}</h1>
             <p>Confira os dados do pedido e finalize o pagamento pelo gateway seguro.</p>
           </div>
-          <div className={pagamentoPago ? "payment-status-card paid" : "payment-status-card pending"}>
+          <div  className="grid gap-1 border-l-2 border-accent bg-soft p-4 text-sm">
             <span>Status de pagamento</span>
             <strong>{traduzirPagamento(pedido.statusPagamento)}</strong>
           </div>
         </section>
 
-        {feedback.text && <p className={`feedback-banner ${feedback.type}`}>{feedback.text}</p>}
+        {feedback.text && <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>}
 
-        <section className="checkout-grid">
-          <article className="checkout-card">
-            <h2>Resumo do pedido</h2>
-            <div className="checkout-details">
+        <section  className="grid items-start gap-8 lg:grid-cols-[1.2fr_1fr]">
+          <article  className="grid min-w-0 gap-5 border-t border-stroke pt-6 [&_h2]:font-display [&_h2]:text-2xl [&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted">
+            <h2  className="font-display text-2xl leading-snug">Resumo do pedido</h2>
+            <div  className="grid gap-4 [&>div]:grid [&>div]:grid-cols-[1fr_1.4fr] [&>div]:gap-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:text-sm [&_strong]:font-medium">
               <div><span>Tipo</span><strong>{traduzirTipo(pedido.tipo)}</strong></div>
               <div><span>Livro</span><strong>{pedido.livro?.titulo}</strong></div>
               <div><span>Autor</span><strong>{pedido.livro?.autor}</strong></div>
@@ -148,36 +152,36 @@ function OrderSuccess() {
             </div>
 
             {pedido.modalidadeEntrega === "entrega" && (
-              <div className="delivery-address-card">
+              <div  className="grid gap-2 border-t border-stroke pt-5 text-sm [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-medium">
                 <span>Endereço de entrega</span>
                 <strong>{pedido.enderecoEntrega}</strong>
               </div>
             )}
           </article>
 
-          <article className="checkout-card payment-card">
-            <h2>Pagamento</h2>
+          <article  className="grid min-w-0 gap-5 border-t border-stroke pt-6 [&_h2]:font-display [&_h2]:text-2xl [&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted lg:border-l lg:border-stroke lg:pl-8">
+            <h2  className="font-display text-2xl leading-snug">Pagamento</h2>
             <p>
               O BiblioConnect abre o checkout do Mercado Pago. Os meios disponíveis na sua conta do gateway podem incluir cartão e Pix.
               Dados sensíveis de cartão não passam pelo servidor da biblioteca.
             </p>
 
-            {simulacao && precisaPagamento && <button className="btn btn-outline" disabled={pagando} onClick={simularPagamento}>Simular pagamento (demonstração)</button>}
+            {simulacao && precisaPagamento && <Button disabled={pagando} onClick={simularPagamento} type="button" variant="secondary">Simular pagamento (demonstração)</Button>}
 
             {precisaPagamento ? (
-              <button className="btn btn-primary" onClick={iniciarPagamento} disabled={pagando}>
+              <Button onClick={iniciarPagamento} disabled={pagando} type="button" variant="primary">
                 {pagando ? "Abrindo pagamento..." : "Pagar com cartão ou Pix"}
-              </button>
+              </Button>
             ) : pagamentoPago ? (
-              <div className="payment-approved-box"><strong>Pagamento aprovado</strong><span>O pagamento deste pedido está registrado.</span></div>
+              <div  className="grid gap-2 border-l-2 border-accent bg-soft p-4 text-sm"><strong>Pagamento aprovado</strong><span>O pagamento deste pedido está registrado.</span></div>
             ) : (
-              <div className="payment-approved-box"><strong>Sem cobrança agora</strong><span>Este pedido não possui valor pendente para pagamento.</span></div>
+              <div  className="grid gap-2 border-l-2 border-accent bg-soft p-4 text-sm"><strong>Sem cobrança agora</strong><span>Este pedido não possui valor pendente para pagamento.</span></div>
             )}
 
-            <div className="checkout-actions">
-              <Link to={`/comprovante/${pedido.id}`} className="btn btn-primary">Ver comprovante</Link>
-              <Link to="/meus-pedidos" className="btn btn-outline">Ver meus pedidos</Link>
-              <Link to="/livros" className="btn btn-dark">Voltar ao catálogo</Link>
+            <div  className="mt-3 flex flex-wrap gap-3">
+              <Link to={`/comprovante/${pedido.id}`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#1e293b] hover:bg-accent-hover">Ver comprovante</Link>
+              <Link to="/meus-pedidos" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">Ver meus pedidos</Link>
+              <Link to="/livros" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">Voltar ao catálogo</Link>
             </div>
           </article>
         </section>

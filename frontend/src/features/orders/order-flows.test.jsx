@@ -1,0 +1,51 @@
+import {screen,within} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import {beforeEach,it,expect,vi} from "vitest";
+import {Routes,Route} from "react-router-dom";
+import OrderSuccess from "../../pages/OrderSuccess.jsx";
+import MyOrders from "../../pages/MyOrders.jsx";
+import ClientChat from "../../pages/ClientChat.jsx";
+import {renderWithRouter} from "../../test/renderWithRouter.jsx";
+import {livroDisponivel} from "../../test/fixtures.js";
+import api from "../../api/api.js";
+vi.mock("../../api/api.js",()=>({default:{get:vi.fn(),post:vi.fn(),patch:vi.fn()}}));
+const order={id:41,livroId:7,tipo:"compra",status:"pendente",statusPagamento:"pendente",valor:20,createdAt:"2026-10-13T12:00:00Z",livro:livroDisponivel};
+beforeEach(()=>{api.get.mockReset();api.post.mockReset();api.patch.mockReset();});
+it("pagamento continua pendente até resposta do servidor",async()=>{
+  api.get.mockImplementation(url=>Promise.resolve({data:url==="/integracoes/status"?{simulacao:true}:order}));
+  renderWithRouter(<Routes><Route path="/pedido-confirmado/:id" element={<OrderSuccess/>}/></Routes>,{route:"/pedido-confirmado/41"});
+  expect((await screen.findAllByText("Pagamento pendente")).length).toBeGreaterThan(0);
+  expect(screen.queryByText("Pagamento aprovado")).not.toBeInTheDocument();
+  expect(screen.getByRole("button",{name:"Simular pagamento (demonstração)"})).toBeVisible();
+  expect(api.patch).not.toHaveBeenCalled();
+});
+it("pedido cancelado não oferece cobrança nem envia API",async()=>{
+  api.get.mockResolvedValue({data:[{...order,status:"cancelado"}]});
+  renderWithRouter(<MyOrders/>);
+  await screen.findByText(livroDisponivel.titulo,{exact:false});
+  expect(screen.queryByRole("button",{name:"Pagar pedido"})).not.toBeInTheDocument();
+  expect(screen.queryByRole("button",{name:"Cancelar pedido"})).not.toBeInTheDocument();
+  expect(api.post).not.toHaveBeenCalled();
+});
+it("cancelamento pendente bloqueia confirmação repetida e expõe erro no diálogo",async()=>{
+  api.get.mockResolvedValue({data:[order]});api.patch.mockRejectedValueOnce({response:{data:{erro:"Cancelamento recusado"}}});
+  renderWithRouter(<MyOrders/>);const user=userEvent.setup();
+  await user.click(await screen.findByRole("button",{name:"Cancelar pedido",exact:true}));
+  const dialog=screen.getByRole("dialog",{name:"Cancelar pedido"});
+  await user.click(within(dialog).getByRole("button",{name:"Confirmar cancelamento"}));
+  expect(await within(dialog).findByRole("alert")).toHaveTextContent("Cancelamento recusado");
+  expect(api.patch).toHaveBeenCalledExactlyOnceWith("/me/pedidos/41/cancelar");
+});
+it("chat não duplica envio pendente e preserva rascunho ao falhar",async()=>{
+  api.get.mockResolvedValue({data:{mensagens:[]}});
+  let reject;api.post.mockImplementation(()=>new Promise((_,fail)=>{reject=fail;}));
+  Element.prototype.scrollIntoView=vi.fn();
+  renderWithRouter(<ClientChat/>);const user=userEvent.setup();
+  const text=screen.getByRole("textbox",{name:"Mensagem para a biblioteca"});
+  await user.type(text,"Preciso de ajuda com meu pedido");
+  await user.dblClick(screen.getByRole("button",{name:"Enviar",exact:true}));
+  expect(api.post).toHaveBeenCalledExactlyOnceWith("/chat/mensagens",{texto:"Preciso de ajuda com meu pedido"});
+  reject({response:{data:{erro:"Falha no envio"}}});
+  expect(await screen.findByRole("alert")).toHaveTextContent("Falha no envio");
+  expect(text).toHaveValue("Preciso de ajuda com meu pedido");
+});

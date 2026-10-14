@@ -5,8 +5,8 @@ import { expect } from "@playwright/test";
 
 export async function loginUi(page, { email, senha }) {
   await page.goto("/login");
-  await page.getByPlaceholder("Digite seu email").fill(email);
-  await page.getByPlaceholder("Digite sua senha").fill(senha);
+  await page.getByLabel("Email", {exact:true}).fill(email);
+  await page.getByLabel("Senha", {exact:true}).fill(senha);
   await page.getByRole("button", { name: /^entrar$/i }).click();
   await page.waitForURL(url => url.pathname !== "/login");
 }

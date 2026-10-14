@@ -30,6 +30,16 @@
 }
 
 @layer components {
+  /* The internal receipt prints alone; screen controls never become part of the document. */
+  @media print {
+    body, body.dark { --bg: white; --card: white; --text: #111827; --muted: #475569; background: white; }
+    body:has(.receipt-print) header:not(.receipt-print header),
+    body:has(.receipt-print) aside,
+    body:has(.receipt-print) footer:not(.receipt-print footer) { display: none; }
+    .receipt-print { box-shadow: none; color: #111827; }
+    .receipt-print section { break-inside: avoid; }
+    .receipt-print header, .receipt-print footer { display: flex; }
+  }
   :root {
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);

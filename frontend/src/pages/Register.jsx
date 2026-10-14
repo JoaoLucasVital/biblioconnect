@@ -1,3 +1,6 @@
+import Field from "../components/ui/Field.jsx";
+import Button from "../components/ui/Button.jsx";
+import StatusMessage from "../components/ui/StatusMessage.jsx";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth.js";
@@ -190,6 +193,7 @@ function Register() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (loading) return;
 
     setErro("");
     setSucesso("");
@@ -282,267 +286,99 @@ function Register() {
     form.senha !== form.confirmarSenha;
 
   return (
-    <main className="auth-page register-page-enhanced">
-      <div className="auth-card register-card-wide">
-        <div className="auth-header">
-          <span className="auth-mark">BC</span>
-          <h1>Criar cadastro</h1>
+    <main  className="mx-auto max-w-3xl px-5 py-12 sm:py-20 max-w-4xl">
+      <div  className="mx-auto max-w-lg max-w-none">
+        <div  className="mb-8 space-y-3">
+          <span  className="mb-4 inline-flex border-b-2 border-accent pb-2 font-display text-lg">BC</span>
+          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Criar cadastro</h1>
           <p>
             Cadastre-se para acessar reservas, compras e aluguéis. Após o
             cadastro, confirme seu email para liberar o login.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="register-section">
-            <h2>Dados pessoais</h2>
+        <form onSubmit={handleSubmit} className="grid gap-5">
+          <div  className="mb-8 grid gap-5 border-t border-stroke pt-6">
+            <h2  className="font-display text-2xl leading-snug">Dados pessoais</h2>
 
-            <div className="register-grid">
-              <div className="form-group">
-                <label>Nome completo</label>
-                <input
-                  type="text"
-                  name="nome"
-                  placeholder="Digite seu nome"
-                  value={form.nome}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            <div  className="grid gap-5 sm:grid-cols-2">
+              <div className="grid gap-2"><Field label={"Nome completo"}><input type="text" name="nome" placeholder="Digite seu nome" value={form.nome} onChange={handleChange} required/></Field></div>
 
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Digite seu email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Email"}><input type="email" name="email" placeholder="Digite seu email" value={form.email} onChange={handleChange} required/></Field></div>
 
-              <div className="form-group">
-                <label>Telefone</label>
-                <input
-                  type="text"
-                  name="telefone"
-                  placeholder="Digite seu telefone"
-                  value={form.telefone}
-                  onChange={handleChange}
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Telefone"}><input type="text" name="telefone" placeholder="Digite seu telefone" value={form.telefone} onChange={handleChange}/></Field></div>
             </div>
           </div>
 
-          <div className="register-section">
-            <h2>Segurança da conta</h2>
+          <div  className="mb-8 grid gap-5 border-t border-stroke pt-6">
+            <h2  className="font-display text-2xl leading-snug">Segurança da conta</h2>
 
-            <div className="register-grid">
-              <div className="form-group">
-                <label>Senha</label>
-
-                <div className="password-input-box">
-                  <input
-                    type={mostrarSenha ? "text" : "password"}
-                    name="senha"
-                    placeholder="Crie uma senha"
-                    value={form.senha}
-                    onChange={handleChange}
-                    required
-                  />
-
-                  <button
-                    type="button"
-                    className="password-eye-btn"
-                    onClick={() => setMostrarSenha((prev) => !prev)}
-                    aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
-                  >
+            <div  className="grid gap-5 sm:grid-cols-2">
+              <div className="grid gap-2"><Field label={"Senha"} trailing={<Button type="button" onClick={() => setMostrarSenha((prev) => !prev)} aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"} variant="ghost" className="px-2 text-xs">
                     {mostrarSenha ? "Ocultar" : "Mostrar"}
-                  </button>
-                </div>
-              </div>
+                  </Button>}><input type={mostrarSenha ? "text" : "password"} name="senha" placeholder="Crie uma senha" value={form.senha} onChange={handleChange} required/></Field></div>
 
-              <div className="form-group">
-                <label>Confirmar senha</label>
-
-                <div className="password-input-box">
-                  <input
-                    type={mostrarConfirmarSenha ? "text" : "password"}
-                    name="confirmarSenha"
-                    placeholder="Digite a senha novamente"
-                    value={form.confirmarSenha}
-                    onChange={handleChange}
-                    required
-                  />
-
-                  <button
-                    type="button"
-                    className="password-eye-btn"
-                    onClick={() => setMostrarConfirmarSenha((prev) => !prev)}
-                    aria-label={
+              <div className="grid gap-2"><Field label={"Confirmar senha"} trailing={<Button type="button" onClick={() => setMostrarConfirmarSenha((prev) => !prev)} aria-label={
                       mostrarConfirmarSenha ? "Ocultar senha" : "Mostrar senha"
-                    }
-                  >
+                    } variant="ghost" className="px-2 text-xs">
                     {mostrarConfirmarSenha ? "Ocultar" : "Mostrar"}
-                  </button>
-                </div>
-
-                {form.confirmarSenha && form.senha !== form.confirmarSenha && (
-                  <small className="field-warning">
+                  </Button>}><input type={mostrarConfirmarSenha ? "text" : "password"} name="confirmarSenha" placeholder="Digite a senha novamente" value={form.confirmarSenha} onChange={handleChange} required/></Field>{form.confirmarSenha && form.senha !== form.confirmarSenha && (
+                  <small  className="text-sm text-red-700 dark:text-red-300">
                     As senhas ainda não coincidem.
                   </small>
-                )}
-              </div>
+                )}</div>
             </div>
           </div>
 
-          <div className="register-section">
-            <h2>Endereço completo</h2>
+          <div  className="mb-8 grid gap-5 border-t border-stroke pt-6">
+            <h2  className="font-display text-2xl leading-snug">Endereço completo</h2>
 
-            <div className="cep-row">
-              <div className="form-group">
-                <label>CEP</label>
-                <input
-                  type="text"
-                  name="cep"
-                  placeholder="00000-000"
-                  value={form.cep}
-                  onChange={handleChange}
-                  onBlur={buscarCep}
-                  required
-                />
-              </div>
+            <div  className="grid items-end gap-3 sm:grid-cols-[1fr_auto]">
+              <div className="grid gap-2"><Field label={"CEP"}><input type="text" name="cep" placeholder="00000-000" value={form.cep} onChange={handleChange} onBlur={buscarCep} required/></Field></div>
 
-              <button
-                type="button"
-                className="btn cep-search-btn"
-                onClick={buscarCep}
-                disabled={buscandoCep}
-              >
+              <Button type="button" onClick={buscarCep} disabled={buscandoCep} variant="secondary">
                 {buscandoCep ? "Buscando..." : "Buscar CEP"}
-              </button>
+              </Button>
             </div>
 
             {cepFeedback.text && (
-              <p
-                className={`cep-feedback ${cepFeedback.type} ${
-                  cepFeedback.fading ? "fade-out" : ""
-                }`}
-              >
+              <StatusMessage type={cepFeedback.type}>
                 {cepFeedback.text}
-              </p>
+              </StatusMessage>
             )}
 
-            <div className="register-grid">
-              <div className="form-group">
-                <label>Rua / Avenida</label>
-                <input
-                  type="text"
-                  name="rua"
-                  placeholder="Rua, avenida ou travessa"
-                  value={form.rua}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            <div  className="grid gap-5 sm:grid-cols-2">
+              <div className="grid gap-2"><Field label={"Rua / Avenida"}><input type="text" name="rua" placeholder="Rua, avenida ou travessa" value={form.rua} onChange={handleChange} required/></Field></div>
 
-              <div className="form-group">
-                <label>Bairro</label>
-                <input
-                  type="text"
-                  name="bairro"
-                  placeholder="Bairro"
-                  value={form.bairro}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Bairro"}><input type="text" name="bairro" placeholder="Bairro" value={form.bairro} onChange={handleChange} required/></Field></div>
 
-              <div className="form-group">
-                <label>Cidade</label>
-                <input
-                  type="text"
-                  name="cidade"
-                  placeholder="Cidade"
-                  value={form.cidade}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Cidade"}><input type="text" name="cidade" placeholder="Cidade" value={form.cidade} onChange={handleChange} required/></Field></div>
 
-              <div className="form-group">
-                <label>Estado</label>
-                <input
-                  type="text"
-                  name="estado"
-                  placeholder="UF"
-                  value={form.estado}
-                  onChange={handleChange}
-                  maxLength="2"
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Estado"}><input type="text" name="estado" placeholder="UF" value={form.estado} onChange={handleChange} maxLength="2" required/></Field></div>
 
-              <div className="form-group">
-                <label>Número</label>
-                <input
-                  type="text"
-                  name="numero"
-                  placeholder="Número da residência"
-                  value={form.numero}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Número"}><input type="text" name="numero" placeholder="Número da residência" value={form.numero} onChange={handleChange} required/></Field></div>
 
-              <div className="form-group">
-                <label>Complemento</label>
-                <input
-                  type="text"
-                  name="complemento"
-                  placeholder="Casa, apartamento, bloco..."
-                  value={form.complemento}
-                  onChange={handleChange}
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Complemento"}><input type="text" name="complemento" placeholder="Casa, apartamento, bloco..." value={form.complemento} onChange={handleChange}/></Field></div>
             </div>
 
-            <div className="form-group">
-              <label>Ponto de referência</label>
-              <input
-                type="text"
-                name="pontoReferencia"
-                placeholder="Ex: próximo à praça, mercado, escola..."
-                value={form.pontoReferencia}
-                onChange={handleChange}
-              />
-            </div>
+            <div className="grid gap-2"><Field label={"Ponto de referência"}><input type="text" name="pontoReferencia" placeholder="Ex: próximo à praça, mercado, escola..." value={form.pontoReferencia} onChange={handleChange}/></Field></div>
           </div>
 
-          {erro && <p className="feedback-banner error">{erro}</p>}
-          {sucesso && <p className="feedback-banner success">{sucesso}</p>}
+          {erro && <StatusMessage type={"error"}>{erro}</StatusMessage>}
+          {sucesso && <StatusMessage type={"info"}>{sucesso}</StatusMessage>}
 
           {emailCadastroPendente && (
-            <button
-              type="button"
-              className="btn btn-secondary auth-btn"
-              onClick={handleReenviarConfirmacao}
-              disabled={reenviandoEmail}
-            >
+            <Button type="button" onClick={handleReenviarConfirmacao} disabled={reenviandoEmail} variant="secondary" className="w-full">
               {reenviandoEmail ? "Reenviando..." : "Reenviar email de confirmação"}
-            </button>
+            </Button>
           )}
 
-          <button
-            className="btn btn-primary auth-btn"
-            disabled={cadastroBloqueado}
-          >
+          <Button disabled={cadastroBloqueado} type="submit" variant="primary" className="w-full">
             {loading ? "Cadastrando..." : "Criar conta"}
-          </button>
+          </Button>
         </form>
 
-        <p className="auth-footer">
+        <p  className="mt-7 text-sm text-muted [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-4">
           Já tem conta? <Link to="/login">Entrar</Link>
         </p>
       </div>
