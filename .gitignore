@@ -18,3 +18,5 @@ frontend/.env
 .worktrees/
 frontend/test-results/
 frontend/playwright-report/
+.superpowers/
+.impeccable/review/

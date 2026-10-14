@@ -1,7 +1,4 @@
-@layer theme, base, legacy, components, utilities;
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
-@import "./legacy.css" layer(legacy);
+@import "tailwindcss";
 @import "@fontsource/source-serif-4/latin-400.css";
 @import "@fontsource/source-serif-4/latin-ext-400.css";
 @import "@fontsource/source-serif-4/latin-600.css";
@@ -14,6 +11,26 @@
 @import "@fontsource/ibm-plex-sans/latin-ext-600.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --bg: #fff7ed; --card: #ffffff; --text: #1e293b; --muted: #64748b;
+    --primary: #1e3a5f; --accent: #e67e00; --accent-dark: #c96a00;
+    --border: #fed7aa; --soft: #ffedd5;
+    color-scheme: light;
+  }
+  body.dark {
+    --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --muted: #cbd5e1;
+    --primary: #f8fafc; --border: #334155; --soft: #172033;
+    color-scheme: dark;
+  }
+  html { -webkit-text-size-adjust: 100%; }
+  body { color: var(--text); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  button, a, [role="button"] { touch-action: manipulation; }
+  button { user-select: none; }
+  button:enabled, summary { cursor: pointer; }
+  dialog { overscroll-behavior: contain; }
+}
 
 @theme inline {
   --font-display: "Source Serif 4", Georgia, serif;

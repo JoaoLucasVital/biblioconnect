@@ -3,6 +3,7 @@ import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
 import StatusBadge from "../components/ui/StatusBadge.jsx";
 import Dialog from "../components/ui/Dialog.jsx";
+import { BookOpen, ShoppingBag, Bookmark } from "lucide-react";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useMemo, useState } from "react";
 import api from "../api/api.js";
@@ -326,9 +327,9 @@ function AdminOrders() {
                         <article key={pedido.id} className="min-w-0 border-t border-stroke py-6">
                           <div  className="flex min-w-0 items-start gap-4">
                             <div  className="shrink-0 text-2xl">
-                              {pedido.tipo === "compra" && "💰"}
-                              {pedido.tipo === "reserva" && "📌"}
-                              {pedido.tipo === "aluguel" && "📖"}
+                              {pedido.tipo === "compra" && <ShoppingBag size={22} aria-hidden="true"/>}
+                              {pedido.tipo === "reserva" && <Bookmark size={22} aria-hidden="true"/>}
+                              {pedido.tipo === "aluguel" && <BookOpen size={22} aria-hidden="true"/>}
                             </div>
 
                             <div>

@@ -1,12 +1,34 @@
-# BiblioConnect — versão revisada
+# BiblioConnect — edição editorial
 
-Sistema React + Express + Prisma para catálogo, compra, reserva, aluguel, avaliações moderadas, atendimento e administração. Este pacote contém a versão revisada do código recebido. Comentários em português explicam principalmente as regras de negócio, transações e integrações.
+Sistema React + Express + Prisma para catálogo, compra, reserva, aluguel, avaliações moderadas, atendimento e administração. O frontend usa Tailwind, Source Serif 4 e IBM Plex Sans locais, GSAP na abertura e uma cena Three.js carregada sob demanda. As URLs e os contratos da API permanecem os mesmos.
+
+O redesign está na branch `codex/biblioconnect-editorial`. A migração não exige reset, seed ou alteração do schema Prisma. Preserve seu arquivo de configuração e faça o procedimento normal de backup antes de trocar versões em um ambiente com dados reais.
+
+## Verificar sem tocar nos dados existentes
+
+Execute os comandos na raiz do projeto:
+
+```powershell
+rtk proxy npm --prefix frontend test
+rtk proxy npm --prefix frontend run lint
+rtk proxy npm --prefix frontend run build
+rtk proxy node scripts/qa-environment.js --integration
+rtk proxy node scripts/qa-environment.js --e2e-production
+```
+
+O último comando compila o frontend para produção com a URL da API temporária. Cada execução de QA cria banco, contas e e-mails próprios em `.local/qa/run-*`, usa portas livres e remove apenas seus arquivos/processos no encerramento. Não usa o PostgreSQL configurado no seu `.env` nem a demonstração persistente. Na primeira execução do navegador, instale o Chromium com `rtk proxy npm --prefix frontend exec playwright install chromium`.
+
+Para abrir um ambiente descartável manualmente, use `rtk proxy node scripts/qa-environment.js --serve` e o endereço impresso no terminal. O catálogo desse ambiente começa vazio. As capturas da suíte usam registros exclusivos de QA.
+
+A cena 3D é decorativa: telas menores que 768 px, movimento reduzido e falhas de capa/WebGL mantêm a capa estática e as ações HTML. A alternância clara/escura já existente continua disponível.
+
+Veja o [relatório de verificação](docs/verification/2026-10-13-editorial-redesign.md) e as [atribuições de terceiros](THIRD_PARTY_NOTICES.md). Pagamentos reais, SMTP, Google Maps e dispositivos físicos exigem homologação separada; simulação de pagamento e e-mail em arquivo são identificados na demonstração.
 
 ## Começar rapidamente no Windows
 
 Instale Node.js 22.12 ou superior. Abra um terminal nesta pasta e execute:
 
-```powershell para testar direto
+```powershell
 npm run setup
 npm run demo
 ```
@@ -17,7 +39,7 @@ Abra http://localhost:5173. A primeira instalação precisa de internet.
 - Senha de demonstração: `admin123`
 - O catálogo começa vazio: entre como administrador e use **Novo Livro**.
 - Banco persistente da demonstração: `.local/database`.
-- E-mails de demonstração: `.local/emails`. Abra o HTML mais recente e use o link de confirmação ou recuperação. pegando o link que vai criar no .local
+- E-mails de demonstração: `.local/emails`. Abra o HTML mais recente e use o link de confirmação ou recuperação.
 - Na página de detalhes do pedido, use **Simular pagamento (demonstração)** para testar sem cobrança. Em Meus Pedidos, clique em **Detalhes e pagamento**.
 - Encerre o terminal com Ctrl+C. Ao reiniciar a demonstração, faça login novamente.
 - As portas 3000, 5173 e 55440 precisam estar livres. A demonstração usa um banco isolado e não acessa seu PostgreSQL existente.

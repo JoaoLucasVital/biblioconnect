@@ -77,7 +77,7 @@ async function waitForHttp(url, processInfo) {
   throw new Error(`Timeout de inicialização QA em ${url}: ${processInfo.log}`);
 }
 
-async function createEnvironment(withFrontend) {
+async function createEnvironment(withFrontend, production) {
   await fs.mkdir(qaRoot, { recursive: true });
   const directory = safeQaPath(await fs.mkdtemp(path.join(qaRoot, "run-")));
   const children = [];
@@ -125,8 +125,15 @@ async function createEnvironment(withFrontend) {
     let frontendUrl = null;
     if (withFrontend) {
       frontendUrl = env.FRONTEND_URL;
-      const frontend = startChild(["node_modules/vite/bin/vite.js", "--host", "127.0.0.1", "--port", String(frontendPort), "--strictPort"],
-        path.join(root, "frontend"), { ...env, VITE_API_URL: env.BACKEND_URL });
+      const frontendEnv = { ...env, NODE_ENV:production ? "production" : env.NODE_ENV, VITE_API_URL: env.BACKEND_URL };
+      const output = safeQaPath(path.join(directory, "public"));
+      if (production) {
+        const build = startChild(["node_modules/vite/bin/vite.js","build","--outDir",output],path.join(root,"frontend"),frontendEnv);
+        const code = await new Promise(resolve=>build.child.once("exit",resolve));
+        if (code !== 0) throw new Error(`Build QA falhou: ${build.log}`);
+      }
+      const frontend = startChild(["node_modules/vite/bin/vite.js", ...(production ? ["preview","--outDir",output] : []), "--host", "127.0.0.1", "--port", String(frontendPort), "--strictPort"],
+        path.join(root, "frontend"), frontendEnv);
       await waitForHttp(frontendUrl, frontend);
     }
     return { apiUrl: env.BACKEND_URL, frontendUrl, databaseUrl: env.DATABASE_URL, emailDir, stop };
@@ -136,17 +143,19 @@ async function createEnvironment(withFrontend) {
   }
 }
 
-export async function startQaEnvironment({ withFrontend = false } = {}) {
+export async function startQaEnvironment({ withFrontend = false, production = false } = {}) {
   for (let attempt = 1; attempt <= 3; attempt++) {
-    try { return await createEnvironment(withFrontend); }
+    try { return await createEnvironment(withFrontend, production); }
     catch (error) { if (attempt === 3 || !/EADDRINUSE/.test(error.message)) throw error; }
   }
 }
 
 async function runCli() {
-  const mode = process.argv[2];
-  if (!["--integration", "--e2e", "--serve"].includes(mode)) throw new Error("Use --integration, --e2e ou --serve.");
-  const qa = await startQaEnvironment({ withFrontend: mode !== "--integration" });
+  const requestedMode = process.argv[2];
+  const production = requestedMode==="--e2e-production" || process.env.QA_PRODUCTION==="1";
+  const mode = requestedMode==="--e2e-production" ? "--e2e" : requestedMode;
+  if (!["--integration", "--e2e", "--serve"].includes(mode)) throw new Error("Use --integration, --e2e, --e2e-production ou --serve.");
+  const qa = await startQaEnvironment({ withFrontend: mode !== "--integration", production });
   let runner;
   const stop = async () => { if (runner) await stopChild(runner); await qa.stop(); };
   const handleSignal = () => { stop().finally(() => { process.exitCode = 130; }); };
@@ -163,7 +172,7 @@ async function runCli() {
     runner = spawn(process.execPath, args, {
       cwd: mode === "--integration" ? root : path.join(root, "frontend"), windowsHide: true, stdio: "inherit",
       env: { ...process.env, API_TEST_URL: qa.apiUrl, QA_API_URL: qa.apiUrl, QA_BASE_URL: qa.frontendUrl ?? "",
-        EMAIL_OUTPUT_DIR: qa.emailDir, DATABASE_URL: qa.databaseUrl },
+        EMAIL_OUTPUT_DIR: qa.emailDir, DATABASE_URL: qa.databaseUrl, QA_PRODUCTION:production ? "1" : "0" },
     });
     process.exitCode = await new Promise((resolve, reject) => { runner.once("exit", code => resolve(code ?? 1)); runner.once("error", reject); });
   } finally {

@@ -1,12 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { createBook } from "./helpers.js";
+import {captureReview} from "./capture-review.js";
 let book,other;
 const coverUrl=`${process.env.QA_API_URL}/qa-cover.svg`;
 const cover='<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600"><rect width="400" height="600" fill="#1e3a5f"/><path d="M40 80H360M40 520H360" stroke="#e67e00" stroke-width="4"/><text x="45" y="230" fill="#fff7ed" font-family="serif" font-size="40">LEITURA</text><text x="45" y="280" fill="#fff7ed" font-family="serif" font-size="40">DE TESTE</text><text x="45" y="470" fill="#fff7ed" font-size="20">Acervo exclusivo de QA</text></svg>';
 test.beforeAll(async({request})=>{
   const login=await request.post(`${process.env.QA_API_URL}/login`,{data:{email:"admin@biblioconnect.com",senha:"admin123"}});
   const adminToken=(await login.json()).token;
-  other=await createBook({request,adminToken,overrides:{titulo:"Outra obra em destaque",imagemUrlExterna:coverUrl}});
+  other=await createBook({request,adminToken,overrides:{titulo:`Outra obra em destaque ${Date.now()}`,imagemUrlExterna:coverUrl}});
   book=await createBook({request,adminToken,overrides:{titulo:"Uma leitura real em cena",imagemUrlExterna:coverUrl}});
 });
 test.beforeEach(async({page})=>{
@@ -19,8 +20,11 @@ test("home editorial em desktop, tablet e celular com fallback leve",async({page
     await page.setViewportSize({width,height:1000});await page.goto("/");
     await expect(page.getByRole("heading",{name:book.titulo,exact:true}).first()).toBeVisible();
     await page.evaluate(()=>document.fonts.ready);
-    await page.getByRole("heading",{level:1}).focus();
+    await expect(page.locator("[data-hero-detail]").first()).toHaveCSS("opacity","1");
+    await expect(page.locator("[data-hero-detail]").last()).toHaveCSS("opacity","1");
     await page.screenshot({path:info.outputPath(`home-editorial-${width}.png`),fullPage:true});
+    await captureReview(page,`home-${width}`);
+    await captureReview(page,`home-${width}-full`,{fullPage:true});
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
     if(width<768){await expect(page.locator("canvas")).toHaveCount(0);expect(scenes).toEqual([]);}
   }
@@ -65,6 +69,7 @@ test("Canvas renderiza o livro e perda de contexto conserva a navegação",async
   const canvas=page.locator("canvas");await expect(canvas).toBeVisible({timeout:10000});
   await expect.poll(()=>canvas.evaluate(el=>el.width>0 && el.height>0)).toBe(true);
   await page.screenshot({path:info.outputPath("home-3d-1440.png")});
+  await captureReview(page,"home-3d-1440");
   await canvas.dispatchEvent("webglcontextlost");
   await expect(canvas).toHaveCount(0);
   await expect(page.getByRole("region",{name:"Descubra sua próxima leitura"}).getByRole("img",{name:`Capa de ${book.titulo}`})).toBeVisible();

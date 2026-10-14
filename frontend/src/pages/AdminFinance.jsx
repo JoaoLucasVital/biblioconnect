@@ -276,10 +276,10 @@ function AdminFinance() {
               <ResponsiveContainer width="100%" height={320}>
                 <BarChart data={tipoChart}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#d6dde7"/>
-                  <XAxis dataKey="nome" tick={{ fill: "#5b6676", fontSize: 12 }}/>
-                  <YAxis tick={{ fill: "#5b6676", fontSize: 12 }}/>
+                  <XAxis dataKey="nome" tick={{ fill: "var(--muted)", fontSize: 12 }}/>
+                  <YAxis tick={{ fill: "var(--muted)", fontSize: 12 }}/>
                   <Tooltip formatter={(value) => formatarMoeda(value)}/>
-                  <Bar dataKey="valor" fill="#1E3A5F" radius={[8, 8, 0, 0]}/>
+                  <Bar isAnimationActive={false} dataKey="valor" fill="#1E3A5F" radius={[8, 8, 0, 0]}/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -296,7 +296,7 @@ function AdminFinance() {
             <div  className="h-72 min-w-0 w-full">
               <ResponsiveContainer width="100%" height={320}>
                 <PieChart>
-                  <Pie data={pagamentoChart} dataKey="value" nameKey="name" innerRadius={70} outerRadius={110} paddingAngle={4}>
+                  <Pie isAnimationActive={false} data={pagamentoChart} dataKey="value" nameKey="name" innerRadius={70} outerRadius={110} paddingAngle={4}>
                     {pagamentoChart.map((entry, index) => (
                       <Cell key={entry.name} fill={pagamentoColors[index % pagamentoColors.length]}/>
                     ))}

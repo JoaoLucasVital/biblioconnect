@@ -207,7 +207,7 @@ function AdminDashboard() {
 
         <section  className="my-6 flex flex-wrap gap-3 text-sm">
           <div>
-            <span  className="bg-soft px-3 py-2 text-sm">🔥 Livro mais vendido</span>
+            <span  className="bg-soft px-3 py-2 text-sm">Livro mais vendido</span>
 
             <strong>
               {stats.livroMaisVendido
@@ -224,7 +224,7 @@ function AdminDashboard() {
           </div>
 
           <div>
-            <span  className="bg-soft px-3 py-2 text-sm">🔥 Gênero mais vendido</span>
+            <span  className="bg-soft px-3 py-2 text-sm">Gênero mais vendido</span>
 
             <strong>
               {stats.generoMaisVendido
@@ -338,10 +338,10 @@ function AdminDashboard() {
               <ResponsiveContainer width="100%" height={320}>
                 <BarChart data={barData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#d6dde7"/>
-                  <XAxis dataKey="nome" tick={{ fill: "#5b6676", fontSize: 12 }}/>
-                  <YAxis tick={{ fill: "#5b6676", fontSize: 12 }}/>
+                  <XAxis dataKey="nome" tick={{ fill: "var(--muted)", fontSize: 12 }}/>
+                  <YAxis tick={{ fill: "var(--muted)", fontSize: 12 }}/>
                   <Tooltip/>
-                  <Bar dataKey="valor" fill="#1E3A5F" radius={[8, 8, 0, 0]}/>
+                  <Bar isAnimationActive={false} dataKey="valor" fill="#1E3A5F" radius={[8, 8, 0, 0]}/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -358,7 +358,7 @@ function AdminDashboard() {
             <div  className="h-72 min-w-0 w-full">
               <ResponsiveContainer width="100%" height={320}>
                 <PieChart>
-                  <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={70} outerRadius={110} paddingAngle={4}>
+                  <Pie isAnimationActive={false} data={pieData} dataKey="value" nameKey="name" innerRadius={70} outerRadius={110} paddingAngle={4}>
                     {pieData.map((entry, index) => (
                       <Cell key={entry.name} fill={pieColors[index % pieColors.length]}/>
                     ))}
@@ -385,10 +385,10 @@ function AdminDashboard() {
                 <ResponsiveContainer width="100%" height={320}>
                   <BarChart data={livrosData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#d6dde7"/>
-                    <XAxis dataKey="nome" tick={{ fill: "#5b6676", fontSize: 12 }}/>
-                    <YAxis tick={{ fill: "#5b6676", fontSize: 12 }}/>
+                    <XAxis dataKey="nome" tick={{ fill: "var(--muted)", fontSize: 12 }}/>
+                    <YAxis tick={{ fill: "var(--muted)", fontSize: 12 }}/>
                     <Tooltip/>
-                    <Bar dataKey="vendas" fill="#E67E00" radius={[8, 8, 0, 0]}/>
+                    <Bar isAnimationActive={false} dataKey="vendas" fill="#E67E00" radius={[8, 8, 0, 0]}/>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -413,10 +413,10 @@ function AdminDashboard() {
                 <ResponsiveContainer width="100%" height={320}>
                   <BarChart data={generosData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#d6dde7"/>
-                    <XAxis dataKey="nome" tick={{ fill: "#5b6676", fontSize: 12 }}/>
-                    <YAxis tick={{ fill: "#5b6676", fontSize: 12 }}/>
+                    <XAxis dataKey="nome" tick={{ fill: "var(--muted)", fontSize: 12 }}/>
+                    <YAxis tick={{ fill: "var(--muted)", fontSize: 12 }}/>
                     <Tooltip/>
-                    <Bar dataKey="vendas" fill="#1E3A5F" radius={[8, 8, 0, 0]}/>
+                    <Bar isAnimationActive={false} dataKey="vendas" fill="#1E3A5F" radius={[8, 8, 0, 0]}/>
                   </BarChart>
                 </ResponsiveContainer>
               </div>

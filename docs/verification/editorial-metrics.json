@@ -1,0 +1,15 @@
+{
+  "mode": "production-preview",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "navigation": {
+    "domContentLoadedMs": 101.39999997615814,
+    "loadMs": 101.39999997615814,
+    "transferBytes": 317564,
+    "requests": 21
+  },
+  "filterRoundTripMs": 50.42,
+  "note": "Sem throttling; tempo do filtro inclui automação Playwright."
+}

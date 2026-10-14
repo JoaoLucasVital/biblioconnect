@@ -3,6 +3,7 @@ import StatusBadge from "../components/ui/StatusBadge.jsx";
 import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
 import Dialog from "../components/ui/Dialog.jsx";
+import { BookOpen, ShoppingBag, Bookmark, Library } from "lucide-react";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
@@ -54,10 +55,10 @@ function traduzirPagamento(status) {
 }
 
 function getPedidoIcon(tipo) {
-  if (tipo === "compra") return "💰";
-  if (tipo === "reserva") return "📌";
-  if (tipo === "aluguel") return "📖";
-  return "📚";
+  if (tipo === "compra") return <ShoppingBag size={22} aria-hidden="true"/>;
+  if (tipo === "reserva") return <Bookmark size={22} aria-hidden="true"/>;
+  if (tipo === "aluguel") return <BookOpen size={22} aria-hidden="true"/>;
+  return <Library size={22} aria-hidden="true"/>;
 }
 
 function MyOrders() {

@@ -7,6 +7,7 @@ function ThemeToggle() {
 
   useEffect(() => {
     document.body.classList.toggle("dark", dark);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content",dark ? "#0f172a" : "#fff7ed");
   }, [dark]);
 
   function toggleTheme() {
