@@ -8,7 +8,7 @@
     "dev": "nodemon server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "test": "node --test",
+    "test": "node --test tests/**/*.test.js",
     "email:test": "node scripts/email-check.js",
     "demo": "node scripts/demo.js",
     "setup": "npm ci && npm --prefix frontend ci && prisma generate",

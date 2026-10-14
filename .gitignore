@@ -16,3 +16,5 @@ frontend/.env
 # Índice local de navegação de código
 .codegraph/
 .worktrees/
+frontend/test-results/
+frontend/playwright-report/
