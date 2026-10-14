@@ -159,7 +159,7 @@ async function runCli() {
       await new Promise(resolve => { process.once("SIGINT", resolve); process.once("SIGTERM", resolve); });
       return;
     }
-    const args = mode === "--integration" ? ["--test", "tests/**/*.test.js"] : ["node_modules/@playwright/test/cli.js", "test"];
+    const args = mode === "--integration" ? ["--test", "tests/**/*.test.js"] : ["node_modules/@playwright/test/cli.js", "test", ...process.argv.slice(3)];
     runner = spawn(process.execPath, args, {
       cwd: mode === "--integration" ? root : path.join(root, "frontend"), windowsHide: true, stdio: "inherit",
       env: { ...process.env, API_TEST_URL: qa.apiUrl, QA_API_URL: qa.apiUrl, QA_BASE_URL: qa.frontendUrl ?? "",

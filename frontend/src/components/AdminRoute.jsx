@@ -6,9 +6,9 @@ function AdminRoute({ children }) {
 
   if (loadingAuth) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Verificando autenticação...</p>
+      <main className="mx-auto max-w-7xl px-5 py-16">
+        <div role="status">
+          <p className="text-muted">Verificando autenticação...</p>
         </div>
       </main>
     );
@@ -20,11 +20,11 @@ function AdminRoute({ children }) {
 
   if (!isAdmin) {
     return (
-      <main className="page">
-        <div className="container">
-          <div className="access-denied">
-            <h1>Acesso negado</h1>
-            <p>Esta área é exclusiva para administradores.</p>
+      <main className="mx-auto max-w-7xl px-5 py-20">
+        <div>
+          <div className="border-l-2 border-accent pl-6">
+            <h1 className="mb-3 font-display text-4xl">Acesso negado</h1>
+            <p className="text-muted">Esta área é exclusiva para administradores.</p>
           </div>
         </div>
       </main>

@@ -1,235 +1,45 @@
-import { useEffect, useRef, useState } from "react";
+import { startTransition, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle.jsx";
+import { Menu, ArrowUpRight, LogOut } from "lucide-react";
 import { useAuth } from "../context/auth.js";
+import { publicItems, clientItems } from "../layouts/nav-items.js";
 import BrandLogo from "./BrandLogo.jsx";
+import ThemeToggle from "./ThemeToggle.jsx";
+import Button from "./ui/Button.jsx";
+import Dialog from "./ui/Dialog.jsx";
 
-function Navbar() {
-  const { usuario, isAuthenticated, isAdmin, logout, loadingAuth } = useAuth();
+const navClass = ({isActive}) => `inline-flex min-h-11 items-center border-b-2 px-1 text-sm font-medium ${isActive ? "border-accent text-ink" : "border-transparent text-muted hover:text-ink"}`;
+export default function Navbar() {
+  const {usuario,isAuthenticated,isAdmin,loadingAuth,logout} = useAuth();
   const navigate = useNavigate();
-
-  const [navbarHidden, setNavbarHidden] = useState(false);
-  const [navbarCompact, setNavbarCompact] = useState(false);
-  const lastScrollY = useRef(0);
-
-  function handleLogout() {
-    logout();
-    navigate("/");
+  const [open,setOpen] = useState(false);
+  const items = [...publicItems,...(!loadingAuth && isAuthenticated ? clientItems : []),...(!loadingAuth && isAdmin ? [{label:"Painel",to:"/admin"}] : [])];
+  const close = () => setOpen(false);
+  const leave = () => startTransition(() => { logout(); close(); navigate("/"); });
+  function links(mobile = false) {
+    return <><nav aria-label={mobile ? "Navegação móvel" : "Principal"} className={mobile ? "grid gap-2" : "flex items-center gap-6"}>
+      {items.map(item=><NavLink key={item.to} end={item.to==="/" || item.to==="/admin"} to={item.to} onClick={close} className={navClass}>{item.label}</NavLink>)}
+    </nav>
+    {!loadingAuth && (isAuthenticated ? <div className={mobile ? "grid gap-2 border-t border-stroke pt-4" : "flex min-w-0 items-center gap-3"}>
+      <span className="max-w-32 truncate text-sm text-muted" title={usuario?.nome}>{usuario?.nome}</span>
+      <Button variant="ghost" onClick={leave}><LogOut size={16} aria-hidden="true"/>Sair</Button>
+    </div> : <div className="flex items-center gap-5">
+      <NavLink to="/login" onClick={close} className={navClass}>Login</NavLink>
+      <Link to="/cadastro" onClick={close} className="inline-flex min-h-11 items-center gap-2 rounded border border-stroke px-4 text-sm font-medium hover:border-ink">Criar conta<ArrowUpRight size={16} aria-hidden="true"/></Link>
+    </div>)}</>;
   }
-
-  function getNavLinkClass(isActive) {
-    return isActive ? "nav-link active" : "nav-link";
-  }
-
-  useEffect(() => {
-    function handleScroll() {
-      const currentScrollY = window.scrollY;
-
-      setNavbarCompact(currentScrollY > 40);
-
-      if (currentScrollY < 90) {
-        setNavbarHidden(false);
-        lastScrollY.current = currentScrollY;
-        return;
-      }
-
-      if (currentScrollY > lastScrollY.current + 8) {
-        setNavbarHidden(true);
-      }
-
-      if (currentScrollY < lastScrollY.current - 8) {
-        setNavbarHidden(false);
-      }
-
-      lastScrollY.current = currentScrollY;
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  return (
-    <header
-      className={[
-        "navbar",
-        navbarHidden ? "navbar-hidden" : "",
-        navbarCompact ? "navbar-compact" : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <div className="container navbar-shell">
-        <div className="navbar-left">
-          <Link to="/" className="brand">
-            <BrandLogo className="brand-logo" />
-
-            <div className="brand-text">
-              <strong>BiblioConnect</strong>
-              <span>Biblioteca Online</span>
-            </div>
-          </Link>
-        </div>
-
-        <div className="navbar-center">
-          <div className="nav-cluster">
-            <NavLink
-              to="/"
-              className={({ isActive }) => getNavLinkClass(isActive)}
-            >
-              Início
-            </NavLink>
-
-            <NavLink
-              to="/livros"
-              className={({ isActive }) => getNavLinkClass(isActive)}
-            >
-              Catálogo
-            </NavLink>
-          </div>
-
-          {!loadingAuth && isAuthenticated && !isAdmin && (
-            <>
-              <span className="nav-divider" />
-
-              <div className="nav-cluster">
-                <NavLink
-                  to="/meus-pedidos"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Meus Pedidos
-                </NavLink>
-
-                <NavLink
-                  to="/chat"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Atendimento
-                </NavLink>
-              </div>
-            </>
-          )}
-
-          {!loadingAuth && isAdmin && (
-            <>
-              <span className="nav-divider" />
-
-              <div className="nav-cluster">
-                <NavLink
-                  to="/admin"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Painel
-                </NavLink>
-
-                <NavLink
-                  to="/admin/livros"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Livros
-                </NavLink>
-
-                <NavLink
-                  to="/admin/pedidos"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Pedidos
-                </NavLink>
-
-                <NavLink
-                  to="/admin/financeiro"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Financeiro
-                </NavLink>
-
-                <NavLink
-                  to="/admin/usuarios"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Usuários
-                </NavLink>
-
-                <NavLink
-                  to="/admin/atrasos"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Atrasos
-                </NavLink>
-
-                <NavLink
-                  to="/admin/entregas"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Entregas
-                </NavLink>
-
-                <NavLink
-                  to="/admin/avaliacoes"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Avaliações
-                </NavLink>
-
-                <NavLink
-                  to="/admin/chat"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Chat
-                </NavLink>
-
-                <NavLink
-                  to="/adicionar-livro"
-                  className={({ isActive }) => getNavLinkClass(isActive)}
-                >
-                  Novo Livro
-                </NavLink>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className="navbar-right">
-          {!loadingAuth && !isAuthenticated && (
-            <div className="nav-auth">
-              <NavLink
-                to="/login"
-                className={({ isActive }) => getNavLinkClass(isActive)}
-              >
-                Login
-              </NavLink>
-
-              <NavLink
-                to="/cadastro"
-                className={({ isActive }) => getNavLinkClass(isActive)}
-              >
-                Cadastro
-              </NavLink>
-            </div>
-          )}
-
-          {!loadingAuth && isAuthenticated && (
-            <div className="user-panel">
-              <div className="user-chip">
-                <span className="user-label">Olá,</span>
-                <strong>{usuario?.nome}</strong>
-              </div>
-
-              <button className="logout-btn" onClick={handleLogout}>
-                Sair
-              </button>
-            </div>
-          )}
-
-          <div className="theme-toggle-box">
-            <ThemeToggle />
-          </div>
-        </div>
+  return <header className="relative z-20 border-b border-stroke bg-paper text-ink">
+    <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-50 focus:bg-surface focus:p-3">Pular para conteúdo</a>
+    <div className="mx-auto flex min-h-22 max-w-7xl items-center justify-between gap-5 px-5 sm:px-8">
+      <Link to="/" aria-label="BiblioConnect — início" className="flex shrink-0 items-center gap-2">
+        <BrandLogo className="h-10 w-10"/>
+        <span className="font-display text-[23px] font-semibold tracking-[-0.03em]">BiblioConnect<span className="block font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-muted">Sua próxima leitura</span></span>
+      </Link>
+      <div className="hidden items-center gap-6 xl:flex">{links()}</div>
+      <div className="flex shrink-0 items-center gap-1"><ThemeToggle/>
+        <Button variant="ghost" className="px-2 xl:hidden" onClick={()=>setOpen(true)} aria-label="Abrir navegação" aria-expanded={open} aria-controls="menu-principal"><Menu size={22} aria-hidden="true"/></Button>
       </div>
-    </header>
-  );
+    </div>
+    <Dialog open={open} title="Navegação" onClose={close}><div id="menu-principal" className="grid gap-6">{links(true)}</div></Dialog>
+  </header>;
 }
-
-export default Navbar;

@@ -6,9 +6,9 @@ function ProtectedRoute({ children }) {
 
   if (loadingAuth) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Verificando autenticação...</p>
+      <main className="mx-auto max-w-7xl px-5 py-16">
+        <div role="status">
+          <p className="text-muted">Verificando autenticação...</p>
         </div>
       </main>
     );
