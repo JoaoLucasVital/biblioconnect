@@ -1,4 +1,5 @@
 import Field from "../components/ui/Field.jsx";
+import GoogleSignIn from "../features/account/GoogleSignIn.jsx";
 import Button from "../components/ui/Button.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import { useState } from "react";
@@ -98,6 +99,7 @@ function Login() {
             {loading ? "Entrando..." : "Entrar"}
           </Button>
         </form>
+        <GoogleSignIn/>
 
         {import.meta.env.DEV && <div  className="mt-7 grid gap-1 border-l-2 border-stroke pl-4 text-xs text-muted">
           <strong>Acesso administrativo de teste</strong>

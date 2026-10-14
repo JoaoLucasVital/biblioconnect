@@ -9,7 +9,7 @@ import ResetPassword from "../../pages/ResetPassword.jsx";
 import {AuthContext} from "../../context/auth.js";
 import {renderWithRouter} from "../../test/renderWithRouter.jsx";
 import api from "../../api/api.js";
-vi.mock("../../api/api.js",()=>({default:{post:vi.fn(),patch:vi.fn()}}));
+vi.mock("../../api/api.js",()=>({default:{post:vi.fn(),patch:vi.fn(),get:vi.fn().mockResolvedValue({data:{googleEnabled:false}})}}));
 it("login inválido preserva email e reenvia confirmação pelo contrato atual",async()=>{
   const login=vi.fn().mockRejectedValue({response:{data:{erro:"Confirme seu email",precisaConfirmarEmail:true}}});
   const resendConfirmation=vi.fn().mockResolvedValue({mensagem:"Confirmação reenviada"});

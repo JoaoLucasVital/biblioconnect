@@ -7,6 +7,10 @@ import { AuthContext } from "./auth.js";
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
+  const acceptSession = useCallback(({usuario,csrfToken}) => {
+    api.setCsrfToken(csrfToken);
+    setUsuario(usuario);
+  }, []);
 
   const carregarUsuarioLogado = useCallback(async () => {
     localStorage.removeItem("@biblioconnect:token");
@@ -72,6 +76,7 @@ export function AuthProvider({ children }) {
         register,
         resendConfirmation,
         logout,
+        acceptSession,
       }}
     >
       {children}

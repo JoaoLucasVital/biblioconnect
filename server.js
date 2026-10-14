@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import {createAuth} from "./src/middleware/auth.js";
 import {revokeUserSessions} from "./src/services/authSessionService.js";
+import {createGoogleAuthRoutes} from "./src/routes/googleAuthRoutes.js";
 import crypto from "crypto";
 import multer from "multer";
 import path from "path";
@@ -86,6 +87,11 @@ app.use("/login", auth.rateLimit("login-ip",{limit:20,windowMs:quarterHour}), au
 app.use(["/reenviar-confirmacao","/esqueci-senha"], auth.rateLimit("email-ip",{limit:20,windowMs:quarterHour}), auth.rateLimit("email-account",{limit:3,windowMs:quarterHour,key:emailKey}));
 app.get("/auth/session", auth.sessionResponse);
 app.post("/auth/logout", auth.authenticate, auth.signOut);
+app.use(createGoogleAuthRoutes({prisma,auth,sendConfirmation:async usuario => {
+  const token=gerarTokenConfirmacaoEmail();
+  await prisma.usuario.update({where:{id:usuario.id},data:{tokenConfirmacaoEmail:token,tokenConfirmacaoExpira:gerarDataExpiracaoToken()}});
+  await enviarEmailConfirmacaoCadastro(usuario,token);
+}}));
 
 // ======================
 // UPLOADS - IMAGENS DOS LIVROS

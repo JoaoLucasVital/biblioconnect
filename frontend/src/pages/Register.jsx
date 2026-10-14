@@ -1,4 +1,5 @@
 import Field from "../components/ui/Field.jsx";
+import GoogleSignIn from "../features/account/GoogleSignIn.jsx";
 import Button from "../components/ui/Button.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import { useState } from "react";
@@ -378,6 +379,7 @@ function Register() {
             {loading ? "Cadastrando..." : "Criar conta"}
           </Button>
         </form>
+        <GoogleSignIn/>
 
         <p  className="mt-7 text-sm text-muted [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-4">
           Já tem conta? <Link to="/login">Entrar</Link>
