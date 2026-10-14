@@ -196,8 +196,8 @@ Cada task abaixo tem ciclo vermelho → implementação → verde → commit loc
 - [x] CLI oficial consultada no npm: Vercel 64.1.0, executável via `rtk proxy npx --yes vercel@64.1.0` sem instalação global/dependência do app.
 - [x] Comandos de categories/discover tentados; CLI iniciou login por ausência de credenciais inclusive no modo não interativo. Fluxos interrompidos; nenhum projeto/recurso foi criado. Ajuda da CLI confirma os comandos e flags. Não repetir descoberta até autenticação deliberada do usuário.
 - [ ] Usuário autentica Vercel e configura Google Cloud; confirmar estado atual de Stripe/provedor de e-mail/recursos antes de provisionar. Google Cloud exige projeto, Routes API, faturamento e cliente web de login distintos da API key Maps.
-- [ ] Revisão deste plano e escolha do método de execução. Recomendação: **nativa, nesta conversa**, por economia de contexto e dependência sequencial entre sessão, perfil, pagamento e deploy. Não disparar subagentes sem a escolha correspondente.
+- [x] Plano revisado/aprovado pelo usuário: **“Aprovo o plano; executar aqui”**. Execução nativa nesta conversa; sem subagentes por task.
 
 ## Auto-revisão do plano
 
-Cobertura da especificação conferida: identidade/sessão/e-mail (2–4), perfil/imagens (5), favoritos/avaliações/motion (6–7), frete (8), pagamentos (9–10), dados/deploy (11–12). Contratos e nomes compartilhados estão definidos nas Interfaces; os cinco pontos de Review Focus têm testes nas tasks indicadas. A configuração externa não foi tratada como pronta nem substituída por simulação. Revisão do usuário ainda pendente; nenhuma task de produto foi iniciada.
+Cobertura da especificação conferida: identidade/sessão/e-mail (2–4), perfil/imagens (5), favoritos/avaliações/motion (6–7), frete (8), pagamentos (9–10), dados/deploy (11–12). Contratos e nomes compartilhados estão definidos nas Interfaces; os cinco pontos de Review Focus têm testes nas tasks indicadas. A configuração externa não foi tratada como pronta nem substituída por simulação. Plano aprovado; progresso no ledger de execução.

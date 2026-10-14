@@ -11,7 +11,9 @@ model Usuario {
   id                     Int       @id @default(autoincrement())
   nome                   String
   email                  String    @unique
-  senha                  String
+  senha                  String?
+  avatarKey              String?
+  stripeCustomerId       String?   @unique
   telefone               String?
 
   endereco               String?
@@ -27,9 +29,11 @@ model Usuario {
   role                   String    @default("CLIENTE")
   emailConfirmado        Boolean   @default(false)
   tokenConfirmacaoEmail  String?   @unique
+  tokenConfirmacaoHash   String?   @unique
   tokenConfirmacaoExpira DateTime?
 
   tokenResetSenha        String?   @unique
+  tokenResetSenhaHash    String?   @unique
   tokenResetSenhaExpira  DateTime?
 
   bloqueado              Boolean   @default(false)
@@ -39,6 +43,10 @@ model Usuario {
   avaliacoes             Avaliacao[]
   conversas              Conversa[]
   mensagensChat          MensagemChat[]
+  identidades            IdentidadeExterna[]
+  sessoes                Sessao[]
+  favoritos              Favorito[]
+  operacoes              OperacaoIdempotente[]
 }
 
 model Livro {
@@ -67,6 +75,8 @@ model Livro {
 
   pedidos         Pedido[]
   avaliacoes      Avaliacao[]
+  favoritos       Favorito[]
+  eventosFavorito EventoFavorito[]
 }
 
 model Pedido {
@@ -122,9 +132,119 @@ model Pagamento {
 
   pedidoId Int
   pedido   Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  eventosGateway EventoGateway[]
 
   @@index([gatewayPaymentId])
   @@index([gatewayPreferenceId])
+}
+
+model IdentidadeExterna {
+  id        String   @id @default(cuid())
+  provider  String
+  subject   String
+  usuarioId Int
+  createdAt DateTime @default(now())
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, subject])
+  @@index([usuarioId])
+}
+
+model Sessao {
+  id                      String    @id @default(cuid())
+  tokenHash               String    @unique
+  previousTokenHash       String?   @unique
+  previousTokenValidUntil DateTime?
+  usuarioId               Int
+  lembrar                 Boolean   @default(false)
+  createdAt               DateTime  @default(now())
+  lastSeenAt              DateTime  @default(now())
+  rotatedAt               DateTime  @default(now())
+  idleExpiresAt           DateTime
+  absoluteExpiresAt       DateTime
+  revokedAt               DateTime?
+  usuario                 Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, revokedAt])
+  @@index([idleExpiresAt])
+}
+
+model DesafioGoogle {
+  id         String    @id @default(cuid())
+  nonceHash  String    @unique
+  cookieHash String
+  lembrar    Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+  consumedAt DateTime?
+
+  @@index([expiresAt])
+}
+
+model Favorito {
+  id        Int      @id @default(autoincrement())
+  usuarioId Int
+  livroId   Int
+  createdAt DateTime @default(now())
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  livro     Livro    @relation(fields: [livroId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, livroId])
+  @@index([livroId])
+  @@index([usuarioId, createdAt])
+}
+
+model EventoFavorito {
+  id        BigInt   @id @default(autoincrement())
+  livroId   Int
+  total     Int
+  createdAt DateTime @default(now())
+  livro     Livro    @relation(fields: [livroId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([livroId, id])
+}
+
+model EventoGateway {
+  id          String     @id @default(cuid())
+  gateway     String
+  eventId     String
+  tipo        String
+  pagamentoId Int?
+  createdAt   DateTime   @default(now())
+  pagamento   Pagamento? @relation(fields: [pagamentoId], references: [id], onDelete: SetNull)
+
+  @@unique([gateway, eventId])
+  @@index([pagamentoId])
+}
+
+model OperacaoIdempotente {
+  id          String   @id @default(cuid())
+  usuarioId   Int
+  scope       String
+  keyHash     String
+  fingerprint String
+  resultadoId Int?
+  state       String   @default("pendente")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expiresAt   DateTime
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, scope, keyHash])
+  @@index([expiresAt])
+}
+
+model LimiteOperacao {
+  id          String   @id @default(cuid())
+  scope       String
+  keyHash     String
+  windowStart DateTime
+  count       Int      @default(0)
+  expiresAt   DateTime
+
+  @@unique([scope, keyHash, windowStart])
+  @@index([expiresAt])
 }
 
 model Avaliacao {
