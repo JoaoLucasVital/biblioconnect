@@ -1,3 +1,5 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import Button from "../components/ui/Button.jsx";
 import { useRef, useCallback, useEffect, useState } from "react";
 import api from "../api/api.js";
 
@@ -70,30 +72,30 @@ function AdminChat() {
   }, [carregarConversas]);
 
   return (
-    <main className="page">
-      <div className="container admin-chat-layout">
-        <aside className="chat-conversations">
-          <h1>Atendimentos</h1>
-          {feedback && <p className="feedback-banner error">{feedback}</p>}
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8 grid min-w-0 gap-7 xl:grid-cols-[260px_minmax(0,1fr)]">
+        <aside  className="grid content-start gap-3">
+          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Atendimentos</h1>
+          {feedback && <StatusMessage type={"error"}>{feedback}</StatusMessage>}
           {conversas.map((conversa) => (
-            <button key={conversa.id} onClick={() => abrir(conversa.id)} className="conversation-button">
+            <Button key={conversa.id} onClick={() => abrir(conversa.id)} type="button" variant="secondary" className="grid min-w-0 gap-2 border border-stroke p-4 text-left text-sm [&_small]:truncate [&_small]:text-xs [&_small]:text-muted">
               <strong>{conversa.usuario?.nome}</strong>
               <span>{conversa.status}</span>
               <small>{conversa.mensagens?.[0]?.texto || "Sem mensagens"}</small>
-            </button>
+            </Button>
           ))}
         </aside>
 
-        <section className="chat-shell admin-chat-shell">
-          {!selecionada ? <p className="chat-empty">Selecione uma conversa.</p> : (
+        <section  className="min-w-0 border border-stroke bg-surface min-h-80">
+          {!selecionada ? <p  className="py-10 text-center text-sm text-muted">Selecione uma conversa.</p> : (
             <>
-              <div className="admin-chat-header">
+              <div  className="flex flex-wrap items-start justify-between gap-3 border-b border-stroke p-4 text-sm [&_small]:block [&_small]:text-xs [&_small]:text-muted">
                 <div><strong>{selecionada.usuario?.nome}</strong><small>{selecionada.usuario?.email}</small></div>
-                {selecionada.status === "aberta" && <button className="btn btn-outline" onClick={encerrar}>Encerrar</button>}
+                {selecionada.status === "aberta" && <Button onClick={encerrar} type="button" variant="secondary">Encerrar</Button>}
               </div>
-              <div className="chat-messages">
+              <div  className="grid max-h-[55dvh] min-h-56 gap-4 overflow-y-auto p-4 sm:p-6">
                 {selecionada.mensagens?.map((mensagem) => (
-                  <div className={`chat-message ${mensagem.remetenteRole === "ADMIN" ? "company" : "client"}`} key={mensagem.id}>
+                  <div key={mensagem.id} className="max-w-[90%] wrap-anywhere rounded-md border border-stroke p-4 text-sm [&_strong]:block [&_strong]:mb-2 [&_small]:mt-2 [&_small]:block [&_small]:text-xs [&_small]:text-muted">
                     <strong>{mensagem.remetente?.nome}</strong>
                     <p>{mensagem.texto}</p>
                     <small>{new Date(mensagem.createdAt).toLocaleString("pt-BR")}</small>
@@ -101,9 +103,9 @@ function AdminChat() {
                 ))}
               </div>
               {selecionada.status === "aberta" && (
-                <form className="chat-compose" onSubmit={responder}>
-                  <textarea aria-label="Resposta ao cliente" maxLength={2000} disabled={enviando} value={texto} onChange={(event) => setTexto(event.target.value)} required />
-                  <button className="btn btn-primary" disabled={enviando}>{enviando ? "Enviando..." : "Responder"}</button>
+                <form onSubmit={responder} className="grid gap-3 border-t border-stroke p-4 sm:grid-cols-[1fr_auto]">
+                  <textarea aria-label="Resposta ao cliente" maxLength={2000} disabled={enviando} value={texto} onChange={(event) => setTexto(event.target.value)} required className="min-h-11 w-full min-w-0 rounded-md border border-muted bg-surface px-3 py-2.5 text-base text-ink placeholder:text-muted disabled:opacity-60"/>
+                  <Button disabled={enviando} type="submit" variant="primary">{enviando ? "Enviando..." : "Responder"}</Button>
                 </form>
               )}
             </>

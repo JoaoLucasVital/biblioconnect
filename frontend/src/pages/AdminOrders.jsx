@@ -1,3 +1,8 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import Button from "../components/ui/Button.jsx";
+import Field from "../components/ui/Field.jsx";
+import StatusBadge from "../components/ui/StatusBadge.jsx";
+import Dialog from "../components/ui/Dialog.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useMemo, useState } from "react";
 import api from "../api/api.js";
@@ -98,7 +103,7 @@ function AdminOrders() {
   }
 
   async function confirmarStatus() {
-    if (!pedidoAcao || !novoStatus) return;
+    if (!pedidoAcao || !novoStatus || processando) return;
 
     try {
       setProcessando(true);
@@ -198,22 +203,22 @@ function AdminOrders() {
 
   if (loading) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Carregando pedidos...</p>
+      <main  className="py-10 sm:py-14">
+        <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando pedidos...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="page admin-animated-page">
-      <div className="container">
-        <div className="orders-admin-header">
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        <div  className="mb-8">
           <div>
-            <h1 className="page-title">Gerenciar Pedidos</h1>
+            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Gerenciar Pedidos</h1>
 
-            <p className="page-subtitle">
+            <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
               Finalize apenas pedidos com pagamento aprovado. Pedidos pendentes
               continuam aguardando confirmação financeira.
             </p>
@@ -221,10 +226,10 @@ function AdminOrders() {
         </div>
 
         {feedback.text && (
-          <p className={`feedback-banner ${feedback.type}`}>{feedback.text}</p>
+          <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>
         )}
 
-        <section className="orders-payment-rule">
+        <section  className="my-5 border-l-2 border-accent pl-4 text-sm text-muted">
           <strong>Regra operacional ativa</strong>
           <p>
             Pedidos só podem ser concluídos ou devolvidos depois que o pagamento
@@ -232,59 +237,39 @@ function AdminOrders() {
           </p>
         </section>
 
-        <section className="orders-filter-panel">
-          <div className="orders-filter-top">
+        <section  className="my-8 border-y border-stroke py-6">
+          <div  className="mb-5 flex flex-wrap justify-between gap-4 [&_h2]:font-display [&_h2]:text-2xl [&_p]:text-sm [&_p]:text-muted">
             <div>
-              <h2>Filtros</h2>
+              <h2  className="font-display text-2xl leading-snug">Filtros</h2>
               <p>Encontre pedidos por tipo, status, cliente ou livro.</p>
             </div>
 
-            <button className="btn btn-outline" onClick={limparFiltros}>
+            <Button onClick={limparFiltros} type="button" variant="secondary">
               Limpar filtros
-            </button>
+            </Button>
           </div>
 
-          <div className="orders-filter-grid">
-            <div className="form-group">
-              <label>Buscar</label>
-              <input
-                type="text"
-                value={busca}
-                onChange={(event) => setBusca(event.target.value)}
-                placeholder="Nome, email, telefone, livro ou pagamento"
-              />
-            </div>
+          <div  className="grid items-end gap-4 md:grid-cols-3">
+            <div className="grid gap-2"><Field label={"Buscar"}><input type="text" value={busca} onChange={(event) => setBusca(event.target.value)} placeholder="Nome, email, telefone, livro ou pagamento" /></Field></div>
 
-            <div className="form-group">
-              <label>Tipo</label>
-              <select
-                value={filtroTipo}
-                onChange={(event) => setFiltroTipo(event.target.value)}
-              >
+            <div className="grid gap-2"><Field label={"Tipo"}><select value={filtroTipo} onChange={(event) => setFiltroTipo(event.target.value)} >
                 <option value="todos">Todos os tipos</option>
                 <option value="compra">Compra</option>
                 <option value="reserva">Reserva</option>
                 <option value="aluguel">Aluguel</option>
-              </select>
-            </div>
+              </select></Field></div>
 
-            <div className="form-group">
-              <label>Status</label>
-              <select
-                value={filtroStatus}
-                onChange={(event) => setFiltroStatus(event.target.value)}
-              >
+            <div className="grid gap-2"><Field label={"Status"}><select value={filtroStatus} onChange={(event) => setFiltroStatus(event.target.value)} >
                 <option value="todos">Todos os status</option>
                 <option value="pendente">Pendente</option>
                 <option value="concluido">Concluído</option>
                 <option value="devolvido">Devolvido</option>
                 <option value="cancelado">Cancelado</option>
-              </select>
-            </div>
+              </select></Field></div>
           </div>
         </section>
 
-        <section className="orders-admin-summary">
+        <section  className="my-8 grid grid-cols-2 gap-6 lg:grid-cols-4 [&>div]:grid [&>div]:gap-1 [&_span]:text-xs [&_span]:text-muted [&_strong]:font-display [&_strong]:text-2xl">
           <div>
             <span>Pedidos encontrados</span>
             <strong>{pedidosFiltrados.length}</strong>
@@ -307,20 +292,20 @@ function AdminOrders() {
         </section>
 
         {pedidosFiltrados.length === 0 ? (
-          <div className="empty-state">
-            <h2>Nenhum pedido encontrado</h2>
+          <div  className="my-8 border-y border-stroke py-12 text-muted [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink">
+            <h2  className="font-display text-2xl leading-snug">Nenhum pedido encontrado</h2>
             <p>
               Ajuste os filtros ou aguarde clientes realizarem ações no
               catálogo.
             </p>
           </div>
         ) : (
-          <div className="orders-groups">
+          <div  className="mt-10 grid gap-10">
             {grupos.map((grupo) => (
-              <section className="orders-group" key={grupo.titulo}>
-                <div className="orders-group-header">
+              <section key={grupo.titulo} className="min-w-0">
+                <div  className="mb-5 flex items-center justify-between gap-3 [&_h2]:font-display [&_h2]:text-2xl [&_p]:text-sm [&_p]:text-muted">
                   <div>
-                    <h2>{grupo.titulo}</h2>
+                    <h2  className="font-display text-2xl leading-snug">{grupo.titulo}</h2>
                     <p>{grupo.descricao}</p>
                   </div>
 
@@ -328,47 +313,41 @@ function AdminOrders() {
                 </div>
 
                 {grupo.pedidos.length === 0 ? (
-                  <div className="orders-empty-small">
+                  <div  className="border-t border-stroke py-6 text-sm text-muted">
                     Nenhum pedido nesta categoria.
                   </div>
                 ) : (
-                  <div className="admin-orders-list">
+                  <div  className="grid gap-6">
                     {grupo.pedidos.map((pedido) => {
                       const pagamentoAprovado =
                         pedido.statusPagamento === "pago";
 
                       return (
-                        <article className="admin-order-card" key={pedido.id}>
-                          <div className="admin-order-top">
-                            <div className="order-icon">
+                        <article key={pedido.id} className="min-w-0 border-t border-stroke py-6">
+                          <div  className="flex min-w-0 items-start gap-4">
+                            <div  className="shrink-0 text-2xl">
                               {pedido.tipo === "compra" && "💰"}
                               {pedido.tipo === "reserva" && "📌"}
                               {pedido.tipo === "aluguel" && "📖"}
                             </div>
 
                             <div>
-                              <div className="order-title-row">
-                                <h2>{pedido.livro?.titulo}</h2>
+                              <div  className="flex flex-wrap items-center gap-2 [&_h2]:w-full [&_h2]:wrap-anywhere [&_h2]:font-display [&_h2]:text-2xl">
+                                <h2  className="font-display text-2xl leading-snug">{pedido.livro?.titulo}</h2>
 
-                                <span className={`order-badge ${pedido.tipo}`}>
+                                <StatusBadge>
                                   {traduzirTipo(pedido.tipo)}
-                                </span>
+                                </StatusBadge>
 
-                                <span
-                                  className={`status-badge ${pedido.status}`}
-                                >
+                                <StatusBadge>
                                   {traduzirStatus(pedido.status)}
-                                </span>
+                                </StatusBadge>
 
-                                <span
-                                  className={`payment-mini-status ${
-                                    pedido.statusPagamento || "pendente"
-                                  }`}
-                                >
+                                <StatusBadge>
                                   {traduzirPagamento(
                                     pedido.statusPagamento || "pendente"
                                   )}
-                                </span>
+                                </StatusBadge>
                               </div>
 
                               <p>
@@ -384,13 +363,13 @@ function AdminOrders() {
 
                           {!pagamentoAprovado &&
                             pedido.status === "pendente" && (
-                              <div className="payment-lock-warning">
+                              <div  className="my-3 border-l-2 border-accent pl-3 text-sm text-muted">
                                 Pagamento ainda não aprovado. Finalização
                                 bloqueada.
                               </div>
                             )}
 
-                          <div className="admin-order-grid">
+                          <div  className="my-5 grid grid-cols-2 gap-4 lg:grid-cols-3 [&>div]:grid [&>div]:gap-1 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:text-sm">
                             <div>
                               <span>Email</span>
                               <strong>{pedido.usuario?.email}</strong>
@@ -454,37 +433,26 @@ function AdminOrders() {
                           </div>
 
                           {pedido.status === "pendente" && (
-                            <div className="admin-order-actions">
+                            <div  className="flex flex-wrap gap-2">
                               {pedido.tipo === "aluguel" ? (
-                                <button
-                                  className="btn btn-primary"
-                                  onClick={() =>
+                                <Button onClick={() =>
                                     abrirConfirmacao(pedido, "devolvido")
-                                  }
-                                  disabled={!pagamentoAprovado}
-                                >
+                                  } disabled={!pagamentoAprovado} type="button" variant="primary">
                                   Marcar devolvido
-                                </button>
+                                </Button>
                               ) : (
-                                <button
-                                  className="btn btn-primary"
-                                  onClick={() =>
+                                <Button onClick={() =>
                                     abrirConfirmacao(pedido, "concluido")
-                                  }
-                                  disabled={!pagamentoAprovado}
-                                >
+                                  } disabled={!pagamentoAprovado} type="button" variant="primary">
                                   Marcar concluído
-                                </button>
+                                </Button>
                               )}
 
-                              <button
-                                className="btn btn-danger"
-                                onClick={() =>
+                              <Button onClick={() =>
                                   abrirConfirmacao(pedido, "cancelado")
-                                }
-                              >
+                                } type="button" variant="danger">
                                 Cancelar pedido
-                              </button>
+                              </Button>
                             </div>
                           )}
                         </article>
@@ -499,9 +467,16 @@ function AdminOrders() {
       </div>
 
       {pedidoAcao && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <h2>Atualizar pedido</h2>
+        <Dialog open title={<>Atualizar pedido</>} onClose={fecharConfirmacao} busy={processando} footer={<div  className="flex flex-wrap justify-end gap-3">
+              <Button onClick={fecharConfirmacao} disabled={processando} type="button" variant="secondary">
+                Voltar
+              </Button>
+
+              <Button onClick={confirmarStatus} disabled={processando} type="button" variant={novoStatus==="cancelado" ? "danger" : "primary"}>
+                {processando ? "Atualizando..." : "Confirmar"}
+              </Button>
+            </div>}>
+            
 
             <p>
               Confirmar alteração do pedido de{" "}
@@ -509,7 +484,7 @@ function AdminOrders() {
               <strong>{traduzirStatus(novoStatus)}</strong>?
             </p>
 
-            <div className="popup-details">
+            <div  className="grid gap-2 text-sm text-muted">
               <span>Livro: {pedidoAcao.livro?.titulo}</span>
               <span>Cliente: {pedidoAcao.usuario?.nome}</span>
               <span>Valor: {formatarMoeda(pedidoAcao.valor)}</span>
@@ -520,29 +495,8 @@ function AdminOrders() {
               <span>Multa atual: {formatarMoeda(pedidoAcao.multaAtual)}</span>
             </div>
 
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={fecharConfirmacao}
-                disabled={processando}
-              >
-                Voltar
-              </button>
-
-              <button
-                className={
-                  novoStatus === "cancelado"
-                    ? "btn btn-danger"
-                    : "btn btn-primary"
-                }
-                onClick={confirmarStatus}
-                disabled={processando}
-              >
-                {processando ? "Atualizando..." : "Confirmar"}
-              </button>
-            </div>
-          </div>
-        </div>
+            
+          {feedback.type==="error" && feedback.text && <StatusMessage type="error">{feedback.text}</StatusMessage>}</Dialog>
       )}
     </main>
   );

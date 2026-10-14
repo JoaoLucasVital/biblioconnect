@@ -1,3 +1,6 @@
+import Button from "../components/ui/Button.jsx";
+import Field from "../components/ui/Field.jsx";
+import StatusMessage from "../components/ui/StatusMessage.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -176,6 +179,7 @@ function EditBook() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (saving) return;
 
     setSaving(true);
     setErro("");
@@ -210,9 +214,9 @@ function EditBook() {
 
   if (loading) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Carregando livro...</p>
+      <main  className="py-10 sm:py-14">
+        <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando livro...</p>
         </div>
       </main>
     );
@@ -221,80 +225,58 @@ function EditBook() {
   const imagemParaExibir = previewImagem || montarUrlImagem(imagemAtual);
 
   return (
-    <main className="page">
-      <div className="container">
-        <div className="form-page-header">
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        <div  className="mb-5 flex flex-wrap items-start justify-between gap-5">
           <div>
-            <h1 className="page-title">Editar Livro</h1>
-            <p className="page-subtitle">
+            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Editar Livro</h1>
+            <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
               Atualize as informações, destaque, disponibilidade e imagem do
               livro.
             </p>
           </div>
 
-          <button
-            className="btn btn-outline"
-            onClick={() => navigate("/admin/livros")}
-          >
+          <Button onClick={() => navigate("/admin/livros")} type="button" variant="secondary">
             Voltar
-          </button>
+          </Button>
         </div>
 
-        <form className="book-form" onSubmit={handleSubmit}>
-          <div className="form-section">
-            <h2>Identificação por ISBN</h2>
-            <p className="form-helper">Consulte o Google Books para atualizar os dados bibliográficos automaticamente.</p>
-            <IsbnLookup
-              value={form.isbn}
-              onChange={(isbn) => setForm((prev) => ({ ...prev, isbn }))}
-              onFound={aplicarDadosIsbn}
-            />
+        <form onSubmit={handleSubmit} className="grid min-w-0 gap-8">
+          <div  className="grid min-w-0 gap-5 border-t border-stroke pt-6">
+            <h2  className="font-display text-2xl leading-snug">Identificação por ISBN</h2>
+            <p  className="text-sm leading-relaxed text-muted">Consulte o Google Books para atualizar os dados bibliográficos automaticamente.</p>
+            <IsbnLookup value={form.isbn} onChange={(isbn) => setForm((prev) => ({ ...prev, isbn }))} onFound={aplicarDadosIsbn}/>
           </div>
-          <div className="form-section book-image-section">
+          <div  className="grid min-w-0 gap-5 border-t border-stroke pt-6">
             <div>
-              <h2>Capa do livro</h2>
-              <p className="form-helper">
+              <h2  className="font-display text-2xl leading-snug">Capa do livro</h2>
+              <p  className="text-sm leading-relaxed text-muted">
                 A capa atual será mantida se você não selecionar uma nova
                 imagem.
               </p>
             </div>
 
-            <div className="book-upload-grid">
-              <div className="book-cover-preview-box">
+            <div  className="grid min-w-0 gap-6 sm:grid-cols-[144px_1fr]">
+              <div  className="grid aspect-[2/3] min-w-0 place-items-center overflow-hidden bg-soft">
                 {imagemParaExibir ? (
-                  <img
-                    src={imagemParaExibir}
-                    alt="Capa atual do livro"
-                    className="book-cover-preview-img"
-                  />
+                  <img src={imagemParaExibir} alt="Capa atual do livro" className="h-full w-full object-contain"/>
                 ) : (
-                  <div className="book-cover-placeholder">
+                  <div  className="grid gap-2 p-4 text-center text-sm text-muted">
                     <span>Sem imagem</span>
                     <small>Este livro ainda não possui capa cadastrada</small>
                   </div>
                 )}
               </div>
 
-              <div className="form-group">
-                <label>Trocar imagem da capa</label>
-                <input
-                  type="file"
-                  name="imagem"
-                  accept="image/jpeg,image/png,image/webp,image/jpg"
-                  onChange={handleImagemChange}
-                />
-
-                <small className="input-hint">
+              <div className="grid gap-2"><Field label={"Trocar imagem da capa"}><input type="file" name="imagem" accept="image/jpeg,image/png,image/webp,image/jpg" onChange={handleImagemChange} /></Field><small  className="text-xs text-muted">
                   Tamanho máximo: 5MB. Formatos aceitos: JPG, PNG ou WEBP.
-                </small>
-
-                {novaImagem ? (
-                  <div className="selected-file-info">
+                </small>{novaImagem ? (
+                  <div  className="text-sm text-muted">
                     <strong>Nova imagem selecionada:</strong>
                     <span>{novaImagem.name}</span>
                   </div>
                 ) : (
-                  <div className="selected-file-info">
+                  <div  className="text-sm text-muted">
                     <strong>Imagem atual:</strong>
                     <span>
                       {imagemAtual
@@ -302,162 +284,50 @@ function EditBook() {
                         : "Nenhuma imagem cadastrada ainda."}
                     </span>
                   </div>
-                )}
-              </div>
+                )}</div>
             </div>
           </div>
 
-          <div className="form-section">
-            <h2>Informações principais</h2>
+          <div  className="grid min-w-0 gap-5 border-t border-stroke pt-6">
+            <h2  className="font-display text-2xl leading-snug">Informações principais</h2>
 
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Título</label>
-                <input
-                  type="text"
-                  name="titulo"
-                  value={form.titulo}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            <div  className="grid min-w-0 gap-5 md:grid-cols-2">
+              <div className="grid gap-2"><Field label={"Título"}><input type="text" name="titulo" value={form.titulo} onChange={handleChange} required /></Field></div>
 
-              <div className="form-group">
-                <label>Autor</label>
-                <input
-                  type="text"
-                  name="autor"
-                  value={form.autor}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Autor"}><input type="text" name="autor" value={form.autor} onChange={handleChange} required /></Field></div>
 
-              <div className="form-group">
-                <label>Redator/Editora</label>
-                <input
-                  type="text"
-                  name="redator"
-                  value={form.redator}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Redator/Editora"}><input type="text" name="redator" value={form.redator} onChange={handleChange} required /></Field></div>
 
-              <div className="form-group">
-                <label>Ano</label>
-                <input
-                  type="number"
-                  name="ano"
-                  value={form.ano}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Ano"}><input type="number" name="ano" value={form.ano} onChange={handleChange} required /></Field></div>
 
-              <div className="form-group">
-                <label>Categoria</label>
-                <input
-                  type="text"
-                  name="categoria"
-                  value={form.categoria}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Categoria"}><input type="text" name="categoria" value={form.categoria} onChange={handleChange} required /></Field></div>
 
-              <div className="form-group">
-                <label>Estoque</label>
-                <input
-                  type="number"
-                  name="estoque"
-                  value={form.estoque}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Estoque"}><input type="number" name="estoque" value={form.estoque} onChange={handleChange} required /></Field></div>
             </div>
 
-            <div className="form-group">
-              <label>Sinopse</label>
-              <textarea
-                name="sinopse"
-                value={form.sinopse}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <div className="grid gap-2"><Field label={"Sinopse"}><textarea name="sinopse" value={form.sinopse} onChange={handleChange} required /></Field></div>
           </div>
 
-          <div className="form-section">
-            <h2>Valores e configurações</h2>
+          <div  className="grid min-w-0 gap-5 border-t border-stroke pt-6">
+            <h2  className="font-display text-2xl leading-snug">Valores e configurações</h2>
 
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Preço de compra</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  name="precoCompra"
-                  value={form.precoCompra}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            <div  className="grid min-w-0 gap-5 md:grid-cols-2">
+              <div className="grid gap-2"><Field label={"Preço de compra"}><input type="number" step="0.01" name="precoCompra" value={form.precoCompra} onChange={handleChange} required /></Field></div>
 
-              <div className="form-group">
-                <label>Preço de aluguel</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  name="precoAluguel"
-                  value={form.precoAluguel}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Preço de aluguel"}><input type="number" step="0.01" name="precoAluguel" value={form.precoAluguel} onChange={handleChange} required /></Field></div>
 
-              <div className="form-group">
-                <label>Dias inclusos</label>
-                <input
-                  type="number"
-                  name="diasInclusos"
-                  value={form.diasInclusos}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Dias inclusos"}><input type="number" name="diasInclusos" value={form.diasInclusos} onChange={handleChange} required /></Field></div>
 
-              <div className="form-group">
-                <label>Preço por dia extra</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  name="precoDiaExtra"
-                  value={form.precoDiaExtra}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <div className="grid gap-2"><Field label={"Preço por dia extra"}><input type="number" step="0.01" name="precoDiaExtra" value={form.precoDiaExtra} onChange={handleChange} required /></Field></div>
             </div>
 
-            <label className="checkbox-row">
-              <input
-                type="checkbox"
-                name="isDoado"
-                checked={form.isDoado}
-                onChange={handleChange}
-              />
+            <label  className="flex min-h-11 items-center gap-3 text-sm">
+              <input type="checkbox" name="isDoado" checked={form.isDoado} onChange={handleChange} className="h-4 w-4 shrink-0 accent-accent"/>
               <span>Este livro é doado?</span>
             </label>
 
-            <label className="checkbox-row">
-              <input
-                type="checkbox"
-                name="destaque"
-                checked={form.destaque}
-                onChange={handleChange}
-              />
+            <label  className="flex min-h-11 items-center gap-3 text-sm">
+              <input type="checkbox" name="destaque" checked={form.destaque} onChange={handleChange} className="h-4 w-4 shrink-0 accent-accent"/>
               <span>
                 {form.destaque
                   ? "Manter livro em destaque"
@@ -465,32 +335,23 @@ function EditBook() {
               </span>
             </label>
 
-            <label className="checkbox-row">
-              <input
-                type="checkbox"
-                name="disponivel"
-                checked={form.disponivel}
-                onChange={handleChange}
-              />
+            <label  className="flex min-h-11 items-center gap-3 text-sm">
+              <input type="checkbox" name="disponivel" checked={form.disponivel} onChange={handleChange} className="h-4 w-4 shrink-0 accent-accent"/>
               <span>Livro disponível para venda, aluguel e reserva?</span>
             </label>
           </div>
 
-          {erro && <p className="form-error">{erro}</p>}
-          {sucesso && <p className="form-success">{sucesso}</p>}
+          {erro && <StatusMessage type={"error"}>{erro}</StatusMessage>}
+          {sucesso && <StatusMessage type={"info"}>{sucesso}</StatusMessage>}
 
-          <div className="form-actions">
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={() => navigate("/admin/livros")}
-            >
+          <div  className="flex flex-wrap justify-end gap-3 border-t border-stroke pt-6">
+            <Button type="button" onClick={() => navigate("/admin/livros")} variant="secondary">
               Cancelar
-            </button>
+            </Button>
 
-            <button className="btn btn-primary" disabled={saving}>
+            <Button disabled={saving} type="submit" variant="primary">
               {saving ? "Salvando..." : "Salvar Alterações"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

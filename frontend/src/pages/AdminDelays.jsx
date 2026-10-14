@@ -1,3 +1,6 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import Button from "../components/ui/Button.jsx";
+import Dialog from "../components/ui/Dialog.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useState } from "react";
 import api from "../api/api.js";
@@ -56,7 +59,7 @@ function AdminDelays() {
   }
 
   async function confirmarAcao() {
-    if (!acaoConfirmacao) return;
+    if (!acaoConfirmacao || processandoId !== null) return;
 
     const { atraso, tipoAcao } = acaoConfirmacao;
 
@@ -108,31 +111,31 @@ function AdminDelays() {
 
   if (loading) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Carregando atrasos...</p>
+      <main  className="py-10 sm:py-14">
+        <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando atrasos...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="page admin-animated-page">
-      <div className="container">
-        <div className="delays-page-header">
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        <div  className="mb-8">
           <div>
-            <h1 className="page-title">Atrasos e Multas</h1>
-            <p className="page-subtitle">
+            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Atrasos e Multas</h1>
+            <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
               Acompanhe reservas e aluguéis atrasados, calcule multas e resolva pendências.
             </p>
           </div>
         </div>
 
         {feedback.text && (
-          <p className={`feedback-banner ${feedback.type}`}>{feedback.text}</p>
+          <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>
         )}
 
-        <section className="delays-summary">
+        <section  className="my-7 grid grid-cols-2 gap-6 [&>div]:grid [&>div]:gap-2 [&_span]:text-xs [&_span]:text-muted [&_strong]:font-display [&_strong]:text-3xl">
           <div>
             <span>Total de atrasos</span>
             <strong>{atrasos.length}</strong>
@@ -145,20 +148,20 @@ function AdminDelays() {
         </section>
 
         {atrasos.length === 0 ? (
-          <div className="empty-state">
-            <h2>Nenhum atraso no momento</h2>
+          <div  className="my-8 border-y border-stroke py-12 text-muted [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink">
+            <h2  className="font-display text-2xl leading-snug">Nenhum atraso no momento</h2>
             <p>
               Quando houver reservas ou aluguéis atrasados, eles aparecerão nesta área.
             </p>
           </div>
         ) : (
-          <div className="delays-list">
+          <div  className="grid gap-7">
             {atrasos.map((atraso) => (
-              <article className="delay-card" key={atraso.id}>
-                <div className="delay-content">
-                  <div className="delay-header">
+              <article key={atraso.id} className="min-w-0 border-t border-stroke py-6">
+                <div  className="min-w-0">
+                  <div  className="mb-5 flex flex-wrap justify-between gap-4 [&_h2]:font-display [&_h2]:text-2xl [&_p]:mt-2 [&_p]:text-sm [&_p]:text-muted">
                     <div>
-                      <h2>{atraso.livro.titulo}</h2>
+                      <h2  className="font-display text-2xl leading-snug">{atraso.livro.titulo}</h2>
 
                       <p>
                         {traduzirTipo(atraso.tipo)} de{" "}
@@ -166,10 +169,10 @@ function AdminDelays() {
                       </p>
                     </div>
 
-                    <span className="delay-fine">{formatarMoeda(atraso.multa)}</span>
+                    <span  className="font-display text-2xl text-red-700 dark:text-red-300">{formatarMoeda(atraso.multa)}</span>
                   </div>
 
-                  <div className="delay-grid">
+                  <div  className="grid grid-cols-2 gap-5 lg:grid-cols-3 [&>div]:grid [&>div]:gap-1 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:text-sm">
                     <div>
                       <span>Usuário</span>
                       <strong>{atraso.usuario.nome}</strong>
@@ -221,24 +224,16 @@ function AdminDelays() {
                     </div>
                   </div>
 
-                  <div className="delay-actions">
+                  <div  className="mt-6 flex flex-wrap gap-2">
                     {!atraso.usuario.bloqueado && (
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => abrirConfirmacao(atraso, "congelar")}
-                        disabled={processandoId === atraso.id}
-                      >
+                      <Button onClick={() => abrirConfirmacao(atraso, "congelar")} disabled={processandoId === atraso.id} type="button" variant="danger">
                         Congelar usuário
-                      </button>
+                      </Button>
                     )}
 
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => abrirConfirmacao(atraso, "resolver")}
-                      disabled={processandoId === atraso.id}
-                    >
+                    <Button onClick={() => abrirConfirmacao(atraso, "resolver")} disabled={processandoId === atraso.id} type="button" variant="primary">
                       Resolver pendência
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </article>
@@ -248,13 +243,22 @@ function AdminDelays() {
       </div>
 
       {acaoConfirmacao && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <h2>
+        <Dialog open title={<>
               {acaoConfirmacao.tipoAcao === "congelar"
                 ? "Congelar usuário"
                 : "Resolver pendência"}
-            </h2>
+            </>} onClose={fecharConfirmacao} busy={processandoId === acaoConfirmacao.atraso.id} footer={<div  className="flex flex-wrap justify-end gap-3">
+              <Button onClick={fecharConfirmacao} disabled={processandoId === acaoConfirmacao.atraso.id} type="button" variant="secondary">
+                Voltar
+              </Button>
+
+              <Button onClick={confirmarAcao} disabled={processandoId === acaoConfirmacao.atraso.id} type="button" variant="danger">
+                {processandoId === acaoConfirmacao.atraso.id
+                  ? "Processando..."
+                  : "Confirmar"}
+              </Button>
+            </div>}>
+            
 
             {acaoConfirmacao.tipoAcao === "congelar" ? (
               <p>
@@ -269,38 +273,15 @@ function AdminDelays() {
               </p>
             )}
 
-            <div className="popup-details">
+            <div  className="grid gap-2 text-sm text-muted">
               <span>Livro: {acaoConfirmacao.atraso.livro.titulo}</span>
               <span>Tipo: {traduzirTipo(acaoConfirmacao.atraso.tipo)}</span>
               <span>Dias de atraso: {acaoConfirmacao.atraso.diasAtraso}</span>
               <span>Multa: {formatarMoeda(acaoConfirmacao.atraso.multa)}</span>
             </div>
 
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={fecharConfirmacao}
-                disabled={processandoId === acaoConfirmacao.atraso.id}
-              >
-                Voltar
-              </button>
-
-              <button
-                className={
-                  acaoConfirmacao.tipoAcao === "congelar"
-                    ? "btn btn-danger"
-                    : "btn btn-primary"
-                }
-                onClick={confirmarAcao}
-                disabled={processandoId === acaoConfirmacao.atraso.id}
-              >
-                {processandoId === acaoConfirmacao.atraso.id
-                  ? "Processando..."
-                  : "Confirmar"}
-              </button>
-            </div>
-          </div>
-        </div>
+            
+          {feedback.type==="error" && feedback.text && <StatusMessage type="error">{feedback.text}</StatusMessage>}</Dialog>
       )}
     </main>
   );

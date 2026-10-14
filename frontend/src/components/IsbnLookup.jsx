@@ -1,5 +1,7 @@
 import { useState } from "react";
 import api from "../api/api.js";
+import Field from "./ui/Field.jsx";
+import Button from "./ui/Button.jsx";
 
 /**
  * Campo reutilizável de ISBN para cadastro/edição.
@@ -10,6 +12,7 @@ function IsbnLookup({ value, onChange, onFound }) {
   const [feedback, setFeedback] = useState("");
 
   async function buscar() {
+    if (loading) return;
     const isbn = String(value || "").trim();
     if (!isbn) {
       setFeedback("Informe o ISBN antes de buscar.");
@@ -30,22 +33,16 @@ function IsbnLookup({ value, onChange, onFound }) {
   }
 
   return (
-    <div className="isbn-lookup">
-      <div className="form-group">
-        <label>ISBN</label>
-        <div className="inline-field-action">
+    <div className="grid gap-3">
+      <Field label="ISBN" hint={feedback}>
           <input
             type="text"
             value={value}
             onChange={(event) => onChange(event.target.value)}
             placeholder="Ex: 9788535914849"
           />
-          <button type="button" className="btn btn-outline" onClick={buscar} disabled={loading}>
-            {loading ? "Buscando..." : "Preencher por ISBN"}
-          </button>
-        </div>
-        {feedback && <small className="input-hint">{feedback}</small>}
-      </div>
+      </Field>
+      <Button variant="secondary" onClick={buscar} busy={loading} className="justify-self-start">Preencher por ISBN</Button>
     </div>
   );
 }

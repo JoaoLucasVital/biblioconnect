@@ -1,3 +1,7 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import StatusBadge from "../components/ui/StatusBadge.jsx";
+import Button from "../components/ui/Button.jsx";
+import Dialog from "../components/ui/Dialog.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useMemo, useState } from "react";
 import {
@@ -117,7 +121,7 @@ function AdminFinance() {
   }
 
   async function confirmarPagamento() {
-    if (!pedidoAcao || !novoPagamento) return;
+    if (!pedidoAcao || !novoPagamento || processando) return;
 
     try {
       setProcessando(true);
@@ -173,22 +177,22 @@ function AdminFinance() {
 
   if (loading) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Carregando financeiro...</p>
+      <main  className="py-10 sm:py-14">
+        <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando financeiro...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="page admin-animated-page">
-      <div className="container">
-        <section className="finance-hero">
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        <section  className="mb-8 flex flex-wrap items-start justify-between gap-6 [&_h1]:font-display [&_h1]:text-4xl [&_p]:mt-3 [&_p]:max-w-xl [&_p]:text-sm [&_p]:text-muted">
           <div>
-            <span className="section-kicker">Controle financeiro</span>
+            <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Controle financeiro</span>
 
-            <h1>Financeiro da biblioteca</h1>
+            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Financeiro da biblioteca</h1>
 
             <p>
               Acompanhe apenas receitas aprovadas, pagamentos pendentes,
@@ -196,19 +200,19 @@ function AdminFinance() {
             </p>
           </div>
 
-          <div className="finance-hero-card">
+          <div  className="grid gap-2 border-l-2 border-accent pl-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:font-display [&_strong]:text-3xl">
             <span>Receita aprovada</span>
             <strong>{formatarMoeda(financeiro.totalRecebido)}</strong>
           </div>
         </section>
 
         {feedback.text && (
-          <p className={`feedback-banner ${feedback.type}`}>
+          <StatusMessage type={feedback.type}>
             {feedback.text}
-          </p>
+          </StatusMessage>
         )}
 
-        <section className="finance-rule-alert">
+        <section  className="my-5 border-l-2 border-stroke pl-4 text-sm text-muted">
           <strong>Regra financeira ativa</strong>
           <p>
             Valores pendentes, estornados ou cancelados não entram como receita.
@@ -217,124 +221,111 @@ function AdminFinance() {
           </p>
         </section>
 
-        <section className="finance-stats-grid">
-          <div className="finance-stat-card received">
+        <section  className="my-8 grid grid-cols-2 gap-5 xl:grid-cols-4">
+          <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-2xl">
             <span>Receita aprovada</span>
             <strong>{formatarMoeda(financeiro.totalRecebido)}</strong>
           </div>
 
-          <div className="finance-stat-card pending">
+          <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-2xl border-accent">
             <span>Total pendente</span>
             <strong>{formatarMoeda(financeiro.totalPendente)}</strong>
           </div>
 
-          <div className="finance-stat-card">
+          <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-2xl">
             <span>Compras pagas</span>
             <strong>{formatarMoeda(financeiro.totalCompras)}</strong>
           </div>
 
-          <div className="finance-stat-card">
+          <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-2xl">
             <span>Aluguéis pagos</span>
             <strong>{formatarMoeda(financeiro.totalAlugueis)}</strong>
           </div>
 
-          <div className="finance-stat-card">
+          <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-2xl">
             <span>Reservas/multas pagas</span>
             <strong>{formatarMoeda(financeiro.totalReservasMultas)}</strong>
           </div>
 
-          <div className="finance-stat-card">
+          <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-2xl">
             <span>Pedidos pagos</span>
             <strong>{financeiro.pedidosPagos}</strong>
           </div>
 
-          <div className="finance-stat-card">
+          <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-2xl">
             <span>Pagamentos pendentes</span>
             <strong>{financeiro.pedidosPendentes}</strong>
           </div>
 
-          <div className="finance-stat-card danger-money">
+          <div  className="grid min-w-0 gap-2 border-t border-stroke py-4 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-display [&_strong]:text-2xl">
             <span>Valor estornado</span>
             <strong>{formatarMoeda(financeiro.totalEstornado)}</strong>
           </div>
         </section>
 
-        <section className="dashboard-grid professional-chart-grid finance-charts">
-          <div className="chart-card professional-card">
-            <div className="chart-card-header">
+        <section  className="my-8 grid min-w-0 gap-7 xl:grid-cols-2">
+          <div  className="min-w-0 border-t border-stroke pt-6">
+            <div  className="mb-5 [&_h2]:font-display [&_h2]:text-xl [&_p]:mt-2 [&_p]:text-sm [&_p]:text-muted">
               <div>
-                <h2>Receita aprovada por tipo</h2>
+                <h2  className="font-display text-2xl leading-snug">Receita aprovada por tipo</h2>
                 <p>Somente pagamentos aprovados entram neste gráfico.</p>
               </div>
             </div>
 
-            <div className="real-chart-box">
+            <div  className="h-72 min-w-0 w-full">
               <ResponsiveContainer width="100%" height={320}>
                 <BarChart data={tipoChart}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#d6dde7" />
-                  <XAxis
-                    dataKey="nome"
-                    tick={{ fill: "#5b6676", fontSize: 12 }}
-                  />
-                  <YAxis tick={{ fill: "#5b6676", fontSize: 12 }} />
-                  <Tooltip formatter={(value) => formatarMoeda(value)} />
-                  <Bar dataKey="valor" fill="#1E3A5F" radius={[8, 8, 0, 0]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#d6dde7"/>
+                  <XAxis dataKey="nome" tick={{ fill: "#5b6676", fontSize: 12 }}/>
+                  <YAxis tick={{ fill: "#5b6676", fontSize: 12 }}/>
+                  <Tooltip formatter={(value) => formatarMoeda(value)}/>
+                  <Bar dataKey="valor" fill="#1E3A5F" radius={[8, 8, 0, 0]}/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="chart-card professional-card">
-            <div className="chart-card-header">
+          <div  className="min-w-0 border-t border-stroke pt-6">
+            <div  className="mb-5 [&_h2]:font-display [&_h2]:text-xl [&_p]:mt-2 [&_p]:text-sm [&_p]:text-muted">
               <div>
-                <h2>Status de pagamentos</h2>
+                <h2  className="font-display text-2xl leading-snug">Status de pagamentos</h2>
                 <p>Quantidade de pedidos por situação financeira.</p>
               </div>
             </div>
 
-            <div className="real-chart-box">
+            <div  className="h-72 min-w-0 w-full">
               <ResponsiveContainer width="100%" height={320}>
                 <PieChart>
-                  <Pie
-                    data={pagamentoChart}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={70}
-                    outerRadius={110}
-                    paddingAngle={4}
-                  >
+                  <Pie data={pagamentoChart} dataKey="value" nameKey="name" innerRadius={70} outerRadius={110} paddingAngle={4}>
                     {pagamentoChart.map((entry, index) => (
-                      <Cell
-                        key={entry.name}
-                        fill={pagamentoColors[index % pagamentoColors.length]}
-                      />
+                      <Cell key={entry.name} fill={pagamentoColors[index % pagamentoColors.length]}/>
                     ))}
                   </Pie>
-                  <Tooltip />
-                  <Legend />
+                  <Tooltip/>
+                  <Legend/>
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
         </section>
 
-        <section className="finance-orders-section">
-          <div className="section-heading-row">
+        <section  className="mt-10">
+          <div  className="mb-6 flex flex-wrap justify-between gap-4 [&_h2]:font-display [&_h2]:text-2xl [&_p]:text-sm [&_p]:text-muted">
             <div>
-              <span className="section-kicker">Movimentações recentes</span>
-              <h2>Pedidos financeiros</h2>
+              <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Movimentações recentes</span>
+              <h2  className="font-display text-2xl leading-snug">Pedidos financeiros</h2>
             </div>
           </div>
 
           {financeiro.pedidosRecentes.length === 0 ? (
-            <div className="empty-state">
-              <h2>Nenhuma movimentação financeira</h2>
+            <div  className="my-8 border-y border-stroke py-12 text-muted [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink">
+              <h2  className="font-display text-2xl leading-snug">Nenhuma movimentação financeira</h2>
               <p>Quando pedidos forem criados, eles aparecerão aqui.</p>
             </div>
           ) : (
-            <div className="finance-orders-list">
+            <div  className="grid gap-6">
               {financeiro.pedidosRecentes.map((pedido) => (
-                <article className="finance-order-card" key={pedido.id}>
+                <article key={pedido.id} className="grid min-w-0 gap-4 border-t border-stroke py-6 [&_h3]:wrap-anywhere [&_h3]:font-display [&_h3]:text-xl [&_p]:text-sm [&_small]:text-xs [&_small]:text-muted">
                   <div>
                     <h3>{pedido.livro?.titulo}</h3>
 
@@ -348,40 +339,26 @@ function AdminFinance() {
                     </small>
                   </div>
 
-                  <div className="finance-order-values">
+                  <div  className="flex flex-wrap items-center gap-4">
                     <span>{formatarMoeda(pedido.valor)}</span>
 
-                    <strong
-                      className={`payment-mini-status ${pedido.statusPagamento}`}
-                    >
+                    <StatusBadge>
                       {traduzirPagamento(pedido.statusPagamento)}
-                    </strong>
+                    </StatusBadge>
                   </div>
 
-                  <div className="finance-order-actions">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => abrirPagamento(pedido, "pago")}
-                      disabled={pedido.statusPagamento === "pago"}
-                    >
+                  <div  className="flex flex-wrap gap-2">
+                    <Button onClick={() => abrirPagamento(pedido, "pago")} disabled={pedido.statusPagamento === "pago"} type="button" variant="primary">
                       Marcar pago
-                    </button>
+                    </Button>
 
-                    <button
-                      className="btn btn-outline"
-                      onClick={() => abrirPagamento(pedido, "pendente")}
-                      disabled={pedido.statusPagamento === "pendente"}
-                    >
+                    <Button onClick={() => abrirPagamento(pedido, "pendente")} disabled={pedido.statusPagamento === "pendente"} type="button" variant="secondary">
                       Pendente
-                    </button>
+                    </Button>
 
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => abrirPagamento(pedido, "estornado")}
-                      disabled={pedido.statusPagamento === "estornado"}
-                    >
+                    <Button onClick={() => abrirPagamento(pedido, "estornado")} disabled={pedido.statusPagamento === "estornado"} type="button" variant="danger">
                       Estornar
-                    </button>
+                    </Button>
                   </div>
                 </article>
               ))}
@@ -391,9 +368,16 @@ function AdminFinance() {
       </div>
 
       {pedidoAcao && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <h2>Alterar pagamento</h2>
+        <Dialog open title={<>Alterar pagamento</>} onClose={fecharPagamento} busy={processando} footer={<div  className="flex flex-wrap justify-end gap-3">
+              <Button onClick={fecharPagamento} disabled={processando} type="button" variant="secondary">
+                Voltar
+              </Button>
+
+              <Button onClick={confirmarPagamento} disabled={processando} type="button" variant={novoPagamento==="estornado" ? "danger" : "primary"}>
+                {processando ? "Atualizando..." : "Confirmar"}
+              </Button>
+            </div>}>
+            
 
             <p>
               Confirmar alteração do pedido{" "}
@@ -401,7 +385,7 @@ function AdminFinance() {
               <strong>{traduzirPagamento(novoPagamento)}</strong>?
             </p>
 
-            <div className="popup-details">
+            <div  className="grid gap-2 text-sm text-muted">
               <span>Livro: {pedidoAcao.livro?.titulo}</span>
               <span>Cliente: {pedidoAcao.usuario?.nome}</span>
               <span>Valor: {formatarMoeda(pedidoAcao.valor)}</span>
@@ -411,29 +395,8 @@ function AdminFinance() {
               </span>
             </div>
 
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={fecharPagamento}
-                disabled={processando}
-              >
-                Voltar
-              </button>
-
-              <button
-                className={
-                  novoPagamento === "pago"
-                    ? "btn btn-primary"
-                    : "btn btn-danger"
-                }
-                onClick={confirmarPagamento}
-                disabled={processando}
-              >
-                {processando ? "Atualizando..." : "Confirmar"}
-              </button>
-            </div>
-          </div>
-        </div>
+            
+          {feedback.type==="error" && feedback.text && <StatusMessage type="error">{feedback.text}</StatusMessage>}</Dialog>
       )}
     </main>
   );

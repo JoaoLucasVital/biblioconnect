@@ -1,3 +1,7 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import Button from "../components/ui/Button.jsx";
+import Field from "../components/ui/Field.jsx";
+import Dialog from "../components/ui/Dialog.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useMemo, useState } from "react";
 import api from "../api/api.js";
@@ -68,7 +72,7 @@ function AdminUsers() {
   }
 
   async function confirmarAcao() {
-    if (!usuarioAcao || !tipoAcao) return;
+    if (!usuarioAcao || !tipoAcao || processando) return;
 
     try {
       setProcessando(true);
@@ -164,72 +168,58 @@ function AdminUsers() {
 
   if (loading) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Carregando usuários...</p>
+      <main  className="py-10 sm:py-14">
+        <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando usuários...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="page admin-animated-page">
-      <div className="container">
-        <h1 className="page-title">Usuários Cadastrados</h1>
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        <h1  className="font-display text-4xl leading-tight sm:text-5xl">Usuários Cadastrados</h1>
 
-        <p className="page-subtitle">
+        <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
           Visualize clientes, endereço completo, pendências, dados de contato e
           controle de congelamento.
         </p>
 
         {feedback.text && (
-          <p className={`feedback-banner ${feedback.type}`}>{feedback.text}</p>
+          <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>
         )}
 
-        <section className="users-filter-panel">
-          <div className="users-filter-top">
+        <section  className="my-8 border-y border-stroke py-6">
+          <div  className="mb-5 flex flex-wrap items-center justify-between gap-4 [&_h2]:font-display [&_h2]:text-2xl [&_p]:text-sm [&_p]:text-muted">
             <div>
-              <h2>Filtros de usuários</h2>
+              <h2  className="font-display text-2xl leading-snug">Filtros de usuários</h2>
               <p>
                 Busque clientes por dados pessoais, endereço, CEP ou status
                 operacional.
               </p>
             </div>
 
-            <button className="btn btn-outline" onClick={limparFiltros}>
+            <Button onClick={limparFiltros} type="button" variant="secondary">
               Limpar filtros
-            </button>
+            </Button>
           </div>
 
-          <div className="users-filter-grid">
-            <div className="form-group">
-              <label>Buscar usuário</label>
-              <input
-                type="text"
-                value={busca}
-                onChange={(event) => setBusca(event.target.value)}
-                placeholder="Nome, email, telefone, CEP, rua, bairro ou cidade"
-              />
-            </div>
+          <div  className="grid items-end gap-4 sm:grid-cols-2">
+            <div className="grid gap-2"><Field label={"Buscar usuário"}><input type="text" value={busca} onChange={(event) => setBusca(event.target.value)} placeholder="Nome, email, telefone, CEP, rua, bairro ou cidade" /></Field></div>
 
-            <div className="form-group">
-              <label>Status</label>
-              <select
-                value={filtroStatus}
-                onChange={(event) => setFiltroStatus(event.target.value)}
-              >
+            <div className="grid gap-2"><Field label={"Status"}><select value={filtroStatus} onChange={(event) => setFiltroStatus(event.target.value)} >
                 <option value="todos">Todos</option>
                 <option value="ativos">Ativos</option>
                 <option value="congelados">Congelados</option>
                 <option value="comMulta">Com multa</option>
                 <option value="emailConfirmado">Email confirmado</option>
                 <option value="emailPendente">Email pendente</option>
-              </select>
-            </div>
+              </select></Field></div>
           </div>
         </section>
 
-        <section className="users-summary-grid">
+        <section  className="mb-8 grid grid-cols-2 gap-5 xl:grid-cols-4 [&>div]:grid [&>div]:gap-2 [&_span]:text-xs [&_span]:text-muted [&_strong]:font-display [&_strong]:text-2xl">
           <div>
             <span>Total de usuários</span>
             <strong>{totalUsuarios}</strong>
@@ -262,45 +252,32 @@ function AdminUsers() {
         </section>
 
         {usuariosFiltrados.length === 0 ? (
-          <div className="empty-state">
-            <h2>Nenhum usuário encontrado</h2>
+          <div  className="my-8 border-y border-stroke py-12 text-muted [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink">
+            <h2  className="font-display text-2xl leading-snug">Nenhum usuário encontrado</h2>
             <p>
               Ajuste os filtros ou aguarde clientes criarem conta na plataforma.
             </p>
           </div>
         ) : (
-          <div className="admin-users-grid">
+          <div  className="grid gap-7">
             {usuariosFiltrados.map((usuario) => (
-              <article
-                className={
-                  usuario.bloqueado
-                    ? "admin-user-card user-blocked enhanced-user-card"
-                    : "admin-user-card enhanced-user-card"
-                }
-                key={usuario.id}
-              >
-                <div className="admin-user-top">
-                  <div className="admin-user-avatar">
+              <article key={usuario.id} className="min-w-0 border-t border-stroke py-6">
+                <div  className="flex min-w-0 items-start gap-4">
+                  <div  className="grid h-11 w-11 shrink-0 place-items-center bg-soft text-lg">
                     {usuario.nome?.charAt(0)?.toUpperCase() || "U"}
                   </div>
 
                   <div>
-                    <h2>{usuario.nome}</h2>
+                    <h2  className="font-display text-2xl leading-snug">{usuario.nome}</h2>
                     <p>{usuario.email}</p>
                   </div>
 
-                  <span
-                    className={
-                      usuario.bloqueado
-                        ? "user-status blocked"
-                        : "user-status active"
-                    }
-                  >
+                  <span  className="rounded bg-soft px-2 py-1 text-xs">
                     {usuario.bloqueado ? "Congelado" : "Ativo"}
                   </span>
                 </div>
 
-                <div className="admin-user-info">
+                <div  className="min-w-0 [&_h2]:wrap-anywhere [&_h2]:font-display [&_h2]:text-2xl [&_p]:wrap-anywhere [&_p]:text-sm [&_p]:text-muted">
                   <div>
                     <span>Telefone</span>
                     <strong>{usuario.telefone || "Não informado"}</strong>
@@ -332,13 +309,13 @@ function AdminUsers() {
                   </div>
                 </div>
 
-                <div className="user-address-box">
-                  <div className="user-address-header">
+                <div  className="my-6 border-l-2 border-stroke pl-5 text-sm">
+                  <div  className="mb-4 grid gap-2 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-medium">
                     <span>Endereço completo</span>
                     <strong>{montarEnderecoResumo(usuario)}</strong>
                   </div>
 
-                  <div className="user-address-grid">
+                  <div  className="grid grid-cols-2 gap-4 lg:grid-cols-3 [&>div]:grid [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:font-medium">
                     <div>
                       <span>Rua / Avenida</span>
                       <strong>{usuario.rua || "Não informado"}</strong>
@@ -369,7 +346,7 @@ function AdminUsers() {
                       <strong>{usuario.complemento || "Não informado"}</strong>
                     </div>
 
-                    <div className="address-reference">
+                    <div  className="col-span-full">
                       <span>Ponto de referência</span>
                       <strong>
                         {usuario.pontoReferencia || "Não informado"}
@@ -378,22 +355,14 @@ function AdminUsers() {
                   </div>
                 </div>
 
-                <div className="admin-user-actions">
-                  <button
-                    className={
-                      usuario.bloqueado ? "btn btn-primary" : "btn btn-dark"
-                    }
-                    onClick={() => abrirConfirmacao(usuario, "bloquear")}
-                  >
+                <div  className="mt-5 flex flex-wrap gap-2">
+                  <Button onClick={() => abrirConfirmacao(usuario, "bloquear")} type="button" variant={usuario.bloqueado ? "primary" : "secondary"}>
                     {usuario.bloqueado ? "Descongelar" : "Congelar"}
-                  </button>
+                  </Button>
 
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => abrirConfirmacao(usuario, "remover")}
-                  >
+                  <Button onClick={() => abrirConfirmacao(usuario, "remover")} type="button" variant="danger">
                     Remover
-                  </button>
+                  </Button>
                 </div>
               </article>
             ))}
@@ -402,15 +371,22 @@ function AdminUsers() {
       </div>
 
       {usuarioAcao && (
-        <div className="popup-overlay final-modal-overlay">
-          <div className="popup-card final-modal-card">
-            <h2>
+        <Dialog open title={<>
               {tipoAcao === "remover"
                 ? "Remover usuário"
                 : usuarioAcao.bloqueado
                 ? "Descongelar usuário"
                 : "Congelar usuário"}
-            </h2>
+            </>} onClose={fecharConfirmacao} busy={processando} footer={<div  className="flex flex-wrap justify-end gap-3">
+              <Button onClick={fecharConfirmacao} disabled={processando} type="button" variant="secondary">
+                Voltar
+              </Button>
+
+              <Button onClick={confirmarAcao} disabled={processando} type="button" variant={tipoAcao==="remover" ? "danger" : "primary"}>
+                {processando ? "Processando..." : "Confirmar"}
+              </Button>
+            </div>}>
+            
 
             <p>
               {tipoAcao === "remover"
@@ -420,7 +396,7 @@ function AdminUsers() {
                 : "Este usuário ficará impedido de comprar, alugar e reservar novos livros até ser descongelado."}
             </p>
 
-            <div className="popup-details">
+            <div  className="grid gap-2 text-sm text-muted">
               <span>Nome: {usuarioAcao.nome}</span>
               <span>Email: {usuarioAcao.email}</span>
               <span>Telefone: {usuarioAcao.telefone || "Não informado"}</span>
@@ -428,27 +404,8 @@ function AdminUsers() {
               <span>Multa total: {formatarMoeda(usuarioAcao.multaTotal)}</span>
             </div>
 
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={fecharConfirmacao}
-                disabled={processando}
-              >
-                Voltar
-              </button>
-
-              <button
-                className={
-                  tipoAcao === "remover" ? "btn btn-danger" : "btn btn-primary"
-                }
-                onClick={confirmarAcao}
-                disabled={processando}
-              >
-                {processando ? "Processando..." : "Confirmar"}
-              </button>
-            </div>
-          </div>
-        </div>
+            
+          {feedback.type==="error" && feedback.text && <StatusMessage type="error">{feedback.text}</StatusMessage>}</Dialog>
       )}
     </main>
   );

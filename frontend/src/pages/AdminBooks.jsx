@@ -1,19 +1,11 @@
+import StatusMessage from "../components/ui/StatusMessage.jsx";
+import Button from "../components/ui/Button.jsx";
+import Dialog from "../components/ui/Dialog.jsx";
+import BookCover from "../components/ui/BookCover.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/api.js";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-function montarUrlImagem(imagemUrl) {
-  if (!imagemUrl) return "";
-
-  if (imagemUrl.startsWith("http://") || imagemUrl.startsWith("https://")) {
-    return imagemUrl;
-  }
-
-  return `${API_URL}${imagemUrl}`;
-}
 
 function formatarMoeda(valor) {
   return Number(valor || 0).toLocaleString("pt-BR", {
@@ -22,36 +14,7 @@ function formatarMoeda(valor) {
   });
 }
 
-function AdminBookCover({ livro }) {
-  const imagem = montarUrlImagem(livro.imagemUrl);
-
-  return (
-    <div className="admin-book-cover-thumb">
-      {imagem ? (
-        <img
-          src={imagem}
-          alt={`Capa do livro ${livro.titulo}`}
-          loading="lazy"
-          onError={(event) => {
-            event.currentTarget.style.display = "none";
-            event.currentTarget.nextElementSibling?.classList.remove("hidden");
-          }}
-        />
-      ) : null}
-
-      <div
-        className={
-          imagem
-            ? "admin-book-cover-fallback hidden"
-            : "admin-book-cover-fallback"
-        }
-      >
-        {livro.titulo?.slice(0, 2)?.toUpperCase()}
-      </div>
-    </div>
-  );
-}
-
+function AdminBookCover({livro}) { return <div  className="w-20 shrink-0"><BookCover livro={livro}/></div>; }
 function AdminBooks() {
   const [livros, setLivros] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -120,7 +83,7 @@ function AdminBooks() {
   }
 
   async function confirmarExclusao() {
-    if (!livroParaExcluir) return;
+    if (!livroParaExcluir || excluindo) return;
 
     try {
       setExcluindo(true);
@@ -143,55 +106,55 @@ function AdminBooks() {
 
   if (loading) {
     return (
-      <main className="page">
-        <div className="container">
-          <p className="page-subtitle">Carregando livros...</p>
+      <main  className="py-10 sm:py-14">
+        <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando livros...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="page">
-      <div className="container">
-        <div className="form-page-header">
+    <main  className="py-10 sm:py-14">
+      <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+        <div  className="mb-5 flex flex-wrap items-start justify-between gap-5">
           <div>
-            <h1 className="page-title">Gerenciar Livros</h1>
-            <p className="page-subtitle">
+            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Gerenciar Livros</h1>
+            <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
               Edite, pause, destaque ou exclua livros do catálogo.
             </p>
           </div>
 
-          <Link to="/adicionar-livro" className="btn btn-primary">
+          <Link to="/adicionar-livro" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-transparent bg-accent text-[#1e293b] hover:bg-accent-hover">
             Novo Livro
           </Link>
         </div>
 
-        {erro && <p className="form-error">{erro}</p>}
-        {mensagem && <p className="form-success">{mensagem}</p>}
+        {erro && <StatusMessage type={"error"}>{erro}</StatusMessage>}
+        {mensagem && <StatusMessage type={"info"}>{mensagem}</StatusMessage>}
 
         {livros.length === 0 ? (
-          <div className="empty-state">
-            <h2>Nenhum livro cadastrado</h2>
+          <div  className="my-8 border-y border-stroke py-12 text-muted [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink">
+            <h2  className="font-display text-2xl leading-snug">Nenhum livro cadastrado</h2>
             <p>Cadastre o primeiro livro para ele aparecer no catálogo.</p>
           </div>
         ) : (
-          <div className="admin-books-list">
+          <div  className="mt-8 grid gap-6">
             {livros.map((livro) => (
-              <div className="admin-book-card admin-book-card-with-cover" key={livro.id}>
-                <div className="admin-book-main">
-                  <AdminBookCover livro={livro} />
+              <div key={livro.id} className="min-w-0 border-t border-stroke py-6 grid gap-6 xl:grid-cols-[1fr_auto]">
+                <div  className="flex min-w-0 items-start gap-5 [&_small]:mt-2 [&_small]:block [&_small]:text-xs [&_small]:text-muted">
+                  <AdminBookCover livro={livro}/>
 
                   <div>
-                    <div className="book-title-row">
-                      <h2>{livro.titulo}</h2>
+                    <div  className="mb-2 flex flex-wrap items-center gap-2 [&_h2]:wrap-anywhere [&_h2]:font-display [&_h2]:text-2xl">
+                      <h2  className="font-display text-2xl leading-snug">{livro.titulo}</h2>
 
                       {livro.destaque && (
-                        <span className="book-badge">Destaque</span>
+                        <span  className="rounded bg-soft px-2 py-1 text-xs">Destaque</span>
                       )}
 
                       {!livro.disponivel && (
-                        <span className="book-badge paused">Pausado</span>
+                        <span  className="rounded bg-soft px-2 py-1 text-xs">Pausado</span>
                       )}
                     </div>
 
@@ -204,45 +167,33 @@ function AdminBooks() {
                     </small>
 
                     {livro.imagemUrl ? (
-                      <span className="admin-image-status ok">
+                      <span  className="text-xs text-muted">
                         Imagem cadastrada
                       </span>
                     ) : (
-                      <span className="admin-image-status warning">
+                      <span  className="text-xs text-muted text-red-700 dark:text-red-300">
                         Sem imagem de capa
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="admin-book-actions">
-                  <Link
-                    to={`/editar-livro/${livro.id}`}
-                    className="btn btn-outline"
-                  >
+                <div  className="flex flex-wrap items-center gap-2">
+                  <Link to={`/editar-livro/${livro.id}`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">
                     Editar
                   </Link>
 
-                  <button
-                    className="btn btn-dark"
-                    onClick={() => alternarDisponibilidade(livro)}
-                  >
+                  <Button onClick={() => alternarDisponibilidade(livro)} type="button" variant="secondary">
                     {livro.disponivel ? "Pausar" : "Ativar"}
-                  </button>
+                  </Button>
 
-                  <button
-                    className="btn btn-outline"
-                    onClick={() => alternarDestaque(livro)}
-                  >
+                  <Button onClick={() => alternarDestaque(livro)} type="button" variant="secondary">
                     {livro.destaque ? "Remover Destaque" : "Destacar"}
-                  </button>
+                  </Button>
 
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => setLivroParaExcluir(livro)}
-                  >
+                  <Button onClick={() => setLivroParaExcluir(livro)} type="button" variant="danger">
                     Excluir
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}
@@ -251,19 +202,26 @@ function AdminBooks() {
       </div>
 
       {livroParaExcluir && (
-        <div className="popup-overlay final-modal-overlay">
-          <div className="popup-card final-modal-card">
-            <h2>Excluir livro</h2>
+        <Dialog open title={<>Excluir livro</>} onClose={() => setLivroParaExcluir(null)} busy={excluindo} footer={<div  className="flex flex-wrap justify-end gap-3">
+              <Button onClick={() => setLivroParaExcluir(null)} disabled={excluindo} type="button" variant="secondary">
+                Cancelar
+              </Button>
+
+              <Button onClick={confirmarExclusao} disabled={excluindo} type="button" variant="danger">
+                {excluindo ? "Excluindo..." : "Confirmar exclusão"}
+              </Button>
+            </div>}>
+            
 
             <p>
               Tem certeza que deseja excluir{" "}
               <strong>{livroParaExcluir.titulo}</strong>?
             </p>
 
-            <div className="popup-book-resume">
-              <AdminBookCover livro={livroParaExcluir} />
+            <div  className="flex min-w-0 items-start gap-4">
+              <AdminBookCover livro={livroParaExcluir}/>
 
-              <div className="popup-details">
+              <div  className="grid gap-2 text-sm text-muted">
                 <span>Autor: {livroParaExcluir.autor}</span>
                 <span>Categoria: {livroParaExcluir.categoria}</span>
                 <span>Estoque: {livroParaExcluir.estoque}</span>
@@ -273,30 +231,13 @@ function AdminBooks() {
               </div>
             </div>
 
-            <p className="danger-note">
+            <p  className="text-sm text-red-700 dark:text-red-300">
               Essa ação só será permitida se o livro não tiver pedidos
               vinculados. Caso tenha pedidos, pause o livro em vez de excluir.
             </p>
 
-            <div className="popup-actions">
-              <button
-                className="btn btn-outline"
-                onClick={() => setLivroParaExcluir(null)}
-                disabled={excluindo}
-              >
-                Cancelar
-              </button>
-
-              <button
-                className="btn btn-danger"
-                onClick={confirmarExclusao}
-                disabled={excluindo}
-              >
-                {excluindo ? "Excluindo..." : "Confirmar exclusão"}
-              </button>
-            </div>
-          </div>
-        </div>
+            
+          {erro && <StatusMessage type="error">{erro}</StatusMessage>}</Dialog>
       )}
     </main>
   );
