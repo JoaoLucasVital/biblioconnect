@@ -38,7 +38,7 @@ test("casos extremos usam os mesmos componentes sem transbordar",async({page},in
   await expect(page.getByRole("heading",{name:worst[0].titulo,exact:true})).toBeVisible();
   const overflow=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,offenders:[...document.querySelectorAll("body *")].filter(el=>el.getBoundingClientRect().right>innerWidth+1 && getComputedStyle(el).position!=="fixed").slice(0,8).map(el=>({tag:el.tagName,class:el.className,right:Math.round(el.getBoundingClientRect().right)}))}));
   expect(overflow.scrollWidth<=overflow.width,JSON.stringify(overflow)).toBe(true);
-  await page.getByRole("button",{name:"Escuro",exact:true}).click();
+  await page.getByRole("switch",{name:"Tema escuro",exact:true}).check();
   await expect(page.locator("body")).toHaveClass(/dark/);
   await page.screenshot({path:info.outputPath("extremos-320-escuro.png"),fullPage:true});
   await captureReview(page,"extremos-320-escuro");

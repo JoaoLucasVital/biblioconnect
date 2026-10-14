@@ -1,0 +1,15 @@
+.bc-book-loading { display:grid; justify-items:center; gap:24px; padding:32px 16px; }
+.bc-loading-book { width:120px; height:84px; position:relative; }
+.bc-loading-book > div { width:100%; height:100%; border-radius:8px; position:relative; perspective:600px; background:#1e3a5f; border:1px solid #547294; box-shadow:0 8px 24px #0f172a1a; }
+.bc-loading-book ul { margin:0; padding:0; list-style:none; position:relative; }
+.bc-loading-book li { position:absolute; top:6px; left:6px; transform-origin:100% 50%; color:#fff7ed70; opacity:0; transform:rotateY(180deg); animation:bc-page-turn 3s var(--ease-in-out) infinite; }
+.bc-loading-book li svg { width:54px; height:72px; display:block; }
+.bc-loading-book li:first-child { transform:rotateY(0); opacity:1; animation:none; }
+.bc-loading-book li:last-child { opacity:1; animation:none; }
+.bc-loading-book li:nth-child(2) { animation-delay:0s; color:#fff7edb0; }
+.bc-loading-book li:nth-child(3) { animation-delay:.45s; color:#fff7edb0; }
+.bc-loading-book li:nth-child(4) { animation-delay:.9s; color:#fff7edb0; }
+.bc-loading-book li:nth-child(5) { animation-delay:1.35s; color:#fff7edb0; }
+@keyframes bc-page-turn { 0% { transform:rotateY(180deg); opacity:0; } 20% { opacity:1; } 35%,100% { opacity:0; } 50%,100% { transform:rotateY(0); } }
+.bc-book-loading[data-paused] li { animation-play-state:paused; }
+@media (prefers-reduced-motion:reduce) { .bc-loading-book li { animation:none; } }

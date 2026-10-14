@@ -1,0 +1,4 @@
+.bc-reveal-word { display:inline-block; white-space:pre; }
+.bc-reveal-word > span { display:inline-block; animation:bc-reveal-letter 200ms var(--ease-out) both; }
+@keyframes bc-reveal-letter { from { opacity:0; transform:translateY(.15em); } to { opacity:1; transform:translateY(0); } }
+@media (prefers-reduced-motion:reduce) { .bc-reveal-word > span { animation:none; } }

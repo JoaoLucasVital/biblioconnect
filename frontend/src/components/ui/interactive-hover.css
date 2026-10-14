@@ -1,0 +1,16 @@
+.bc-interactive-link { position:relative; display:inline-flex; min-height:48px; align-items:center; justify-content:center; overflow:hidden; isolation:isolate; border:1px solid currentColor; border-radius:999px; padding:12px 24px; background:#fff7ed; color:#1e293b; font-size:14px; font-weight:600; }
+.bc-interactive-label { display:flex; align-items:center; justify-content:center; gap:10px; transition:transform 200ms var(--ease-out),opacity 200ms ease; }
+.bc-interactive-dot { width:8px; height:8px; flex:none; border-radius:50%; background:#e67e00; }
+.bc-interactive-link::before { content:""; position:absolute; left:20px; width:10px; height:10px; background:#e67e00; border-radius:50%; z-index:-1; transition:transform 250ms var(--ease-out); }
+.bc-interactive-active { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:12px; opacity:0; transform:translateX(24px); transition:transform 200ms var(--ease-out),opacity 200ms ease; }
+.bc-interactive-link:focus-visible::before { transform:scale(80); }
+.bc-interactive-link:focus-visible .bc-interactive-label { transform:translateX(24px); opacity:0; }
+.bc-interactive-link:focus-visible .bc-interactive-active { transform:translateX(0); opacity:1; }
+.bc-interactive-link:focus-visible,.bc-interactive-link:focus-visible *,.bc-interactive-link:focus-visible::before { transition:none; }
+@media (hover:hover) and (pointer:fine) {
+  .bc-interactive-link:hover::before { transform:scale(80); }
+  .bc-interactive-link:hover .bc-interactive-label { transform:translateX(24px); opacity:0; }
+  .bc-interactive-link:hover .bc-interactive-active { transform:translateX(0); opacity:1; }
+  .bc-interactive-link:active { transform:scale(.98); }
+}
+@media (prefers-reduced-motion:reduce) { .bc-interactive-link,.bc-interactive-link *,.bc-interactive-link::before { transition:none; } }

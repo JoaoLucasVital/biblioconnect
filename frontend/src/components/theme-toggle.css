@@ -1,0 +1,40 @@
+/* RiccardoRapelli's sun/cloud/moon switch, scoped for accessible React use. */
+.bc-theme-switch { position:relative; display:inline-flex; width:64px; height:44px; flex-shrink:0; align-items:center; cursor:pointer; }
+.bc-theme-switch input { position:absolute; inset:0; width:100%; height:100%; opacity:0; z-index:2; cursor:pointer; }
+.bc-theme-switch input:focus-visible { outline:none; }
+.bc-theme-switch input:focus-visible + .bc-theme-slider { outline:2px solid var(--text); outline-offset:4px; }
+.bc-theme-slider { position:relative; display:block; width:60px; height:34px; overflow:hidden; background:#2196f3; border-radius:34px; isolation:isolate; transition:background-color 200ms ease; }
+.bc-theme-orb { position:absolute; height:26px; width:26px; left:4px; bottom:4px; background:#ffdf36; border-radius:50%; transition:transform 250ms var(--ease-out),background-color 200ms ease; }
+.bc-theme-switch input:checked + .bc-theme-slider { background:#101827; }
+.bc-theme-switch input:checked + .bc-theme-slider .bc-theme-orb { transform:translateX(26px); background:#fff; }
+.bc-moon-dot { position:absolute; fill:#b7bdc8; opacity:0; transition:opacity 200ms ease; }
+.bc-theme-switch input:checked + .bc-theme-slider .bc-moon-dot { opacity:1; }
+.bc-moon-dot-0 { left:10px; top:3px; width:6px; height:6px; }
+.bc-moon-dot-1 { left:2px; top:10px; width:10px; height:10px; }
+.bc-moon-dot-2 { left:16px; top:18px; width:3px; height:3px; }
+.bc-light-ray { position:absolute; z-index:-1; fill:#fff; opacity:.12; }
+.bc-light-ray-0 { width:43px; height:43px; left:-8px; top:-8px; }
+.bc-light-ray-1 { width:55px; height:55px; left:-14px; top:-14px; }
+.bc-light-ray-2 { width:65px; height:65px; left:-20px; top:-20px; }
+.bc-cloud { position:absolute; animation:bc-cloud-move 6s var(--ease-in-out) infinite; }
+.bc-cloud-0,.bc-cloud-1,.bc-cloud-2 { fill:#ccc; animation-delay:1s; }
+.bc-cloud-3,.bc-cloud-4,.bc-cloud-5 { fill:#eee; }
+.bc-cloud-0 { width:40px; height:40px; left:30px; top:15px; }
+.bc-cloud-1 { width:20px; height:20px; left:44px; top:10px; }
+.bc-cloud-2 { width:30px; height:30px; left:18px; top:24px; }
+.bc-cloud-3 { width:40px; height:40px; left:36px; top:18px; }
+.bc-cloud-4 { width:20px; height:20px; left:48px; top:14px; }
+.bc-cloud-5 { width:30px; height:30px; left:22px; top:26px; }
+.bc-theme-stars { position:absolute; inset:0; opacity:0; transform:translateY(-32px); transition:transform 250ms var(--ease-out),opacity 200ms ease; }
+.bc-theme-switch input:checked + .bc-theme-slider .bc-theme-stars { opacity:1; transform:translateY(0); }
+.bc-star { position:absolute; fill:white; animation:bc-star-twinkle 2s var(--ease-in-out) infinite; }
+.bc-star-0 { width:20px; height:20px; left:3px; top:2px; }
+.bc-star-1 { width:6px; height:6px; left:3px; top:20px; animation-delay:.3s; }
+.bc-star-2 { width:12px; height:12px; left:20px; top:21px; animation-delay:.6s; }
+.bc-star-3 { width:10px; height:10px; left:20px; top:0; animation-delay:1.3s; }
+@keyframes bc-cloud-move { 0%,100% { transform:translateX(0); } 40% { transform:translateX(4px); } 80% { transform:translateX(-4px); } }
+@keyframes bc-star-twinkle { 0%,100% { transform:scale(1); } 40% { transform:scale(1.2); } 80% { transform:scale(.8); } }
+.bc-theme-switch[data-paused] * { animation-play-state:paused; }
+.bc-theme-switch input:focus-visible + .bc-theme-slider * { transition:none; }
+@media (prefers-reduced-motion:reduce) { .bc-theme-switch * { animation:none; transition:none; } }
+@media (forced-colors:active) { .bc-theme-switch input { opacity:1; appearance:auto; } .bc-theme-slider { display:none; } }
