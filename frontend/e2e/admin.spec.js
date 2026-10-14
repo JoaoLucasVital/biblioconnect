@@ -64,7 +64,7 @@ test("administrador aprova avaliação e responde atendimento",async({page,reque
   await page.getByRole("button").filter({hasText:"Dúvida de teste sobre retirada."}).click();
   await page.getByLabel("Resposta ao cliente").fill("Sua retirada pode ser acompanhada nos pedidos.");
   await page.getByRole("button",{name:"Responder",exact:true}).click();
-  await expect(page.getByText("Sua retirada pode ser acompanhada nos pedidos.",{exact:true})).toBeVisible();
+  await expect(page.getByText("Sua retirada pode ser acompanhada nos pedidos.",{exact:true,selector:"p"})).toBeVisible();
 });
 test("todas as áreas administrativas cabem a 360px com conteúdo longo",async({page,request},info)=>{
   await createBook({request,adminToken:await adminToken(request),overrides:{titulo:"Um título muito longo para testar as margens e a apresentação de um livro no sistema administrativo"}});

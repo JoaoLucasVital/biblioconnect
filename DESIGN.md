@@ -215,6 +215,10 @@ Artigos do catálogo têm base reta, divisor inferior e espaço de 32 px ao fina
 
 Campos têm label visível, superfície, contorno secundário e raio médio. O controle usa pelo menos 44 px de altura, texto de 16 px e padding do frontmatter. Foco no grupo troca a borda para tinta e adiciona anel de 2 px a 20% de opacidade. Hint e erro são associados ao controle; erro usa borda vermelha e mensagem explícita. O rascunho relevante permanece disponível após falhas.
 
+### Financial Panels
+
+O financeiro usa um card principal marinho de receita aprovada e três cards compactos de valores. A rosca distribui receita por origem; a legenda responde a hover, foco e seleção por teclado, com retorno ao total. O indicador semicircular representa a quantidade de pagamentos aprovados sobre os quatro status recebidos. A administração usa barras horizontais com valores explícitos. Valores acumulados não recebem tendências fictícias. Referências escolhidas em `docs/design-references/2026-10-14/finance-components-selected.md`.
+
 ### Navigation
 
 Cabeçalho com marca Elo BiblioConnect, wordmark IBM Plex Sans e links sans de peso médio. O seletor sol/lua escolhido pelo usuário mantém localStorage.theme e body.dark, possui nome acessível e alvo 60×44 px. Link ativo recebe sublinhado laranja; há link para pular ao conteúdo. Abaixo de xl, Card Nav usa três painéis adaptados ao papel do usuário em diálogo nativo, com foco protegido, Escape, retorno ao acionador e rolagem própria. Entrada por ponteiro usa 250ms, cartões 190ms com stagger de 30ms; teclado e movimento reduzido abrem imediatamente. Administração mantém sidebar marinho e acesso ao Atlas em /livros.

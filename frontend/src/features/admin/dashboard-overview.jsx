@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowDownLeft, ArrowUpRight, BookOpen, Bookmark, Check, CircleAlert, LibraryBig, ShoppingBag, Users } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import "./dashboard.css";
 
 const number = (value) => Number(value || 0).toLocaleString("pt-BR");
@@ -67,12 +67,12 @@ export default function DashboardOverview({ stats }) {
         <PanelHeading index="01 / Operação" title="Movimentações da biblioteca" aside={<span className="dashboard-period">Dados consolidados</span>}>Reservas, vendas, aluguéis e atrasos registrados.</PanelHeading>
         {hasMovements ? <div className="dashboard-chart" role="img" aria-label={movements.map((item) => `${item.nome}: ${number(item.valor)}`).join("; ")}>
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-            <BarChart data={movements} margin={{ top: 12, right: 8, bottom: 4, left: -24 }} barSize={48} accessibilityLayer>
-              <CartesianGrid vertical={false} stroke="var(--dash-line)" strokeDasharray="3 5" />
-              <XAxis dataKey="nome" axisLine={false} tickLine={false} tickMargin={13} tick={{ fill: "var(--muted)", fontSize: 11 }} />
-              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fill: "var(--muted)", fontSize: 10 }} />
+            <BarChart data={movements} layout="vertical" margin={{ top: 12, right: 40, bottom: 4, left: 0 }} barSize={28} accessibilityLayer>
+              <CartesianGrid horizontal={false} stroke="var(--dash-line)" strokeDasharray="3 5" />
+              <XAxis type="number" allowDecimals={false} axisLine={false} tickLine={false} tick={{ fill: "var(--muted)", fontSize: 10 }} />
+              <YAxis type="category" dataKey="nome" width={72} axisLine={false} tickLine={false} tick={{ fill: "var(--muted)", fontSize: 11 }} />
               <Tooltip content={<ChartTooltip />} cursor={{ fill: "var(--dash-soft)" }} />
-              <Bar dataKey="valor" isAnimationActive={false} radius={[4, 4, 0, 0]}>{movements.map((item) => <Cell key={item.nome} fill={item.cor} />)}</Bar>
+              <Bar dataKey="valor" isAnimationActive={false} radius={[0, 4, 4, 0]}>{movements.map((item) => <Cell key={item.nome} fill={item.cor} />)}<LabelList dataKey="valor" position="right" formatter={number} fill="var(--text)" fontSize={12} /></Bar>
             </BarChart>
           </ResponsiveContainer>
         </div> : <EmptyChart title="A operação começa aqui" icon={Bookmark}>Ainda não há reservas, vendas, aluguéis ou atrasos registrados. Os dados aparecerão conforme a biblioteca movimentar o acervo.</EmptyChart>}

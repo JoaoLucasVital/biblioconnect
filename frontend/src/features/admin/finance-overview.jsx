@@ -1,29 +1,70 @@
-import { Banknote, CircleDollarSign, Clock3, CornerUpLeft, WalletCards, XCircle } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useState } from "react";
+import { ArrowUpRight, Banknote, Check, CircleDollarSign, Clock3, CornerUpLeft, XCircle } from "lucide-react";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { formatarMoeda } from "./finance-format.js";
 
-const statusColors = { Pago: "var(--fin-navy)", Pendente: "var(--fin-orange)", Cancelado: "var(--fin-slate)", Estornado: "var(--fin-clay)" };
-function Metric({ label, value, count, icon, accent }) {
-  return <article className={`finance-metric${accent ? " finance-metric-accent" : ""}`}><div className="finance-metric-label"><span>{label}</span>{icon}</div><strong>{formatarMoeda(value)}</strong><span className="finance-metric-foot">{Number(count || 0).toLocaleString("pt-BR")} {Number(count) === 1 ? "pedido" : "pedidos"}</span></article>;
+const quantity = value => Math.max(0, Number(value) || 0);
+const percentage = value => `${value.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`;
+const countLabel = value => `${value.toLocaleString("pt-BR")} ${value === 1 ? "pedido" : "pedidos"}`;
+
+function MoneyCard({ label, value, count, icon: Icon, featured }) {
+  return <article className={`money-card${featured ? " money-card-featured" : ""}`}>
+    <div className="money-card-heading"><span>{label}</span><span className="money-card-icon"><Icon size={19} aria-hidden="true" /></span></div>
+    <strong className="money-card-value">{formatarMoeda(value)}</strong>
+    <div className="money-card-footer"><span>{countLabel(quantity(count))}</span><span className="money-card-badge">{featured ? <><Check size={12} aria-hidden="true" />Confirmada</> : "Acumulado"}</span></div>
+    {featured && <p className="money-card-note">Valor recebido em pagamentos aprovados<ArrowUpRight size={14} aria-hidden="true" /></p>}
+  </article>;
 }
-function ChartEmpty({ title, children }) {
-  return <div className="finance-empty finance-chart-empty"><span className="finance-empty-icon"><Banknote size={23} aria-hidden="true" /></span><h3>{title}</h3><p>{children}</p></div>;
+
+function ApprovalGauge({ pagamentos }) {
+  const total = pagamentos.reduce((sum, item) => sum + item.quantidade, 0);
+  const approved = pagamentos[0].quantidade;
+  const rate = total ? approved / total * 100 : 0;
+  return <article className="finance-panel finance-approval">
+    <header className="finance-panel-heading"><div><span className="finance-eyebrow">Situação dos pedidos</span><h2>Status de pagamentos</h2><p>Proporção de pedidos com pagamento aprovado.</p></div></header>
+    <div className="approval-gauge" role="img" aria-label={total ? `${percentage(rate)} dos pedidos com pagamento aprovado` : "Sem pedidos registrados"}>
+      <svg viewBox="0 0 240 142" aria-hidden="true"><path d="M 24 120 A 96 96 0 0 1 216 120" pathLength="100" className="approval-gauge-track" />{rate > 0 && <path d="M 24 120 A 96 96 0 0 1 216 120" pathLength="100" strokeDasharray={`${rate} 100`} className="approval-gauge-fill" />}</svg>
+      <div><strong>{total ? percentage(rate) : "—"}</strong><span>{total ? "pagamentos aprovados" : "Sem pedidos para calcular"}</span></div>
+    </div>
+    {total > 0 && <p className="approval-count">{approved.toLocaleString("pt-BR")} de {countLabel(total)}</p>}
+    <dl className="approval-statuses">{pagamentos.map(item => <div key={item.nome}><dt><i style={{ background: item.cor }} aria-hidden="true" />{item.nome}</dt><dd>{countLabel(item.quantidade)}</dd></div>)}</dl>
+  </article>;
 }
+
+function RevenueDonut({ receitas }) {
+  const [selected, setSelected] = useState(null);
+  const [hovered, setHovered] = useState(null);
+  const total = receitas.reduce((sum, item) => sum + item.valor, 0);
+  const activeName = hovered ?? selected;
+  const active = receitas.find(item => item.nome === activeName);
+  const label = active?.nome || "Receita total";
+  const value = active?.valor ?? total;
+  const clear = () => { setSelected(null); setHovered(null); };
+  return <section className="finance-panel finance-revenue-donut" aria-labelledby="finance-revenue-heading">
+    <header className="finance-panel-heading"><div><span className="finance-eyebrow">Composição da receita</span><h2 id="finance-revenue-heading">Receita aprovada por tipo</h2><p>Selecione uma categoria para explorar os valores.</p></div><span className="finance-tag">Acumulado</span></header>
+    <div className="revenue-explorer">
+      {total > 0 ? <div className="revenue-donut-wrap"><div className="revenue-donut" role="img" aria-label="Distribuição da receita aprovada. Valores disponíveis na legenda interativa."><ResponsiveContainer width="100%" height="100%" minWidth={0}><PieChart accessibilityLayer={false}><Pie data={receitas} dataKey="valor" nameKey="nome" innerRadius="72%" outerRadius="90%" startAngle={90} endAngle={-270} paddingAngle={receitas.filter(item => item.valor > 0).length > 1 ? 4 : 0} cornerRadius={5} stroke="none" isAnimationActive={false} onMouseEnter={(_, index) => setHovered(receitas[index].nome)} onMouseLeave={() => setHovered(null)}>{receitas.map(item => <Cell key={item.nome} fill={item.cor} opacity={active && item.nome !== active.nome ? .22 : 1} />)}</Pie></PieChart></ResponsiveContainer></div><div className="revenue-donut-center" aria-hidden="true"><span>{label}</span><strong>{formatarMoeda(value)}</strong>{active && <small>{percentage(value / total * 100)} da receita</small>}</div></div> : <div className="finance-empty finance-chart-empty"><span className="finance-empty-icon"><Banknote size={24} aria-hidden="true" /></span><h3>Nenhuma receita aprovada</h3><p>As receitas aparecerão após a aprovação dos pagamentos.</p></div>}
+      <div className="revenue-legend"><p className="revenue-legend-hint">Distribuição por origem</p>{receitas.map(item => <button key={item.nome} type="button" aria-pressed={selected === item.nome} data-active={active?.nome === item.nome || undefined} onClick={() => setSelected(selected === item.nome ? null : item.nome)} onMouseEnter={() => setHovered(item.nome)} onMouseLeave={() => setHovered(null)} onFocus={() => setHovered(item.nome)} onBlur={() => setHovered(null)}><i style={{ background: item.cor }} aria-hidden="true" /><span>{item.nome}<small>{total > 0 ? `${percentage(item.valor / total * 100)} da receita` : "Sem receita registrada"}</small></span><strong>{formatarMoeda(item.valor)}</strong></button>)}<button type="button" className="revenue-reset" onClick={clear}>Ver receita total<ArrowUpRight size={14} aria-hidden="true" /></button></div>
+    </div><p className="sr-only" role="status">{label}: {formatarMoeda(value)}</p>
+  </section>;
+}
+
 export default function FinanceOverview({ financeiro }) {
-  const receita = (financeiro.porTipo || []).map(item => ({ nome: item.nome, valor: Number(item.valor || 0) }));
-  const pagamentos = (financeiro.porPagamento || []).map(item => ({ nome: item.nome, quantidade: Number(item.quantidade || 0) }));
-  const totalPedidos = pagamentos.reduce((total, item) => total + item.quantidade, 0);
-  const temReceita = receita.some(item => item.valor > 0);
-  const receitasDetalhes = [{ nome: "Compras pagas", valor: financeiro.totalCompras }, { nome: "Aluguéis pagos", valor: financeiro.totalAlugueis }, { nome: "Reservas / multas pagas", valor: financeiro.totalReservasMultas }];
-  return <><section className="finance-metrics" aria-label="Resumo financeiro">
-    <Metric label="Receita aprovada" value={financeiro.totalRecebido} count={financeiro.pedidosPagos} icon={<CircleDollarSign size={17} aria-hidden="true" />} accent /><Metric label="Total pendente" value={financeiro.totalPendente} count={financeiro.pedidosPendentes} icon={<Clock3 size={17} aria-hidden="true" />} /><Metric label="Valor estornado" value={financeiro.totalEstornado} count={financeiro.pedidosEstornados} icon={<CornerUpLeft size={17} aria-hidden="true" />} /><Metric label="Pagamentos cancelados" value={financeiro.totalCanceladoPagamento} count={financeiro.pedidosCanceladosPagamento} icon={<XCircle size={17} aria-hidden="true" />} />
-  </section><section className="finance-charts" aria-label="Distribuição financeira">
-    <article className="finance-panel finance-revenue"><header className="finance-panel-heading"><div><span className="finance-eyebrow">Composição da receita</span><h2>Receita aprovada por tipo</h2><p>Valores acumulados de pagamentos aprovados.</p></div><span className="finance-tag">Acumulado</span></header>
-      {temReceita ? <div className="finance-bar-chart" role="img" aria-label="Gráfico de receita aprovada por tipo. Valores detalhados abaixo."><ResponsiveContainer width="100%" height="100%"><BarChart data={receita} layout="vertical" margin={{ top: 6, right: 25, bottom: 4, left: 0 }} barSize={19} accessibilityLayer={false}><CartesianGrid horizontal={false} stroke="var(--fin-border)" strokeDasharray="3 5" /><XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "var(--fin-muted)", fontSize: 10 }} tickFormatter={value => `R$ ${Number(value).toLocaleString("pt-BR", { notation: "compact" })}`} /><YAxis type="category" dataKey="nome" axisLine={false} tickLine={false} width={133} tick={{ fill: "var(--fin-muted)", fontSize: 10 }} /><Tooltip cursor={{ fill: "var(--fin-soft)" }} formatter={value => [formatarMoeda(value), "Receita aprovada"]} contentStyle={{ background: "var(--fin-card)", border: "1px solid var(--fin-border)", borderRadius: 5, color: "var(--text)", fontSize: 12 }} /><Bar isAnimationActive={false} dataKey="valor" fill="var(--fin-navy)" radius={[0, 3, 3, 0]} /></BarChart></ResponsiveContainer></div> : <ChartEmpty title="Nenhuma receita aprovada">Os pagamentos aprovados serão distribuídos por tipo de pedido neste gráfico.</ChartEmpty>}
-      <dl className="finance-revenue-details">{receitasDetalhes.map(item => <div key={item.nome}><dt>{item.nome}</dt><dd>{formatarMoeda(item.valor)}</dd></div>)}</dl>
-    </article>
-    <article className="finance-panel finance-payment"><header className="finance-panel-heading"><div><span className="finance-eyebrow">Situação dos pedidos</span><h2>Status de pagamentos</h2><p>Quantidade por situação financeira.</p></div><WalletCards size={18} aria-hidden="true" className="finance-heading-icon" /></header>
-      {totalPedidos > 0 ? <><div className="finance-donut-wrap"><div className="finance-donut" role="img" aria-label={`${totalPedidos} pedidos distribuídos por status. Quantidades na legenda abaixo.`}><ResponsiveContainer width="100%" height="100%"><PieChart accessibilityLayer={false}><Pie data={pagamentos} dataKey="quantidade" nameKey="nome" innerRadius={66} outerRadius={87} paddingAngle={pagamentos.filter(item => item.quantidade > 0).length > 1 ? 3 : 0} stroke="none" isAnimationActive={false}>{pagamentos.map(item => <Cell key={item.nome} fill={statusColors[item.nome] || "var(--fin-slate)"} />)}</Pie><Tooltip contentStyle={{ background: "var(--fin-card)", border: "1px solid var(--fin-border)", borderRadius: 5, color: "var(--text)", fontSize: 12 }} /></PieChart></ResponsiveContainer></div><div className="finance-donut-total" aria-hidden="true"><strong>{totalPedidos.toLocaleString("pt-BR")}</strong><span>pedidos</span></div></div><dl className="finance-payment-legend">{pagamentos.map(item => <div key={item.nome}><dt><i style={{ background: statusColors[item.nome] || "var(--fin-slate)" }} aria-hidden="true" />{item.nome}</dt><dd><strong>{item.quantidade.toLocaleString("pt-BR")}</strong><span>{Math.round(item.quantidade / totalPedidos * 100)}%</span></dd></div>)}</dl></> : <ChartEmpty title="Sem pagamentos registrados">A distribuição aparecerá quando houver pedidos com situação financeira.</ChartEmpty>}
-    </article>
-  </section></>;
+  const receitas = [
+    { nome: "Compras pagas", valor: quantity(financeiro.totalCompras), cor: "var(--fin-navy)" },
+    { nome: "Aluguéis pagos", valor: quantity(financeiro.totalAlugueis), cor: "var(--fin-orange)" },
+    { nome: "Reservas / multas pagas", valor: quantity(financeiro.totalReservasMultas), cor: "var(--fin-slate)" },
+  ];
+  const pagamentos = [
+    { nome: "Pago", quantidade: quantity(financeiro.pedidosPagos), cor: "var(--fin-navy)" },
+    { nome: "Pendente", quantidade: quantity(financeiro.pedidosPendentes), cor: "var(--fin-orange)" },
+    { nome: "Cancelado", quantidade: quantity(financeiro.pedidosCanceladosPagamento), cor: "var(--fin-slate)" },
+    { nome: "Estornado", quantidade: quantity(financeiro.pedidosEstornados), cor: "var(--fin-clay)" },
+  ];
+  return <><section className="finance-money-grid" aria-label="Resumo financeiro">
+    <MoneyCard label="Receita aprovada" value={financeiro.totalRecebido} count={financeiro.pedidosPagos} icon={CircleDollarSign} featured />
+    <MoneyCard label="Total pendente" value={financeiro.totalPendente} count={financeiro.pedidosPendentes} icon={Clock3} />
+    <MoneyCard label="Valor estornado" value={financeiro.totalEstornado} count={financeiro.pedidosEstornados} icon={CornerUpLeft} />
+    <MoneyCard label="Pagamentos cancelados" value={financeiro.totalCanceladoPagamento} count={financeiro.pedidosCanceladosPagamento} icon={XCircle} />
+  </section><section className="finance-visual-grid" aria-label="Distribuição financeira"><RevenueDonut receitas={receitas} /><ApprovalGauge pagamentos={pagamentos} /></section></>;
 }

@@ -87,4 +87,6 @@ SOFTWARE.
 
 ## Painel e capas contemporâneas
 
+Rodada de widgets financeiros: Stats Widget e Donut Chart de Ravi Katiyar no 21st.dev; Financial Score Cards de Ali Imam no 21st.dev; Sales Card de Yaya12085 no Uiverse; Bar Charts de shadcn/ui e Analytics de React Bits Pro. São referências visuais para implementação local com React, Recharts e Lucide já presentes. Não houve importação do código desses registros nem incorporação de código pago do React Bits Pro. Links, correspondência e limites em `docs/design-references/2026-10-14/finance-components-selected.md`.
+
 shadcn/ui dashboard-01 (https://ui.shadcn.com/blocks) e Tremor (https://www.tremor.so/) são referências de composição; o painel usa implementação própria, Recharts e Lucide já presentes. Proveniência das capas e metadados adicionados: `docs/catalog/2026-10-14-contemporary-acervo.md` e `docs/catalog/youth-cover-provenance.json`. Capas editoriais mantêm os direitos dos respectivos titulares; não são cobertas pela licença do código.

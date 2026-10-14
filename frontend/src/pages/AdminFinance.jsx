@@ -9,6 +9,7 @@ import FinanceOverview from "../features/admin/finance-overview.jsx";
 import FinanceOrders from "../features/admin/finance-orders.jsx";
 import { formatarMoeda, traduzirPagamento } from "../features/admin/finance-format.js";
 import "../features/admin/finance.css";
+import "../features/admin/finance-visuals.css";
 import api from "../api/api.js";
 
 export default function AdminFinance() {

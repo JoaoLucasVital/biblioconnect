@@ -85,7 +85,7 @@ it("preserva o último resultado e bloqueia ações após uma falha de atualiza�
   expect(await screen.findByRole("alert")).toHaveTextContent("Os valores abaixo são da última consulta");
   const row = screen.getByText("Dom Casmurro").closest("tr");
   expect(within(row).getByRole("button", { name: "Marcar pago" })).toBeDisabled();
-  expect(screen.getByText(/R\$\s*125,50/, { selector: "strong" })).toBeInTheDocument();
+  expect(within(screen.getByRole("region", { name: "Resumo financeiro" })).getByText(/R\$\s*125,50/, { selector: "strong" })).toBeInTheDocument();
   await user.click(screen.getByRole("button", { name: "Tentar novamente" }));
   expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   expect(within(row).getByRole("button", { name: "Marcar pago" })).toBeEnabled();

@@ -1,5 +1,7 @@
 # Retomada do BiblioConnect — nova direção de apresentação
 
+**Última etapa:** widgets financeiros escolhidos e implementados (1, 2, 4, 5, com referências 7/8). Veja `docs/verification/2026-10-14-finance-widgets.md`. A seleção aprovada já está no código; não repetir brainstorming ou a implementação desses componentes na retomada.
+
 **Status atualizado:** descoberta implementada e marca 02 — Elo escolhida e aplicada em SVG. O usuário priorizou os painéis administrativo e financeiro, agora integrados aos dados reais. Acervo persistente: 22 livros. Consulte `docs/verification/2026-10-14-elo-dashboards.md` para esta etapa e `docs/verification/2026-10-14-discovery-redesign.md` para a anterior. Os registros abaixo preservam a conversa histórica de planejamento, não indicam trabalho ainda pausado.
 
 Pedido de 14/10/2026: guardar estas decisões e abrir somente a versão atual para mostrar aos amigos. Implementação adiada até o usuário voltar após a renovação do limite. Nenhuma destas mudanças foi implementada neste intervalo.
