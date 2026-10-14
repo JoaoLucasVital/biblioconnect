@@ -1,0 +1,222 @@
+{
+  "at": "2026-10-14T19:37:45.342Z",
+  "before": 12,
+  "after": 22,
+  "created": [
+    {
+      "id": 100,
+      "titulo": "Corrupt"
+    },
+    {
+      "id": 101,
+      "titulo": "Hideaway"
+    },
+    {
+      "id": 102,
+      "titulo": "A empregada"
+    },
+    {
+      "id": 103,
+      "titulo": "A hipótese do amor"
+    },
+    {
+      "id": 104,
+      "titulo": "Verity"
+    },
+    {
+      "id": 105,
+      "titulo": "O príncipe cruel"
+    },
+    {
+      "id": 106,
+      "titulo": "Corte de espinhos e rosas"
+    },
+    {
+      "id": 107,
+      "titulo": "Os sete maridos de Evelyn Hugo"
+    },
+    {
+      "id": 108,
+      "titulo": "Jantar secreto"
+    },
+    {
+      "id": 109,
+      "titulo": "A Biblioteca da Meia-Noite"
+    }
+  ],
+  "skipped": [],
+  "changedHighlights": [
+    34,
+    35,
+    36
+  ],
+  "backup": "C:\\Users\\jluca\\OneDrive\\Documentos\\ChatGPT\\JãoDev\\biblioconnect\\.local\\backups\\before-youth-2026-10-14T19-37-45.149Z",
+  "verified": {
+    "originalBooksPreserved": true,
+    "otherTablesUnchanged": true,
+    "coversHttp200": 10,
+    "uniqueBooks": 10
+  },
+  "books": [
+    {
+      "id": 100,
+      "slug": "corrupt",
+      "titulo": "Corrupt",
+      "autor": "Penelope Douglas",
+      "isbn": "9786550480318",
+      "categoria": "Dark romance",
+      "imagemUrl": "/uploads/livros/e99ce9e4-0067-4731-b014-2339d1af1844-corrupt.jpg",
+      "ano": 2024,
+      "precoCompra": 36,
+      "precoAluguel": 7,
+      "estoque": 4,
+      "destaque": true,
+      "fonte": "https://www.thegiftboxeditora.shop/romance/corrupt",
+      "fonteImagem": "https://images.tcdn.com.br/img/img_prod/1277055/corrupt_69_1_26b0a74e6f66e776ce155bd8311c9af2.jpg"
+    },
+    {
+      "id": 101,
+      "slug": "hideaway",
+      "titulo": "Hideaway",
+      "autor": "Penelope Douglas",
+      "isbn": "9786556360256",
+      "categoria": "Dark romance",
+      "imagemUrl": "/uploads/livros/4471b203-abc9-4729-b40b-99150b666cfc-hideaway.jpg",
+      "ano": 2024,
+      "precoCompra": 36,
+      "precoAluguel": 7,
+      "estoque": 5,
+      "destaque": true,
+      "fonte": "https://www.thegiftboxeditora.shop/romance/hideaway",
+      "fonteImagem": "https://images.tcdn.com.br/img/img_prod/1277055/hideaway_89_1_731dcb8d65649e8377abb8fd3c12b8ce.jpg"
+    },
+    {
+      "id": 102,
+      "slug": "a-empregada",
+      "titulo": "A empregada",
+      "autor": "Freida McFadden",
+      "isbn": "9786555655063",
+      "categoria": "Suspense",
+      "imagemUrl": "/uploads/livros/df9fa056-a39c-416c-a194-39e477d656e1-a-empregada.jpg",
+      "ano": 2023,
+      "precoCompra": 32,
+      "precoAluguel": 6,
+      "estoque": 6,
+      "destaque": true,
+      "fonte": "https://www.editoraarqueiro.com.br/livros/a-empregada/",
+      "fonteImagem": "https://www.editoraarqueiro.com.br/media/livros_livro/9786555655063.jpeg.200x300_q85_upscale.jpg"
+    },
+    {
+      "id": 103,
+      "slug": "a-hipotese-do-amor",
+      "titulo": "A hipótese do amor",
+      "autor": "Ali Hazelwood",
+      "isbn": "9786555653304",
+      "categoria": "Romance",
+      "imagemUrl": "/uploads/livros/c6059088-4a80-4875-b81f-57a5472932f3-a-hipotese-do-amor.jpg",
+      "ano": 2022,
+      "precoCompra": 34,
+      "precoAluguel": 6,
+      "estoque": 4,
+      "destaque": true,
+      "fonte": "https://www.editoraarqueiro.com.br/livros/a-hipotese-do-amor/",
+      "fonteImagem": "https://www.editoraarqueiro.com.br/media/livros_livro/hipotese-do-amor_sobrecapa_imprensa-2.jpg.200x300_q85_upscale.jpg"
+    },
+    {
+      "id": 104,
+      "slug": "verity",
+      "titulo": "Verity",
+      "autor": "Colleen Hoover",
+      "isbn": "9788501117847",
+      "categoria": "Suspense",
+      "imagemUrl": "/uploads/livros/9b8754a6-2cac-46bc-81dc-3e2269e86f04-verity.jpg",
+      "ano": 2020,
+      "precoCompra": 32,
+      "precoAluguel": 6,
+      "estoque": 5,
+      "destaque": true,
+      "fonte": "https://www.record.com.br/products/verity",
+      "fonteImagem": "https://www.record.com.br/cdn/shop/files/d714a333a0c7d64404774020856088c2.jpg?v=1792003175"
+    },
+    {
+      "id": 105,
+      "slug": "o-principe-cruel",
+      "titulo": "O príncipe cruel",
+      "autor": "Holly Black",
+      "isbn": "9788501115553",
+      "categoria": "Fantasia",
+      "imagemUrl": "/uploads/livros/43a333b5-7511-449d-9c52-6e97b1f9dcfa-o-principe-cruel.jpg",
+      "ano": 2018,
+      "precoCompra": 34,
+      "precoAluguel": 6,
+      "estoque": 6,
+      "destaque": true,
+      "fonte": "https://www.record.com.br/products/o-principe-cruel-vol-1-o-povo-do-ar",
+      "fonteImagem": "https://www.record.com.br/cdn/shop/files/ccc474e67385c7b92d4bd749d22ddef0_8fed374c-e44a-4bd7-97ba-c3daeceb63ca.jpg?v=1791334871"
+    },
+    {
+      "id": 106,
+      "slug": "corte-de-espinhos-e-rosas",
+      "titulo": "Corte de espinhos e rosas",
+      "autor": "Sarah J. Maas",
+      "isbn": "9786559810727",
+      "categoria": "Fantasia",
+      "imagemUrl": "/uploads/livros/8c266b74-d704-485b-bd96-1505a9291f59-corte-de-espinhos-e-rosas.jpg",
+      "ano": 2021,
+      "precoCompra": 38,
+      "precoAluguel": 8,
+      "estoque": 4,
+      "destaque": true,
+      "fonte": "https://www.record.com.br/products/corte-de-espinhos-e-rosas-vol-1-edicao-especial",
+      "fonteImagem": "https://www.record.com.br/cdn/shop/files/b705a2170d0dff5312eb59bbd8a69a7a_90f791cc-d5fe-4416-aa1a-041aba5ff4be.jpg?v=1790125883"
+    },
+    {
+      "id": 107,
+      "slug": "os-sete-maridos-de-evelyn-hugo",
+      "titulo": "Os sete maridos de Evelyn Hugo",
+      "autor": "Taylor Jenkins Reid",
+      "isbn": "9788584391509",
+      "categoria": "Romance",
+      "imagemUrl": "/uploads/livros/e9402a4e-ba81-419f-968f-36f6242414c7-os-sete-maridos-de-evelyn-hugo.jpg",
+      "ano": 2019,
+      "precoCompra": 34,
+      "precoAluguel": 6,
+      "estoque": 5,
+      "destaque": true,
+      "fonte": "https://www.companhiadasletras.com.br/9788584391509-os-sete-maridos-de-evelyn-hugo-3202/p",
+      "fonteImagem": "https://ciadasletras.vtexassets.com/arquivos/ids/217859/capa-recolor2-9788584391509.jpg?v=639238600856900000"
+    },
+    {
+      "id": 108,
+      "slug": "jantar-secreto",
+      "titulo": "Jantar secreto",
+      "autor": "Raphael Montes",
+      "isbn": "9788535928358",
+      "categoria": "Suspense",
+      "imagemUrl": "/uploads/livros/589b3c34-b0cb-4261-b4b9-08f181f16d0e-jantar-secreto.jpg",
+      "ano": 2016,
+      "precoCompra": 30,
+      "precoAluguel": 5,
+      "estoque": 6,
+      "destaque": true,
+      "fonte": "https://www.companhiadasletras.com.br/9788535928358-jantar-secreto-3194/p",
+      "fonteImagem": "https://ciadasletras.vtexassets.com/arquivos/ids/219362/capa-recolor2-9788535928358.jpg?v=639238603954700000"
+    },
+    {
+      "id": 109,
+      "slug": "a-biblioteca-da-meia-noite",
+      "titulo": "A Biblioteca da Meia-Noite",
+      "autor": "Matt Haig",
+      "isbn": "9786558380542",
+      "categoria": "Fantasia",
+      "imagemUrl": "/uploads/livros/4e2aecbb-67a1-43fb-82e4-7f10c7ecabc2-a-biblioteca-da-meia-noite.jpg",
+      "ano": 2021,
+      "precoCompra": 32,
+      "precoAluguel": 6,
+      "estoque": 4,
+      "destaque": true,
+      "fonte": "https://www.record.com.br/products/a-biblioteca-da-meia-noite",
+      "fonteImagem": "https://www.record.com.br/cdn/shop/files/733997948113191ffc5f855acdfe3e6f.jpg?v=1791938462"
+    }
+  ]
+}

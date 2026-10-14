@@ -1,6 +1,7 @@
 import useInitialLoad from "../components/useInitialLoad.js";
-import { useCallback, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import AtlasExplorer from "../features/atlas/AtlasExplorer.jsx";
 import api from "../api/api.js";
 import { useAuth } from "../context/auth.js";
 
@@ -70,12 +71,14 @@ function calcularAluguel(livro, dias) {
 function Books() {
   const { isAuthenticated, usuario } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   const [livros, setLivros] = useState([]);
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState({ type: "", text: "" });
 
-  const [busca, setBusca] = useState("");
+  const [busca, setBusca] = useState(()=>searchParams.get("busca")||"");
   const [categoria, setCategoria] = useState("todas");
   const [tipoFiltro, setTipoFiltro] = useState("todos");
 
@@ -279,6 +282,9 @@ function Books() {
   }
 
   useInitialLoad(carregarLivros);
+  useEffect(()=>{
+    if(!loading && location.hash==="#catalogo")document.getElementById("catalogo")?.scrollIntoView?.();
+  },[loading,location.hash]);
 
   const livrosDisponiveis = useMemo(
     () => livros.filter((livro) => livro.disponivel),
@@ -326,15 +332,19 @@ function Books() {
 
   if (loading) return <main className="mx-auto max-w-7xl px-5 py-16 sm:px-8"><BookLoader label="Carregando catálogo…"/></main>;
   const dialogError = feedback.type==="error" ? feedback.text : "";
-  return <main className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
+  const catalogLoadError=feedback.type==="error" && feedback.text==="Erro ao carregar catálogo de livros.";
+  return <main className="mx-auto max-w-[1480px] px-5 pb-12 sm:px-8 sm:pb-16">
+    <AtlasExplorer livros={livrosDisponiveis} error={catalogLoadError?feedback.text:""} onRetry={carregarLivros} embedded onConsultBook={livro=>{setBusca(livro.titulo);setCategoria("todas");setTipoFiltro("todos");}}/>
+    <section id="catalogo" aria-label="Catálogo de livros" className="scroll-mt-6 pt-12 sm:pt-16">
     <header className="mb-8 flex flex-wrap items-end justify-between gap-6">
       <div><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">O acervo</p><h1 className="font-display text-4xl leading-tight sm:text-5xl">Livros disponíveis</h1><p className="mt-4 max-w-xl text-muted">Encontre a sua próxima leitura. Compre, alugue ou reserve um livro para retirar.</p></div>
-      <p role="status" className="text-sm text-muted"><strong className="text-xl font-medium text-ink">{livrosVisiveis.length}</strong> {livrosVisiveis.length===1?"livro encontrado":"livros encontrados"}</p>
+      {!catalogLoadError && <p role="status" className="text-sm text-muted"><strong className="text-xl font-medium text-ink">{livrosVisiveis.length}</strong> {livrosVisiveis.length===1?"livro encontrado":"livros encontrados"}</p>}
     </header>
-    {feedback.text && !livroCompra && !livroAluguel && !livroReserva && <div className="mb-6"><StatusMessage type={feedback.type==="error"?"error":"info"} onRetry={feedback.text==="Erro ao carregar catálogo de livros."?carregarLivros:undefined}>{feedback.text}</StatusMessage></div>}
-    <CatalogFilters busca={busca} categoria={categoria} tipoFiltro={tipoFiltro} categorias={categorias} onBusca={setBusca} onCategoria={setCategoria} onTipo={setTipoFiltro} onClear={limparFiltros}/>
-    {livrosVisiveis.length===0 ? <section className="border-b border-stroke py-16"><h2 className="font-display text-3xl">Nenhum livro encontrado</h2><p className="mt-3 text-muted">Ajuste os filtros ou volte para descobrir novas leituras no acervo.</p></section> : <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{livrosVisiveis.map(livro=><CatalogBookCard key={livro.id} livro={livro} onComprar={abrirCompra} onAlugar={abrirAluguel} onReservar={abrirReserva} onAvaliacoes={item=>navigate(`/livros/${item.id}/avaliacoes`)}/>)}</div>}
+    {feedback.text && !catalogLoadError && !livroCompra && !livroAluguel && !livroReserva && <div className="mb-6"><StatusMessage type={feedback.type==="error"?"error":"info"}>{feedback.text}</StatusMessage></div>}
+    {!catalogLoadError && <CatalogFilters busca={busca} categoria={categoria} tipoFiltro={tipoFiltro} categorias={categorias} onBusca={setBusca} onCategoria={setCategoria} onTipo={setTipoFiltro} onClear={limparFiltros}/>}
+    {!catalogLoadError && (livrosVisiveis.length===0 ? <section className="border-b border-stroke py-16"><h2 className="font-display text-3xl">Nenhum livro encontrado</h2><p className="mt-3 text-muted">Ajuste os filtros ou volte para descobrir novas leituras no acervo.</p></section> : <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{livrosVisiveis.map(livro=><CatalogBookCard key={livro.id} livro={livro} onComprar={abrirCompra} onAlugar={abrirAluguel} onReservar={abrirReserva} onAvaliacoes={item=>navigate(`/livros/${item.id}/avaliacoes`)}/>)}</div>)}
     <PurchaseDialog livro={livroCompra} modalidadeEntrega={modalidadeEntrega} enderecoEntrega={enderecoEntrega} cotacaoEntrega={cotacaoEntrega} loadingCotacao={loadingCotacao} loadingCompra={loadingCompra} error={dialogError} onClose={()=>setLivroCompra(null)} onConfirmar={confirmarCompra} onCotar={cotarEntrega} onModalidadeChange={value=>{setModalidadeEntrega(value);if(value==="retirada")setCotacaoEntrega(null);}} onEnderecoChange={value=>{setEnderecoEntrega(value);setCotacaoEntrega(null);}}/>
+    </section>
     <RentalDialog livro={livroAluguel} dias={diasAluguel} calculo={aluguelCalculado} busy={loadingAluguel} error={dialogError} onDiasChange={setDiasAluguel} onConfirmar={confirmarAluguel} onClose={()=>setLivroAluguel(null)}/>
     <ReservationDialog livro={livroReserva} dataRetirada={dataRetirada} calculo={reservaCalculada} busy={loadingReserva} error={dialogError} onDataChange={setDataRetirada} onConfirmar={confirmarReserva} onClose={()=>setLivroReserva(null)}/>
   </main>;

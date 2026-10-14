@@ -43,7 +43,7 @@ test("resumos de vendas separam o título e o gênero de suas quantidades",async
   for(const label of ["Livro mais vendido","Gênero mais vendido"]){
     const group=page.getByText(label,{exact:true}).locator("..");
     const title=await group.locator("strong").boundingBox();
-    const quantity=await group.locator("small").boundingBox();
+    const quantity=await group.locator("span").last().boundingBox();
     expect(title&&quantity).toBeTruthy();
     expect(title.y+title.height<=quantity.y||title.x+title.width+4<=quantity.x).toBe(true);
   }

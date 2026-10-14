@@ -114,7 +114,7 @@ components:
 
 **Creative North Star: "Atlas editorial contemporâneo"**
 
-Uma biblioteca editorial contemporânea em que capas, títulos e autores conduzem a leitura. O Atlas do Acervo torna visíveis relações reais de categoria e autor. Creme, marinho e laranja preservam a identidade BiblioConnect; o pedido de uma nova marca substitui a preservação do logotipo anterior. A escolha entre as três propostas está em avaliação.
+Uma biblioteca editorial contemporânea em que capas, títulos e autores conduzem a leitura. A home recebe o público de jovens adultos com a Image Stream Hero de livros reais; o Atlas no catálogo torna visíveis relações reais de categoria e autor. Creme, marinho e laranja preservam a identidade BiblioConnect. As três propostas antigas de marca foram rejeitadas; a nova prancha Entrelinhas/Elo/Margem aguarda escolha. A BC03 continua provisoriamente no código, sem aprovação definitiva.
 
 A mesma linguagem acompanha descoberta, catálogo, compra, aluguel, reserva e acompanhamento de pedidos. A home oferece a expressão mais cênica; conta e administração adotam densidade operacional, navegação clara e estados explícitos. Tema escuro, foco visível e alternativas sem movimento fazem parte do sistema.
 
@@ -217,7 +217,7 @@ Campos têm label visível, superfície, contorno secundário e raio médio. O c
 
 ### Navigation
 
-Cabeçalho com marca BiblioConnect, wordmark serifada e links sans de peso médio. O seletor sol/lua escolhido pelo usuário mantém localStorage.theme e body.dark, possui nome acessível e alvo 60×44 px. Link ativo recebe sublinhado laranja; há link para pular ao conteúdo. Menus compactos usam o diálogo nativo; administração acrescenta sidebar marinho com os mesmos destinos, ícones Lucide e acesso ao Atlas.
+Cabeçalho com marca BiblioConnect, wordmark serifada e links sans de peso médio. O seletor sol/lua escolhido pelo usuário mantém localStorage.theme e body.dark, possui nome acessível e alvo 60×44 px. Link ativo recebe sublinhado laranja; há link para pular ao conteúdo. Abaixo de xl, Card Nav usa três painéis adaptados ao papel do usuário em diálogo nativo, com foco protegido, Escape, retorno ao acionador e rolagem própria. Entrada por ponteiro usa 250ms, cartões 190ms com stagger de 30ms; teclado e movimento reduzido abrem imediatamente. Administração mantém sidebar marinho e acesso ao Atlas em /livros.
 
 ### Dialogs
 
@@ -225,7 +225,7 @@ Diálogos nativos com título serifado, superfícies temáticas, divisores entre
 
 ### Atlas do Acervo
 
-O Atlas é o primeiro bloco da home: título serifado expressivo, CTA Interactive Hover Link, busca, categorias reais, mapa e painel da leitura selecionada. SVG desenha relações; botões nativos representam os livros. Linhas contínuas indicam autor em comum, tracejadas indicam categoria. Posições são determinísticas e projetadas na área real por ResizeObserver; alvos de 44px ficam separados em células de pelo menos52px. O mapa exibe até 48 livros, reduzindo pontos se faltar área, com aviso do número efetivo e lista completa equivalente. Não há pontos fictícios, Dewey inventado nem operações privadas nesse espaço público.
+O Atlas é o primeiro bloco do catálogo em /livros; a listagem convencional com filtros e capas maiores aparece abaixo. Título serifado expressivo, busca, categorias reais, mapa e painel da leitura selecionada permanecem. Consultar uma seleção filtra a listagem e usa a âncora #catalogo sem recarregar a página. SVG desenha relações; botões nativos representam os livros. Linhas contínuas indicam autor em comum, tracejadas indicam categoria. Posições são determinísticas e projetadas na área real por ResizeObserver; alvos de 44px ficam separados em células de pelo menos52px. O mapa exibe até 48 livros, reduzindo pontos se faltar área, com aviso do número efetivo e lista completa equivalente. Não há pontos fictícios, Dewey inventado nem operações privadas nesse espaço público. Erro de carga mantém mensagem de conexão e tentativa, sem anunciar acervo vazio ou contagens como dado válido.
 
 O celular abre em lista; no desktop é possível alternar mapa/lista. Movimento reduzido abre em lista e conserva a opção de mapa estático. Seleção por teclado/foco ou clique mostra capa, título, autor, estoque, sinopse e valores retornados pela API, com acesso ao catálogo existente. Carregamento usa o livro Nawsome apenas durante a requisição; erro não mostra contagem zero como dado válido. O título revela caracteres por opacity/transform em 200ms, com stagger total limitado a 400ms e estado estático em reduced-motion.
 
@@ -235,11 +235,17 @@ FadeInput usa o input nativo como fonte de valor, caret, seleção e eventos. Na
 
 ### Editorial book feature
 
+A abertura da home usa duas fileiras de capas em perspectiva, com geometria adaptada da Image Stream Hero da Ruixen UI. O percurso é amostrado em 24 passos e animado por transform CSS em 26s, sem ciclo JS por quadro. Até 12 livros disponíveis e destacados pela API alimentam a composição. Os gêneros são intercalados na seleção para romance, fantasia, suspense e dark romance terem presença na vitrine; clássicos continuam disponíveis no catálogo. Pausa manual, hover de mouse, foco, aba oculta, saída do viewport e movimento reduzido congelam as capas. A lista para leitores de tela contém texto, sem links invisíveis no percurso de Tab.
+
+A vitrine mostra até oito destaques com capas de 140–180px em composição alternada e links que abrem a busca do catálogo. Scroll Expand amplia o conjunto de 0.88 a 1 apenas no desktop sem preferência de redução; Animated Content revela seções por opacity/translate em 480ms. Click Spark oferece feedback pontual no CTA por 320ms, com no máximo oito partículas temporárias e nenhum efeito em acionamento por teclado. Star Border contorna o convite ao Atlas com ciclo CSS de 8s e alternativa estática. Abaixo, permanece a cena de livro já existente.
+
 A seção secundária da home reúne título, acesso ao catálogo e livro real. A cena 3D é carregada sob demanda apenas na home a partir de 768 px e sem movimento reduzido; capa estática atende telas pequenas, redução de movimento, carregamento e falha de textura/WebGL. O conteúdo permanece utilizável sem a animação.
 
 A entrada dos títulos usa 480 ms e deslocamento de 18 px; detalhes usam 400 ms e 10 px, com easing power3.out. A troca automática de destaques ocorre em 6 segundos e pausa por foco, hover de mouse, aba oculta ou controle manual. Essa composição pertence à home, não é um molde obrigatório para páginas operacionais.
 
 ## Do's and Don'ts
+
+O painel administrativo usa quatro indicadores principais, gráfico operacional amplo, coluna de atrasos/multas e leitores, rankings horizontais, títulos completos e atalhos. Todos os números vêm de /admin/dashboard; não há tendência ou porcentagem comercial inventada. A ação de reset restrito conserva suas confirmações e não foi executada na revisão visual. Recharts e os demais pacotes existentes atendem ao painel sem novas dependências.
 
 ### Do:
 

@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import BookCover from "../../components/ui/BookCover.jsx";
 import { formatarMoeda } from "../catalog/format.js";
 
-export default function AtlasBookPanel({livro}) {
+export default function AtlasBookPanel({livro,embedded=false,onConsultBook}) {
   if(!livro)return null;
   const available=livro.disponivel && Number(livro.estoque)>0;
   return <section className="atlas-book-panel" aria-label="Livro selecionado">
@@ -15,6 +15,6 @@ export default function AtlasBookPanel({livro}) {
     <p className="atlas-stock"><span aria-hidden="true" className={available?"atlas-stock-dot":"atlas-stock-dot is-empty"}/>{available?`${Number(livro.estoque)} ${Number(livro.estoque)===1?"exemplar disponível":"exemplares disponíveis"}`:"Sem estoque no momento"}</p>
     {livro.sinopse && <details className="atlas-synopsis"><summary>Sobre esta leitura</summary><p>{livro.sinopse}</p></details>}
     <dl className="atlas-book-prices"><div><dt>Compra</dt><dd>{Number(livro.precoCompra)>0?formatarMoeda(livro.precoCompra):"Não disponível"}</dd></div><div><dt>Aluguel</dt><dd>{Number(livro.precoAluguel)>0?formatarMoeda(livro.precoAluguel):"Não disponível"}</dd></div></dl>
-    <Link to="/livros" className="atlas-catalog-link">Consultar no catálogo<ArrowUpRight size={16} aria-hidden="true"/></Link>
+    {embedded?<a href="#catalogo" onClick={()=>onConsultBook?.(livro)} className="atlas-catalog-link">Consultar no catálogo<ArrowUpRight size={16} aria-hidden="true"/></a>:<Link to="/livros" className="atlas-catalog-link">Consultar no catálogo<ArrowUpRight size={16} aria-hidden="true"/></Link>}
   </section>;
 }

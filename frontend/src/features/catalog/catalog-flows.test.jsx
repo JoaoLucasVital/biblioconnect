@@ -13,21 +13,21 @@ function mount(authenticated = true) {
 }
 it("busca associada e limpar recuperam os livros", async () => {
   mount(); const user=userEvent.setup();
-  await screen.findByRole("heading",{name:livroDisponivel.titulo});
+  await within(await screen.findByRole("region",{name:"Catálogo de livros"})).findByRole("heading",{name:livroDisponivel.titulo});
   await user.type(screen.getByLabelText("Buscar no acervo"),"inexistente");
   expect(screen.getByRole("heading",{name:"Nenhum livro encontrado"})).toBeVisible();
   await user.click(screen.getByRole("button",{name:"Limpar filtros"}));
-  expect(screen.getByRole("heading",{name:livroDisponivel.titulo})).toBeVisible();
+  expect(within(screen.getByRole("region",{name:"Catálogo de livros"})).getByRole("heading",{name:livroDisponivel.titulo})).toBeVisible();
 });
 it("sem estoque bloqueia operações e não envia POST", async () => {
   api.get.mockResolvedValue({data:[livroSemEstoque]}); mount();
-  await screen.findByRole("heading",{name:livroDisponivel.titulo});
+  await within(await screen.findByRole("region",{name:"Catálogo de livros"})).findByRole("heading",{name:livroDisponivel.titulo});
   for(const name of ["Comprar","Alugar","Reservar"]) expect(screen.getByRole("button",{name,exact:true})).toBeDisabled();
   expect(api.post).not.toHaveBeenCalled();
 });
 it("livro doado mantém reserva bloqueada", async () => {
   api.get.mockResolvedValue({data:[livroDoado]}); mount();
-  await screen.findByRole("heading",{name:livroDisponivel.titulo});
+  await within(await screen.findByRole("region",{name:"Catálogo de livros"})).findByRole("heading",{name:livroDisponivel.titulo});
   expect(screen.getByRole("button",{name:"Reservar",exact:true})).toBeDisabled();
 });
 it("compra com entrega exige cotação e preserva endereço após erro", async () => {
@@ -78,6 +78,6 @@ it("reserva preserva data e contrato após erro", async () => {
 it("erro de catálogo oferece nova tentativa com a mesma API", async () => {
   api.get.mockRejectedValueOnce(new Error("offline")); mount(); const user=userEvent.setup();
   await user.click(await screen.findByRole("button",{name:"Tentar novamente"}));
-  expect(await screen.findByRole("heading",{name:livroDisponivel.titulo})).toBeVisible();
+  expect(await within(await screen.findByRole("region",{name:"Catálogo de livros"})).findByRole("heading",{name:livroDisponivel.titulo})).toBeVisible();
   expect(api.get).toHaveBeenCalledTimes(2);
 });

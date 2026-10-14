@@ -1,4 +1,4 @@
-import { startTransition, useState } from "react";
+import { startTransition, useCallback, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Menu, ArrowUpRight, LogOut } from "lucide-react";
 import { useAuth } from "../context/auth.js";
@@ -6,21 +6,33 @@ import { publicItems, clientItems } from "../layouts/nav-items.js";
 import BrandLogo from "./BrandLogo.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
 import Button from "./ui/Button.jsx";
-import Dialog from "./ui/Dialog.jsx";
+import CardNav from "./CardNav.jsx";
 
 const navClass = ({isActive}) => `inline-flex min-h-11 items-center border-b-2 px-1 text-sm font-medium ${isActive ? "border-accent text-ink" : "border-transparent text-muted hover:text-ink"}`;
 export default function Navbar() {
   const {usuario,isAuthenticated,isAdmin,loadingAuth,logout} = useAuth();
   const navigate = useNavigate();
   const [open,setOpen] = useState(false);
+  const [menuMotion,setMenuMotion] = useState("instant");
   const items = [...publicItems,...(!loadingAuth && isAuthenticated ? clientItems : []),...(!loadingAuth && isAdmin ? [{label:"Painel",to:"/admin"}] : [])];
-  const close = () => setOpen(false);
+  const close = useCallback(() => setOpen(false), []);
   const leave = () => startTransition(() => { logout(); close(); navigate("/"); });
-  function links(mobile = false) {
-    return <><nav aria-label={mobile ? "Navegação móvel" : "Principal"} className={mobile ? "grid gap-2" : "flex items-center gap-6"}>
+  const groups = [{title:"Descubra", eyebrow:"Explore", tone:"cream", links:publicItems}];
+  if (!loadingAuth) {
+    if (isAuthenticated) groups.push(
+      {title:"Sua biblioteca", eyebrow:"Leituras", tone:"navy", links:[...clientItems,...(isAdmin ? [{label:"Painel",to:"/admin"}] : [])]},
+      {title:"Sua conta", eyebrow:"Perfil", tone:"orange", description:usuario?.nome, action:<button type="button" onClick={leave} className="bc-nav-card-link"><LogOut size={19} aria-hidden="true"/><span>Sair</span></button>},
+    );
+    else groups.push(
+      {title:"Já tem conta?", eyebrow:"Bem-vindo de volta", tone:"navy", description:"Suas leituras esperam por você.", links:[{label:"Login",to:"/login"}]},
+      {title:"Comece a ler", eyebrow:"Faça parte", tone:"orange", description:"Um novo capítulo começa com uma conta.", links:[{label:"Criar conta",to:"/cadastro"}]},
+    );
+  }
+  function links() {
+    return <><nav aria-label="Principal" className="flex items-center gap-6">
       {items.map(item=><NavLink key={item.to} end={item.to==="/" || item.to==="/admin"} to={item.to} onClick={close} className={navClass}>{item.label}</NavLink>)}
     </nav>
-    {!loadingAuth && (isAuthenticated ? <div className={mobile ? "grid gap-2 border-t border-stroke pt-4" : "flex min-w-0 items-center gap-3"}>
+    {!loadingAuth && (isAuthenticated ? <div className="flex min-w-0 items-center gap-3">
       <span className="max-w-32 truncate text-sm text-muted" title={usuario?.nome}>{usuario?.nome}</span>
       <Button variant="ghost" onClick={leave}><LogOut size={16} aria-hidden="true"/>Sair</Button>
     </div> : <div className="flex items-center gap-5">
@@ -37,9 +49,9 @@ export default function Navbar() {
       </Link>
       <div className="hidden items-center gap-6 xl:flex">{links()}</div>
       <div className="flex shrink-0 items-center gap-1"><ThemeToggle/>
-        <Button variant="ghost" className="px-2 xl:hidden" onClick={()=>setOpen(true)} aria-label="Abrir navegação" aria-expanded={open} aria-controls="menu-principal"><Menu size={22} aria-hidden="true"/></Button>
+        <Button variant="ghost" className="px-2 xl:hidden" onClick={event=>{setMenuMotion(event.detail > 0 ? "pointer" : "instant");setOpen(true);}} aria-label="Abrir navegação" aria-haspopup="dialog" aria-expanded={open} aria-controls="menu-principal"><Menu size={22} aria-hidden="true"/></Button>
       </div>
     </div>
-    <Dialog open={open} title="Navegação" onClose={close}><div id="menu-principal" className="grid gap-6">{links(true)}</div></Dialog>
+    <CardNav open={open} motion={menuMotion} groups={groups} onClose={close}/>
   </header>;
 }

@@ -10,6 +10,6 @@ export default function AdminSidebar({onNavigate}) {
       <div className="grid gap-1">{group.items.map(item=>{const Icon=icons[item.to]||BookOpen;return <NavLink key={item.to} to={item.to} end={item.to==="/admin"} onClick={onNavigate}
         className={({isActive})=>`bc-admin-nav-link ${isActive?"is-active":""}`}><Icon size={17} strokeWidth={1.5} aria-hidden="true"/>{item.label}</NavLink>;})}</div>
     </section>)}
-    <Link to="/" className="bc-admin-atlas-link" onClick={onNavigate}>Explorar o Atlas<ArrowUpRight size={16} aria-hidden="true"/></Link>
+    <Link to="/livros" className="bc-admin-atlas-link" onClick={onNavigate}>Explorar o Atlas<ArrowUpRight size={16} aria-hidden="true"/></Link>
   </nav>;
 }

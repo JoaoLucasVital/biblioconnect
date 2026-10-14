@@ -12,11 +12,11 @@ test("capturas finais de conta catálogo e administração nos dois temas",async
     await captureReview(page,`login-${width}`);
   }
   await page.setViewportSize({width:1440,height:1000});await loginUi(page,{email:"admin@biblioconnect.com",senha:"admin123"});
-  await page.goto("/admin");await expect(page.getByRole("heading",{name:"Painel do BiblioConnect",exact:true})).toBeVisible();await expect(page.getByText("Carregando painel administrativo...")).toHaveCount(0);
+  await page.goto("/admin");await expect(page.getByRole("heading",{name:"Visão geral da biblioteca.",exact:true})).toBeVisible();await expect(page.getByText("Carregando painel administrativo...")).toHaveCount(0);
   await captureReview(page,"admin-1440");await captureReview(page,"admin-1440-full",{fullPage:true});
   await page.getByRole("switch",{name:"Tema escuro",exact:true}).check();await expect(page.locator("body")).toHaveClass(/dark/);
   await captureReview(page,"admin-1440-escuro");
   await page.goto("/admin/financeiro");await expect(page.getByRole("heading",{level:1})).toBeVisible();await captureReview(page,"financeiro-1440-escuro");
   await page.setViewportSize({width:360,height:1000});await page.goto("/admin");
-  await expect(page.getByRole("heading",{name:"Painel do BiblioConnect",exact:true})).toBeVisible();await expect(page.getByText("Carregando painel administrativo...")).toHaveCount(0);await captureReview(page,"admin-360-escuro");
+  await expect(page.getByRole("heading",{name:"Visão geral da biblioteca.",exact:true})).toBeVisible();await expect(page.getByText("Carregando painel administrativo...")).toHaveCount(0);await captureReview(page,"admin-360-escuro");
 });

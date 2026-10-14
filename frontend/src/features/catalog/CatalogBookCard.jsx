@@ -6,8 +6,8 @@ import { formatarMoeda } from "./format.js";
 export default function CatalogBookCard({livro,onComprar,onAlugar,onReservar,onAvaliacoes}) {
   const noStock = Number(livro.estoque)<=0;
   return <article className="grid min-w-0 grid-rows-[auto_1fr] border-b border-stroke pb-8">
-    <div className="relative mb-5 flex min-h-64 items-center justify-center bg-soft p-6">
-      <BookCover livro={livro} className="w-32 shadow-lg"/>
+    <div className="relative mb-5 flex min-h-80 items-center justify-center bg-soft p-6">
+      <BookCover livro={livro} className="w-44 max-w-[85%] shadow-xl"/>
       {livro.destaque && <span className="absolute left-3 top-3"><StatusBadge>Destaque</StatusBadge></span>}
     </div>
     <div className="flex min-w-0 flex-col gap-4">

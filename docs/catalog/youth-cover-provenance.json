@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-14T19:34:39.119Z",
+  "covers": [
+    {
+      "slug": "corrupt",
+      "bytes": 62102,
+      "sha256": "a0eb7c8fed5518318072a0bf917568390a03fa817b54908d69eb81d16faca4e0",
+      "source": "https://images.tcdn.com.br/img/img_prod/1277055/corrupt_69_1_26b0a74e6f66e776ce155bd8311c9af2.jpg"
+    },
+    {
+      "slug": "hideaway",
+      "bytes": 48507,
+      "sha256": "869ff79d4f1dcba4ae2e620199bf4f3675dbeac4b6582fdb32e866eb7d35b3cd",
+      "source": "https://images.tcdn.com.br/img/img_prod/1277055/hideaway_89_1_731dcb8d65649e8377abb8fd3c12b8ce.jpg"
+    },
+    {
+      "slug": "a-empregada",
+      "bytes": 14831,
+      "sha256": "c95891034ff0aca82f805945df9550a5ed3c9705d096ba09dc301aa54d4dada8",
+      "source": "https://www.editoraarqueiro.com.br/media/livros_livro/9786555655063.jpeg.200x300_q85_upscale.jpg"
+    },
+    {
+      "slug": "a-hipotese-do-amor",
+      "bytes": 16182,
+      "sha256": "676c83c66fc1a924a72a860dce42453f581a9e7a4c1e1f7eeeb7b25bdbbb9b3f",
+      "source": "https://www.editoraarqueiro.com.br/media/livros_livro/hipotese-do-amor_sobrecapa_imprensa-2.jpg.200x300_q85_upscale.jpg"
+    },
+    {
+      "slug": "verity",
+      "bytes": 17561,
+      "sha256": "17af1eddb2e63dc46dc89043933a67ca1aced9235aae12fe23bd3b69244b6a32",
+      "source": "https://www.record.com.br/cdn/shop/files/d714a333a0c7d64404774020856088c2.jpg?v=1792003175"
+    },
+    {
+      "slug": "o-principe-cruel",
+      "bytes": 24713,
+      "sha256": "8a69997142e6e8b54c41d7d20fb90b6f80461dc4c24c3d6e83a50e28d9763862",
+      "source": "https://www.record.com.br/cdn/shop/files/ccc474e67385c7b92d4bd749d22ddef0_8fed374c-e44a-4bd7-97ba-c3daeceb63ca.jpg?v=1791334871"
+    },
+    {
+      "slug": "corte-de-espinhos-e-rosas",
+      "bytes": 28973,
+      "sha256": "4b47be95eac81b36efacad50ced68a9edb493972e1a92bf66f342a92fe2f0c5d",
+      "source": "https://www.record.com.br/cdn/shop/files/b705a2170d0dff5312eb59bbd8a69a7a_90f791cc-d5fe-4416-aa1a-041aba5ff4be.jpg?v=1790125883"
+    },
+    {
+      "slug": "os-sete-maridos-de-evelyn-hugo",
+      "bytes": 81964,
+      "sha256": "4c6934f4302d9bcc90c35b963e212f001ea3831b739903d5479170e2b45d2ba2",
+      "source": "https://ciadasletras.vtexassets.com/arquivos/ids/217859/capa-recolor2-9788584391509.jpg?v=639238600856900000"
+    },
+    {
+      "slug": "jantar-secreto",
+      "bytes": 64340,
+      "sha256": "58a573f0e03999813925446120bf06ab03539089311e62df1ea9cdbecc475b6b",
+      "source": "https://ciadasletras.vtexassets.com/arquivos/ids/219362/capa-recolor2-9788535928358.jpg?v=639238603954700000"
+    },
+    {
+      "slug": "a-biblioteca-da-meia-noite",
+      "bytes": 26414,
+      "sha256": "13458b3f95273429717a9cfbcbd26d9fbc88747f13bc39927ac4ebb1aeac786d",
+      "source": "https://www.record.com.br/cdn/shop/files/733997948113191ffc5f855acdfe3e6f.jpg?v=1791938462"
+    }
+  ]
+}

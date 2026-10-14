@@ -13,7 +13,7 @@ import FadeInput from "../../components/ui/FadeInput.jsx";
 import useMediaQuery from "../home/useMediaQuery.js";
 import "./atlas.css";
 
-export default function AtlasExplorer({livros=[],loading=false,error="",onRetry}) {
+export default function AtlasExplorer({livros=[],loading=false,error="",onRetry,headingAs="h1",embedded=false,onConsultBook}) {
   const [query,setQuery]=useState("");
   const [category,setCategory]=useState("");
   const [selectedId,setSelectedId]=useState(null);
@@ -26,8 +26,8 @@ export default function AtlasExplorer({livros=[],loading=false,error="",onRetry}
   const clear=()=>{setQuery("");setCategory("");};
   return <section className="atlas-explorer" aria-label="Atlas do Acervo">
     <div className="atlas-intro">
-      <div><p className="atlas-eyebrow"><span aria-hidden="true"/>BIBLIOCONNECT / EXPLORE AS CONEXÕES</p><RevealText as="h1" className="atlas-title">Atlas do acervo.</RevealText></div>
-      <div className="atlas-intro-note"><p>Cada livro abre<br/><em>um novo caminho.</em></p><InteractiveHoverLink to="/livros">Abrir catálogo</InteractiveHoverLink></div>
+      <div><p className="atlas-eyebrow"><span aria-hidden="true"/>BIBLIOCONNECT / EXPLORE AS CONEXÕES</p><RevealText as={headingAs} className="atlas-title">Atlas do acervo.</RevealText></div>
+      <div className="atlas-intro-note"><p>Cada livro abre<br/><em>um novo caminho.</em></p>{embedded?<a className="atlas-catalog-link" href="#catalogo">Ver todos os livros ↓</a>:<InteractiveHoverLink to="/livros">Abrir catálogo</InteractiveHoverLink>}</div>
     </div>
     <div className="atlas-toolbar">
       <label className="atlas-search"><Search size={19} aria-hidden="true"/><span className="sr-only">Buscar no Atlas</span><FadeInput type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Um título, um autor, uma descoberta…"/></label>
@@ -45,7 +45,7 @@ export default function AtlasExplorer({livros=[],loading=false,error="",onRetry}
           </button></li>)}</ul>}
           {(!isMap || model.total===0) && <AtlasResults total={model.total} visibleCount={model.visibleCount}/>}
         </div>
-        <AtlasBookPanel livro={selected}/>
+        <AtlasBookPanel livro={selected} embedded={embedded} onConsultBook={onConsultBook}/>
       </div>
       {model.books.length>0 && <div className="atlas-cover-strip" aria-label="Percorrer leituras">{model.books.slice(0,8).map((book,i)=><button type="button" key={book.id} onClick={()=>setSelectedId(book.id)} aria-pressed={selected?.id===book.id} aria-label={`Destacar ${book.titulo}`}>
         <span aria-hidden="true" className="atlas-cover-index">{String(i+1).padStart(2,"0")}</span><BookCover livro={book} className="w-10 shrink-0"/><span>{book.titulo}<small>{book.autor}</small></span>

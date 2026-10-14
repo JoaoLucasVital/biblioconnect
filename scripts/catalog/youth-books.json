@@ -1,0 +1,76 @@
+[
+  {
+    "slug": "corrupt", "titulo": "Corrupt", "autor": "Penelope Douglas", "isbn": "9786550480318", "ano": 2024,
+    "redator": "The Gift Box", "categoria": "Dark romance", "classificacaoFonte": "18+",
+    "sinopse": "Erika e Michael se reencontram em uma trama de desejo, vingança e segredos ligada à Devil’s Night. Dark romance para maiores de 18 anos.",
+    "fonte": "https://www.thegiftboxeditora.shop/romance/corrupt",
+    "fonteImagem": "https://images.tcdn.com.br/img/img_prod/1277055/corrupt_69_1_26b0a74e6f66e776ce155bd8311c9af2.jpg",
+    "notaEdicao": "Ano da edição/reimpressão exibida na página oficial (10/04/2024); a primeira edição brasileira é anterior."
+  },
+  {
+    "slug": "hideaway", "titulo": "Hideaway", "autor": "Penelope Douglas", "isbn": "9786556360256", "ano": 2024,
+    "redator": "The Gift Box", "categoria": "Dark romance", "classificacaoFonte": "18+",
+    "sinopse": "Um hotel abandonado aproxima Banks e Kai de um mistério perigoso. A continuação de Devil’s Night reúne romance e suspense para maiores de 18 anos.",
+    "fonte": "https://www.thegiftboxeditora.shop/romance/hideaway",
+    "fonteImagem": "https://images.tcdn.com.br/img/img_prod/1277055/hideaway_89_1_731dcb8d65649e8377abb8fd3c12b8ce.jpg",
+    "notaEdicao": "Ano da edição/reimpressão exibida na página oficial (10/04/2024); a primeira edição brasileira é anterior."
+  },
+  {
+    "slug": "a-empregada", "titulo": "A empregada", "autor": "Freida McFadden", "isbn": "9786555655063", "ano": 2023,
+    "redator": "Arqueiro", "categoria": "Suspense", "classificacaoFonte": null,
+    "sinopse": "Ao trabalhar na casa dos Winchester, Millie encontra uma chance de recomeçar. A rotina da família logo revela segredos e uma tensão crescente.",
+    "fonte": "https://www.editoraarqueiro.com.br/livros/a-empregada/",
+    "fonteImagem": "https://www.editoraarqueiro.com.br/media/livros_livro/9786555655063.jpeg.200x300_q85_upscale.jpg"
+  },
+  {
+    "slug": "a-hipotese-do-amor", "titulo": "A hipótese do amor", "autor": "Ali Hazelwood", "isbn": "9786555653304", "ano": 2022,
+    "redator": "Arqueiro", "categoria": "Romance", "classificacaoFonte": null,
+    "sinopse": "Um namoro de mentira entre a pesquisadora Olive e o professor Adam desafia seus planos. Entre laboratórios e encontros, o experimento ganha sentimentos inesperados.",
+    "fonte": "https://www.editoraarqueiro.com.br/livros/a-hipotese-do-amor/",
+    "fonteImagem": "https://www.editoraarqueiro.com.br/media/livros_livro/hipotese-do-amor_sobrecapa_imprensa-2.jpg.200x300_q85_upscale.jpg",
+    "notaEdicao": "ISBN e ano da edição impressa conforme catálogo principal da Arqueiro; não usar a ficha do audiolivro."
+  },
+  {
+    "slug": "verity", "titulo": "Verity", "autor": "Colleen Hoover", "isbn": "9788501117847", "ano": 2020,
+    "redator": "Galera", "categoria": "Suspense", "classificacaoFonte": "18+",
+    "sinopse": "Contratada para continuar uma série literária, Lowen encontra um manuscrito perturbador na casa de Verity. Um suspense psicológico para maiores de 18 anos.",
+    "fonte": "https://www.record.com.br/products/verity",
+    "fonteImagem": "https://www.record.com.br/cdn/shop/files/d714a333a0c7d64404774020856088c2.jpg?v=1792003175"
+  },
+  {
+    "slug": "o-principe-cruel", "titulo": "O príncipe cruel", "autor": "Holly Black", "isbn": "9788501115553", "ano": 2018,
+    "redator": "Galera", "categoria": "Fantasia", "classificacaoFonte": null,
+    "sinopse": "Humana em um reino de fadas, Jude busca conquistar seu lugar na corte. Sua disputa com Cardan a envolve em alianças, intrigas e ambição.",
+    "fonte": "https://www.record.com.br/products/o-principe-cruel-vol-1-o-povo-do-ar",
+    "fonteImagem": "https://www.record.com.br/cdn/shop/files/ccc474e67385c7b92d4bd749d22ddef0_8fed374c-e44a-4bd7-97ba-c3daeceb63ca.jpg?v=1791334871"
+  },
+  {
+    "slug": "corte-de-espinhos-e-rosas", "titulo": "Corte de espinhos e rosas", "autor": "Sarah J. Maas", "isbn": "9786559810727", "ano": 2021,
+    "redator": "Galera", "categoria": "Fantasia", "classificacaoFonte": null,
+    "sinopse": "Feyre é levada para um território feérico depois de matar uma criatura mágica. Entre perigos e descobertas, sua relação com Tamlin transforma seu destino.",
+    "fonte": "https://www.record.com.br/products/corte-de-espinhos-e-rosas-vol-1-edicao-especial",
+    "fonteImagem": "https://www.record.com.br/cdn/shop/files/b705a2170d0dff5312eb59bbd8a69a7a_90f791cc-d5fe-4416-aa1a-041aba5ff4be.jpg?v=1790125883",
+    "notaEdicao": "Edição especial de 2021, ISBN e capa correspondentes; não a brochura de 2015."
+  },
+  {
+    "slug": "os-sete-maridos-de-evelyn-hugo", "titulo": "Os sete maridos de Evelyn Hugo", "autor": "Taylor Jenkins Reid", "isbn": "9788584391509", "ano": 2019,
+    "redator": "Paralela", "categoria": "Romance", "classificacaoFonte": null,
+    "sinopse": "A estrela Evelyn Hugo escolhe uma jornalista desconhecida para contar sua vida. Memórias de Hollywood revelam amores, escolhas e o custo de guardar segredos.",
+    "fonte": "https://www.companhiadasletras.com.br/9788584391509-os-sete-maridos-de-evelyn-hugo-3202/p",
+    "fonteImagem": "https://ciadasletras.vtexassets.com/arquivos/ids/217859/capa-recolor2-9788584391509.jpg?v=639238600856900000"
+  },
+  {
+    "slug": "jantar-secreto", "titulo": "Jantar secreto", "autor": "Raphael Montes", "isbn": "9788535928358", "ano": 2016,
+    "redator": "Companhia das Letras", "categoria": "Suspense", "classificacaoFonte": null,
+    "sinopse": "Para pagar as contas no Rio de Janeiro, quatro amigos organizam jantares clandestinos. A ideia os arrasta para uma espiral de crimes e violência.",
+    "fonte": "https://www.companhiadasletras.com.br/9788535928358-jantar-secreto-3194/p",
+    "fonteImagem": "https://ciadasletras.vtexassets.com/arquivos/ids/219362/capa-recolor2-9788535928358.jpg?v=639238603954700000"
+  },
+  {
+    "slug": "a-biblioteca-da-meia-noite", "titulo": "A Biblioteca da Meia-Noite", "autor": "Matt Haig", "isbn": "9786558380542", "ano": 2021,
+    "redator": "Bertrand Brasil", "categoria": "Fantasia", "classificacaoFonte": null,
+    "sinopse": "Uma biblioteca permite que Nora experimente vidas que poderia ter vivido. A travessia entre escolhas e possibilidades a faz reconsiderar o que dá sentido à existência.",
+    "fonte": "https://www.record.com.br/products/a-biblioteca-da-meia-noite",
+    "fonteImagem": "https://www.record.com.br/cdn/shop/files/733997948113191ffc5f855acdfe3e6f.jpg?v=1791938462"
+  }
+]

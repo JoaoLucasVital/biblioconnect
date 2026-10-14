@@ -26,6 +26,8 @@ Catálogo, compra, aluguel, reserva, entrega, pagamentos, conta/confirmação/re
 
 Nome BiblioConnect e nova marca em avaliação. Paleta existente e direção editorial contemporânea com Atlas do Acervo como assinatura de descoberta. Uiverse, 21st.dev e React Bits são referências solicitadas, com atribuição para código incorporado. Sol/lua RiccardoRapelli, Interactive Hover Button Magic UI, loading Nawsome e fade de caracteres foram escolhidos pelo usuário.
 
+A rodada de descoberta traz Image Stream Hero na home com capas dos livros em destaque, seleção com gêneros intercalados para jovens adultos, Atlas no topo do catálogo, Card Nav no menu compacto e painel administrativo reorganizado. As três propostas antigas de logo foram rejeitadas; a prancha nova Entrelinhas/Elo/Margem aguarda escolha. O banco persistente tem 22 livros, incluindo dez títulos contemporâneos autorizados; fontes e verificação em `docs/catalog/2026-10-14-contemporary-acervo.md`.
+
 ## Evidence on Hand
 
 Código original, especificação inicial e decisões da segunda rodada em `docs/design-references/2026-10-14/README.md`, com plano revisado e aprovado em `docs/superpowers/plans/2026-10-14-biblioconnect-atlas-plan.md`. O banco original recebeu livros expressamente autorizados; proveniência e verificações em `docs/verification/2026-10-14-persistent-acervo.md`. Não há evidência para inventar depoimentos, parceiros ou vendas.

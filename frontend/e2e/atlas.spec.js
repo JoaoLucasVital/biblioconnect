@@ -1,5 +1,8 @@
 import { test,expect } from "@playwright/test";
 import { livroDisponivel } from "../src/test/fixtures.js";
+// Avoid serializing the 200-book catalog on every action in the 48-click hit-test.
+// Keep all physical clicks and assertions; screenshots still accompany failures.
+test.use({trace:"off"});
 
 const publicBooks=[
   {...livroDisponivel,id:101,titulo:"Dom Casmurro",autor:"Machado de Assis",categoria:"Romance",imagemUrl:null},
@@ -11,14 +14,14 @@ test.beforeEach(async({page})=>{
 });
 
 test("mapa por teclado mostra detalhes reais e busca por acento",async({page})=>{
-  await page.setViewportSize({width:1440,height:1000}); await page.goto("/");
+  await page.setViewportSize({width:1440,height:1000}); await page.goto("/livros");
   const atlas=page.getByRole("region",{name:"Atlas do Acervo",exact:true});
   const node=atlas.getByRole("button",{name:"Ver O Cortiço, de Aluísio Azevedo",exact:true});
   await node.focus(); await page.keyboard.press("Enter");
   const panel=atlas.getByRole("region",{name:"Livro selecionado"});
   await expect(panel.getByRole("heading",{name:"O Cortiço",exact:true})).toBeVisible();
   await expect(panel.getByText("Sem estoque no momento")).toBeVisible();
-  await expect(panel.getByRole("link",{name:"Consultar no catálogo"})).toHaveAttribute("href","/livros");
+  await expect(panel.getByRole("link",{name:"Consultar no catálogo"})).toHaveAttribute("href","#catalogo");
   await atlas.getByRole("searchbox").fill("memorias");
   await expect(atlas.getByRole("button",{name:"Ver Memórias Póstumas de Brás Cubas, de Machado de Assis"})).toBeVisible();
   await expect(node).toHaveCount(0);
@@ -28,7 +31,7 @@ test("mapa por teclado mostra detalhes reais e busca por acento",async({page})=>
 });
 
 test("celular usa lista legível, sem transbordamento, e tema sobrevive ao reload",async({page})=>{
-  await page.setViewportSize({width:390,height:844}); await page.goto("/");
+  await page.setViewportSize({width:390,height:844}); await page.goto("/livros");
   const atlas=page.getByRole("region",{name:"Atlas do Acervo",exact:true});
   await expect(atlas.getByRole("list",{name:"Livros no Atlas"})).toBeVisible();
   await expect(atlas.getByRole("group",{name:"Mapa de livros e categorias"})).toHaveCount(0);
@@ -41,18 +44,18 @@ test("celular usa lista legível, sem transbordamento, e tema sobrevive ao reloa
 });
 
 test("movimento reduzido usa lista e mantém texto e operações disponíveis",async({page})=>{
-  await page.emulateMedia({reducedMotion:"reduce"}); await page.goto("/");
+  await page.emulateMedia({reducedMotion:"reduce"}); await page.goto("/livros");
   const atlas=page.getByRole("region",{name:"Atlas do Acervo",exact:true});
   await expect(atlas.getByRole("list",{name:"Livros no Atlas"})).toBeVisible();
   await expect(atlas.getByRole("heading",{name:"Atlas do acervo.",exact:true})).toBeVisible();
   await expect(page.locator("canvas")).toHaveCount(0);
-  await expect(atlas.getByRole("link",{name:"Abrir catálogo"})).toHaveAttribute("href","/livros");
+  await expect(atlas.getByRole("link",{name:"Ver todos os livros ↓"})).toHaveAttribute("href","#catalogo");
 });
 
 test("mapa denso em tablet mantém cada alvo de livro livre para clique",async({page})=>{
   const many=Array.from({length:200},(_,i)=>({...publicBooks[0],id:i+1,titulo:`Leitura ${String(i).padStart(3,"0")}`}));
   await page.route(`${process.env.QA_API_URL}/livros`,route=>route.fulfill({json:many}));
-  await page.setViewportSize({width:768,height:1100}); await page.goto("/");
+  await page.setViewportSize({width:768,height:1100}); await page.goto("/livros");
   const points=page.locator(".atlas-node"); await expect(points).toHaveCount(48);
   const misses=await points.evaluateAll(elements=>elements.flatMap(element=>{
     const r=element.getBoundingClientRect();
