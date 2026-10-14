@@ -1,3 +1,4 @@
+import AuthShell from "../features/account/AuthShell.jsx";
 import Field from "../components/ui/Field.jsx";
 import GoogleSignIn from "../features/account/GoogleSignIn.jsx";
 import Button from "../components/ui/Button.jsx";
@@ -288,10 +289,10 @@ function Register() {
     form.senha !== form.confirmarSenha;
 
   return (
-    <main  className="mx-auto max-w-3xl px-5 py-12 sm:py-20 max-w-4xl">
+    <AuthShell wide>
       <div  className="mx-auto max-w-lg max-w-none">
         <div  className="mb-8 space-y-3">
-          <span  className="mb-4 inline-flex border-b-2 border-accent pb-2 font-display text-lg">BC</span>
+          <span className="text-xs font-medium uppercase tracking-widest text-muted">SUA PRÓXIMA LEITURA COMEÇA AQUI</span>
           <h1  className="font-display text-4xl leading-tight sm:text-5xl">Criar cadastro</h1>
           <p>
             Cadastre-se para acessar reservas, compras e aluguéis. Após o
@@ -304,9 +305,9 @@ function Register() {
             <h2  className="font-display text-2xl leading-snug">Dados pessoais</h2>
 
             <div  className="grid gap-5 sm:grid-cols-2">
-              <div className="grid gap-2"><Field label={"Nome completo"}><FadeInput type="text" name="nome" placeholder="Digite seu nome" value={form.nome} onChange={handleChange} required/></Field></div>
+              <div className="grid gap-2"><Field label={"Nome completo"}><FadeInput type="text" autoComplete="name" name="nome" placeholder="Digite seu nome" value={form.nome} onChange={handleChange} required/></Field></div>
 
-              <div className="grid gap-2"><Field label={"Email"}><input type="email" name="email" placeholder="Digite seu email" value={form.email} onChange={handleChange} required/></Field></div>
+              <div className="grid gap-2"><Field label={"Email"}><input autoComplete="email" type="email" name="email" placeholder="Digite seu email" value={form.email} onChange={handleChange} required/></Field></div>
 
               <div className="grid gap-2"><Field label={"Telefone"}><input type="text" name="telefone" placeholder="Digite seu telefone" value={form.telefone} onChange={handleChange}/></Field></div>
             </div>
@@ -318,13 +319,13 @@ function Register() {
             <div  className="grid gap-5 sm:grid-cols-2">
               <div className="grid gap-2"><Field label={"Senha"} trailing={<Button type="button" onClick={() => setMostrarSenha((prev) => !prev)} aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"} variant="ghost" className="px-2 text-xs">
                     {mostrarSenha ? "Ocultar" : "Mostrar"}
-                  </Button>}><input type={mostrarSenha ? "text" : "password"} name="senha" placeholder="Crie uma senha" value={form.senha} onChange={handleChange} required/></Field></div>
+                  </Button>}><input type={mostrarSenha ? "text" : "password"} autoComplete="new-password" name="senha" placeholder="Crie uma senha" value={form.senha} onChange={handleChange} required/></Field></div>
 
               <div className="grid gap-2"><Field label={"Confirmar senha"} trailing={<Button type="button" onClick={() => setMostrarConfirmarSenha((prev) => !prev)} aria-label={
                       mostrarConfirmarSenha ? "Ocultar senha" : "Mostrar senha"
                     } variant="ghost" className="px-2 text-xs">
                     {mostrarConfirmarSenha ? "Ocultar" : "Mostrar"}
-                  </Button>}><input type={mostrarConfirmarSenha ? "text" : "password"} name="confirmarSenha" placeholder="Digite a senha novamente" value={form.confirmarSenha} onChange={handleChange} required/></Field>{form.confirmarSenha && form.senha !== form.confirmarSenha && (
+                  </Button>}><input type={mostrarConfirmarSenha ? "text" : "password"} autoComplete="new-password" name="confirmarSenha" placeholder="Digite a senha novamente" value={form.confirmarSenha} onChange={handleChange} required/></Field>{form.confirmarSenha && form.senha !== form.confirmarSenha && (
                   <small  className="text-sm text-red-700 dark:text-red-300">
                     As senhas ainda não coincidem.
                   </small>
@@ -385,7 +386,7 @@ function Register() {
           Já tem conta? <Link to="/login">Entrar</Link>
         </p>
       </div>
-    </main>
+    </AuthShell>
   );
 }
 

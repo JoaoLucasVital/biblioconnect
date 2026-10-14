@@ -1,3 +1,4 @@
+import AuthShell from "../features/account/AuthShell.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Field from "../components/ui/Field.jsx";
 import Button from "../components/ui/Button.jsx";
@@ -41,10 +42,10 @@ function ForgotPassword() {
   }
 
   return (
-    <main  className="mx-auto max-w-3xl px-5 py-12 sm:py-20">
+    <AuthShell>
       <div  className="mx-auto max-w-lg">
         <div  className="mb-8 space-y-3">
-          <span  className="mb-4 inline-flex border-b-2 border-accent pb-2 font-display text-lg">BC</span>
+          <span className="text-xs font-medium uppercase tracking-widest text-muted">SUA PRÓXIMA LEITURA COMEÇA AQUI</span>
           <h1  className="font-display text-4xl leading-tight sm:text-5xl">Esqueci minha senha</h1>
           <p>
             Informe o email cadastrado. Se ele existir no sistema, enviaremos um
@@ -59,7 +60,7 @@ function ForgotPassword() {
         )}
 
         <form onSubmit={handleSubmit} className="grid gap-5">
-          <div className="grid gap-2"><Field label={"Email cadastrado"}><input type="email" placeholder="Digite seu email" value={email} onChange={(event) => setEmail(event.target.value)} required/></Field></div>
+          <div className="grid gap-2"><Field label={"Email cadastrado"}><input autoComplete="email" type="email" placeholder="Digite seu email" value={email} onChange={(event) => setEmail(event.target.value)} required/></Field></div>
 
           <Button disabled={loading} type="submit" variant="primary" className="w-full">
             {loading ? "Enviando..." : "Enviar link de redefinição"}
@@ -70,7 +71,7 @@ function ForgotPassword() {
           Lembrou sua senha? <Link to="/login">Voltar para login</Link>
         </p>
       </div>
-    </main>
+    </AuthShell>
   );
 }
 

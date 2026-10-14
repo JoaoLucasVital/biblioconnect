@@ -18,7 +18,7 @@ if (!destinatario) {
 const diagnostico = await verificarConfiguracaoEmail();
 
 if (!diagnostico.ok) {
-  console.error(`Falha no SMTP: ${diagnostico.mensagem}`);
+  console.error(`Falha no provedor: ${diagnostico.mensagem}`);
   process.exit(1);
 }
 
@@ -29,11 +29,11 @@ try {
     html: `
       <div style="font-family:Arial,sans-serif;padding:24px">
         <h2>BiblioConnect - teste de email</h2>
-        <p>Se você recebeu esta mensagem, a configuração SMTP está funcionando.</p>
+        <p>Se você recebeu esta mensagem, o recebimento desta mensagem de teste foi confirmado por você.</p>
       </div>`,
   });
 
-  console.log(`Email enviado para ${destinatario}.`);
+  console.log("Mensagem aceita pelo provedor; confirme o recebimento na caixa de entrada.");
   console.log(`Message ID: ${info.messageId}`);
 } catch (error) {
   console.error(`Falha ao enviar: ${descreverErroEmail(error)}`);

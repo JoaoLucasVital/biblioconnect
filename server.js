@@ -1,3 +1,4 @@
+import {issueAccountToken,consumeAccountToken} from "./src/services/accountTokenService.js";
 import { origensPermitidas } from "./src/utils/corsOrigins.js";
 import { assinaturaValida, aplicarPagamento } from "./src/services/paymentWebhook.js";
 import { criarPedidoComEstoque, alterarStatusPedido } from "./src/services/orderService.js";
@@ -84,12 +85,12 @@ app.use(["/login", "/usuarios", "/reenviar-confirmacao", "/esqueci-senha", "/red
   next();
 });
 app.use("/login", auth.rateLimit("login-ip",{limit:20,windowMs:quarterHour}), auth.rateLimit("login-account",{limit:5,windowMs:quarterHour,key:emailKey}));
-app.use(["/reenviar-confirmacao","/esqueci-senha"], auth.rateLimit("email-ip",{limit:20,windowMs:quarterHour}), auth.rateLimit("email-account",{limit:3,windowMs:quarterHour,key:emailKey}));
+app.use(["/reenviar-confirmacao","/esqueci-senha"], auth.rateLimit("email-ip",{limit:20,windowMs:quarterHour,key:req=>`${req.baseUrl}:${req.ip}`}), auth.rateLimit("email-account",{limit:3,windowMs:quarterHour,key:req=>`${req.baseUrl}:${emailKey(req)}`}));
+app.use("/redefinir-senha",auth.rateLimit("reset-ip",{limit:20,windowMs:quarterHour}));
 app.get("/auth/session", auth.sessionResponse);
 app.post("/auth/logout", auth.authenticate, auth.signOut);
 app.use(createGoogleAuthRoutes({prisma,auth,sendConfirmation:async usuario => {
-  const token=gerarTokenConfirmacaoEmail();
-  await prisma.usuario.update({where:{id:usuario.id},data:{tokenConfirmacaoEmail:token,tokenConfirmacaoExpira:gerarDataExpiracaoToken()}});
+  const {token}=await issueAccountToken(prisma,{usuarioId:usuario.id,purpose:"confirmation"});
   await enviarEmailConfirmacaoCadastro(usuario,token);
 }}));
 
@@ -315,15 +316,9 @@ async function criarAdminPadrao() {
 // ======================
 // EMAIL - CONFIRMAÇÃO DE CADASTRO
 // ======================
-function gerarTokenConfirmacaoEmail() {
-  return crypto.randomBytes(32).toString("hex");
-}
 
-function gerarDataExpiracaoToken() {
-  const data = new Date();
-  data.setHours(data.getHours() + 24);
-  return data;
-}
+
+
 
 async function enviarEmailConfirmacaoCadastro(usuario, token) {
   const linkConfirmacao = `${BACKEND_URL}/confirmar-email/${token}`;
@@ -377,15 +372,9 @@ async function enviarEmailConfirmacaoCadastro(usuario, token) {
 // ======================
 // EMAIL - REDEFINIÇÃO DE SENHA
 // ======================
-function gerarTokenResetSenha() {
-  return crypto.randomBytes(32).toString("hex");
-}
 
-function gerarDataExpiracaoResetSenha() {
-  const data = new Date();
-  data.setMinutes(data.getMinutes() + 30);
-  return data;
-}
+
+
 
 async function enviarEmailResetSenha(usuario, token) {
   const linkReset = `${FRONTEND_URL}/redefinir-senha/${token}`;
@@ -612,8 +601,7 @@ app.post("/usuarios", async (req, res) => {
       .join(", ");
 
     const senhaCriptografada = await bcrypt.hash(senha, 10);
-    const tokenConfirmacaoEmail = gerarTokenConfirmacaoEmail();
-    const tokenConfirmacaoExpira = gerarDataExpiracaoToken();
+
 
     const usuarioCriado = await prisma.usuario.create({
       data: {
@@ -634,8 +622,7 @@ app.post("/usuarios", async (req, res) => {
 
         role: "CLIENTE",
         emailConfirmado: false,
-        tokenConfirmacaoEmail,
-        tokenConfirmacaoExpira,
+
       },
       select: {
         id: true,
@@ -659,12 +646,13 @@ app.post("/usuarios", async (req, res) => {
     });
 
     try {
+      const {token:tokenConfirmacaoEmail}=await issueAccountToken(prisma,{usuarioId:usuarioCriado.id,purpose:"confirmation"});
       await enviarEmailConfirmacaoCadastro(
         usuarioCriado,
         tokenConfirmacaoEmail
       );
     } catch (emailError) {
-      console.error("Erro ao enviar email de confirmação:", emailError);
+      console.error("Falha no envio de confirmação.");
 
       return res.status(201).json({
         mensagem:
@@ -682,11 +670,10 @@ app.post("/usuarios", async (req, res) => {
       emailEnviado: true,
     });
   } catch (error) {
-    console.error("Erro ao cadastrar usuário:", error);
+    console.error("Falha ao cadastrar usuário.");
 
     res.status(error.status || 500).json({
-      erro: "Erro ao cadastrar usuário",
-      detalhe: error.message,
+      erro: "Não foi possível cadastrar a conta. Tente novamente.",
     });
   }
 });
@@ -694,281 +681,52 @@ app.post("/usuarios", async (req, res) => {
 // ======================
 // CONFIRMAR EMAIL
 // ======================
-app.get("/confirmar-email/:token", async (req, res) => {
-  try {
-    const { token } = req.params;
-
-    const usuario = await prisma.usuario.findFirst({
-      where: {
-        tokenConfirmacaoEmail: token,
-      },
-    });
-
-    if (!usuario) {
-      return res.status(400).send(`
-        <html>
-          <body style="font-family: Arial; padding: 40px;">
-            <h2>Link inválido</h2>
-            <p>Este link de confirmação não existe ou já foi utilizado.</p>
-            <a href="${FRONTEND_URL}/login">Voltar para o login</a>
-          </body>
-        </html>
-      `);
-    }
-
-    if (
-      usuario.tokenConfirmacaoExpira &&
-      new Date(usuario.tokenConfirmacaoExpira) < new Date()
-    ) {
-      return res.status(400).send(`
-        <html>
-          <body style="font-family: Arial; padding: 40px;">
-            <h2>Link expirado</h2>
-            <p>Este link de confirmação expirou. Solicite um novo link pela tela de login.</p>
-            <a href="${FRONTEND_URL}/login">Voltar para o login</a>
-          </body>
-        </html>
-      `);
-    }
-
-    await prisma.usuario.update({
-      where: {
-        id: usuario.id,
-      },
-      data: {
-        emailConfirmado: true,
-        tokenConfirmacaoEmail: null,
-        tokenConfirmacaoExpira: null,
-      },
-    });
-
-    res.send(`
-      <html>
-        <head>
-          <meta http-equiv="refresh" content="3;url=${FRONTEND_URL}/login" />
-        </head>
-
-        <body style="font-family: Arial; padding: 40px; background: #f8fafc;">
-          <div style="max-width: 560px; margin: 0 auto; background: white; padding: 32px; border-radius: 16px; border: 1px solid #e5e7eb;">
-            <h2 style="color: #15803d;">Email confirmado com sucesso</h2>
-            <p>Sua conta foi ativada. Você já pode fazer login no BiblioConnect.</p>
-            <p>Você será redirecionado em alguns segundos.</p>
-            <a href="${FRONTEND_URL}/login" style="color: #E67E00; font-weight: bold;">Ir para o login</a>
-          </div>
-        </body>
-      </html>
-    `);
-  } catch (error) {
-    console.error("Erro ao confirmar email:", error);
-
-    res.status(500).send(`
-      <html>
-        <body style="font-family: Arial; padding: 40px;">
-          <h2>Erro ao confirmar email</h2>
-          <p>Ocorreu um erro interno ao confirmar sua conta.</p>
-          <a href="${FRONTEND_URL}/login">Voltar para o login</a>
-        </body>
-      </html>
-    `);
-  }
+app.get("/confirmar-email/:token",async(req,res)=>{
+  res.set({"Cache-Control":"no-store","Referrer-Policy":"no-referrer"});
+  try{
+    const usuario=await consumeAccountToken(prisma,{token:req.params.token,purpose:"confirmation"});
+    const heading=usuario?"Email confirmado com sucesso":"Link inválido ou expirado";
+    res.status(usuario?200:400).type("html").send(`<!doctype html><html lang="pt-BR"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${heading} — BiblioConnect</title><body style="font-family:system-ui;background:#f6f3ed;color:#1e3a5f;padding:clamp(24px,8vw,80px)"><main style="max-width:560px;margin:auto"><h1>${heading}</h1><p>${usuario?"Sua conta foi ativada. Você já pode fazer login.":"Solicite um novo link pela tela de login."}</p><a href="${FRONTEND_URL.split(",")[0]}/login">Voltar para o login</a></main></body></html>`);
+  }catch{res.status(500).type("html").send("Não foi possível confirmar o email. Tente novamente.");}
 });
 
-
-// ======================
-// ESQUECI MINHA SENHA
-// ======================
-app.post("/esqueci-senha", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({
-        erro: "Email é obrigatório",
-      });
-    }
-
-    const emailNormalizado = String(email).trim().toLowerCase();
-
-    const usuario = await prisma.usuario.findUnique({
-      where: {
-        email: emailNormalizado,
-      },
-    });
-
-    // Segurança: não revela se o email existe ou não.
-    if (!usuario) {
-      return res.json({
-        mensagem:
-          "Se este email estiver cadastrado, enviaremos um link de redefinição.",
-      });
-    }
-
-    const tokenResetSenha = gerarTokenResetSenha();
-    const tokenResetSenhaExpira = gerarDataExpiracaoResetSenha();
-
-    const usuarioAtualizado = await prisma.usuario.update({
-      where: {
-        id: usuario.id,
-      },
-      data: {
-        tokenResetSenha,
-        tokenResetSenhaExpira,
-      },
-      select: {
-        id: true,
-        nome: true,
-        email: true,
-      },
-    });
-
-    await enviarEmailResetSenha(usuarioAtualizado, tokenResetSenha);
-
-    res.json({
-      mensagem:
-        "Se este email estiver cadastrado, enviaremos um link de redefinição.",
-    });
-  } catch (error) {
-    console.error("Erro ao solicitar redefinição de senha:", error);
-
-    res.status(error.status || 500).json({
-      erro: "Erro ao solicitar redefinição de senha",
-      detalhe: error.message,
-    });
-  }
+app.post("/esqueci-senha",async(req,res)=>{
+  try{
+    const email=typeof req.body.email==="string"?req.body.email.trim().toLowerCase():"";
+    if(!email)return res.status(400).json({erro:"Informe um email válido."});
+    if(!emailConfigurado())return res.status(503).json({erro:"O envio de email está temporariamente indisponível."});
+    const usuario=await prisma.usuario.findUnique({where:{email},select:{id:true,nome:true,email:true}});
+    if(usuario){const {token}=await issueAccountToken(prisma,{usuarioId:usuario.id,purpose:"reset"});await enviarEmailResetSenha(usuario,token);}
+    res.json({mensagem:"Se este email estiver cadastrado, enviaremos um link de redefinição."});
+  }catch{res.status(503).json({erro:"Não foi possível solicitar a redefinição agora. Tente novamente."});}
 });
 
-// ======================
-// REDEFINIR SENHA
-// ======================
-app.patch("/redefinir-senha/:token", async (req, res) => {
-  try {
-    const { token } = req.params;
-    const { novaSenha } = req.body;
-
-    if (!validarSenha(novaSenha)) {
-      return res.status(400).json({
-        erro: "A senha deve ter pelo menos 8 caracteres e no máximo 72 bytes.",
-      });
-    }
-
-    const usuario = await prisma.usuario.findFirst({
-      where: {
-        tokenResetSenha: token,
-      },
+app.patch("/redefinir-senha/:token",async(req,res)=>{
+  try{
+    const {novaSenha}=req.body;
+    if(!validarSenha(novaSenha))return res.status(400).json({erro:"A senha deve ter pelo menos 8 caracteres e no máximo 72 bytes."});
+    const senha=await bcrypt.hash(novaSenha,10);
+    const changed=await prisma.$transaction(async tx=>{
+      const usuario=await consumeAccountToken(tx,{token:req.params.token,purpose:"reset"});
+      if(!usuario)return false;
+      await tx.usuario.update({where:{id:usuario.id},data:{senha}});
+      await revokeUserSessions(tx,usuario.id);return true;
     });
-
-    if (!usuario) {
-      return res.status(400).json({
-        erro: "Link inválido ou já utilizado.",
-      });
-    }
-
-    if (
-      usuario.tokenResetSenhaExpira &&
-      new Date(usuario.tokenResetSenhaExpira) < new Date()
-    ) {
-      return res.status(400).json({
-        erro: "Link expirado. Solicite uma nova redefinição de senha.",
-      });
-    }
-
-    const senhaCriptografada = await bcrypt.hash(novaSenha, 10);
-
-    await prisma.$transaction(async tx => {
-    await tx.usuario.update({
-      where: {
-        id: usuario.id,
-      },
-      data: {
-        senha: senhaCriptografada,
-        tokenResetSenha: null,
-        tokenResetSenhaExpira: null,
-      },
-    });
-
-    await revokeUserSessions(tx,usuario.id);
-    });
-
-    res.json({
-      mensagem: "Senha redefinida com sucesso. Faça login novamente.",
-    });
-  } catch (error) {
-    console.error("Erro ao redefinir senha:", error);
-
-    res.status(error.status || 500).json({
-      erro: "Erro ao redefinir senha",
-      detalhe: error.message,
-    });
-  }
+    if(!changed)return res.status(400).json({erro:"Link inválido, expirado ou já utilizado."});
+    res.json({mensagem:"Senha redefinida com sucesso. Faça login novamente."});
+  }catch{res.status(500).json({erro:"Não foi possível redefinir a senha agora."});}
 });
 
-
-// ======================
-// REENVIAR CONFIRMAÇÃO DE EMAIL
-// ======================
-app.post("/reenviar-confirmacao", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({
-        erro: "Email é obrigatório",
-      });
-    }
-
-    const emailNormalizado = String(email).trim().toLowerCase();
-
-    const usuario = await prisma.usuario.findUnique({
-      where: {
-        email: emailNormalizado,
-      },
-    });
-
-    if (!usuario) {
-      return res.status(404).json({
-        erro: "Usuário não encontrado",
-      });
-    }
-
-    if (usuario.emailConfirmado) {
-      return res.status(400).json({
-        erro: "Este email já foi confirmado.",
-      });
-    }
-
-    const novoToken = gerarTokenConfirmacaoEmail();
-    const novaExpiracao = gerarDataExpiracaoToken();
-
-    const usuarioAtualizado = await prisma.usuario.update({
-      where: {
-        id: usuario.id,
-      },
-      data: {
-        tokenConfirmacaoEmail: novoToken,
-        tokenConfirmacaoExpira: novaExpiracao,
-      },
-      select: {
-        id: true,
-        nome: true,
-        email: true,
-      },
-    });
-
-    await enviarEmailConfirmacaoCadastro(usuarioAtualizado, novoToken);
-
-    res.json({
-      mensagem: "Novo email de confirmação enviado com sucesso.",
-    });
-  } catch (error) {
-    console.error("Erro ao reenviar confirmação:", error);
-
-    res.status(error.status || 500).json({
-      erro: "Erro ao reenviar email de confirmação",
-      detalhe: descreverErroEmail(error),
-    });
-  }
+app.post("/reenviar-confirmacao",async(req,res)=>{
+  try{
+    const email=typeof req.body.email==="string"?req.body.email.trim().toLowerCase():"";
+    if(!email)return res.status(400).json({erro:"Informe um email válido."});
+    if(!emailConfigurado())return res.status(503).json({erro:"O envio de email está temporariamente indisponível."});
+    const usuario=await prisma.usuario.findUnique({where:{email},select:{id:true,nome:true,email:true,emailConfirmado:true}});
+    if(usuario&&!usuario.emailConfirmado){const {token}=await issueAccountToken(prisma,{usuarioId:usuario.id,purpose:"confirmation"});await enviarEmailConfirmacaoCadastro(usuario,token);}
+    res.json({mensagem:"Se esta conta precisar de confirmação, enviaremos um novo link."});
+  }catch{res.status(503).json({erro:"Não foi possível reenviar o email agora. Tente novamente."});}
 });
-
 
 // ======================
 // LOGIN

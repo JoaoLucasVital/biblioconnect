@@ -87,5 +87,7 @@ test("fluxos integrados de autenticação, acervo, pedidos, moderação e chat",
   await api("/me",{token:fresh,status:401});
   await api(`/admin/usuarios/${me.id}/bloqueio`,{token:admin,method:"PATCH",body:{bloqueado:false}});
   await api("/me",{token:fresh,status:401});
+  for(let i=0;i<3;i++)await api("/reenviar-confirmacao",{method:"POST",body:{email:"missing-account@example.test"}});
+  await api("/reenviar-confirmacao",{method:"POST",body:{email:"missing-account@example.test"},status:429});
   console.log(`${verificacoes} respostas HTTP verificadas, além das regras de estoque e visibilidade.`);
 });

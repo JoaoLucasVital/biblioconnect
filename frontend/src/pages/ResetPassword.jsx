@@ -1,3 +1,4 @@
+import AuthShell from "../features/account/AuthShell.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
@@ -65,7 +66,7 @@ function ResetPassword() {
   }
 
   return (
-    <main  className="mx-auto max-w-3xl px-5 py-12 sm:py-20">
+    <AuthShell>
       <section  className="mx-auto max-w-lg">
         <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Nova senha</span>
 
@@ -84,7 +85,7 @@ function ResetPassword() {
                   mostrarNovaSenha ? "Ocultar nova senha" : "Mostrar nova senha"
                 } variant="ghost" className="px-2 text-xs">
                 {mostrarNovaSenha ? "Ocultar" : "Mostrar"}
-              </Button>}><input type={mostrarNovaSenha ? "text" : "password"} value={novaSenha} onChange={(event) => setNovaSenha(event.target.value)} placeholder="Mínimo de 8 caracteres" required/></Field></div>
+              </Button>}><input type={mostrarNovaSenha ? "text" : "password"} autoComplete="new-password" value={novaSenha} onChange={(event) => setNovaSenha(event.target.value)} placeholder="Mínimo de 8 caracteres" required/></Field></div>
 
           <div className="grid gap-2"><Field label={"Confirmar nova senha"} trailing={<Button type="button" onClick={() => setMostrarConfirmarSenha((prev) => !prev)} aria-label={
                   mostrarConfirmarSenha
@@ -92,7 +93,7 @@ function ResetPassword() {
                     : "Mostrar confirmação de senha"
                 } variant="ghost" className="px-2 text-xs">
                 {mostrarConfirmarSenha ? "Ocultar" : "Mostrar"}
-              </Button>}><input type={mostrarConfirmarSenha ? "text" : "password"} value={confirmarSenha} onChange={(event) => setConfirmarSenha(event.target.value)} placeholder="Digite a senha novamente" required/></Field>{confirmarSenha && novaSenha !== confirmarSenha && (
+              </Button>}><input type={mostrarConfirmarSenha ? "text" : "password"} autoComplete="new-password" value={confirmarSenha} onChange={(event) => setConfirmarSenha(event.target.value)} placeholder="Digite a senha novamente" required/></Field>{confirmarSenha && novaSenha !== confirmarSenha && (
               <small  className="text-sm text-red-700 dark:text-red-300">
                 As senhas ainda não coincidem.
               </small>
@@ -107,7 +108,7 @@ function ResetPassword() {
           <Link to="/login">Voltar para o login</Link>
         </div>
       </section>
-    </main>
+    </AuthShell>
   );
 }
 

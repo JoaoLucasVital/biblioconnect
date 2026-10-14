@@ -1,5 +1,6 @@
 import Field from "../components/ui/Field.jsx";
 import GoogleSignIn from "../features/account/GoogleSignIn.jsx";
+import AuthShell from "../features/account/AuthShell.jsx";
 import Button from "../components/ui/Button.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import { useState } from "react";
@@ -12,6 +13,7 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [lembrar,setLembrar] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const [erro, setErro] = useState("");
@@ -30,7 +32,7 @@ function Login() {
     setLoading(true);
 
     try {
-      await login(email, senha);
+      await login(email, senha, lembrar);
       navigate("/");
     } catch (error) {
       const dadosErro = error.response?.data || {};
@@ -69,20 +71,20 @@ function Login() {
   }
 
   return (
-    <main  className="mx-auto max-w-3xl px-5 py-12 sm:py-20">
+    <AuthShell>
       <div  className="mx-auto max-w-lg">
         <div  className="mb-8 space-y-3">
-          <span  className="mb-4 inline-flex border-b-2 border-accent pb-2 font-display text-lg">BC</span>
+          <span className="text-xs font-medium uppercase tracking-widest text-muted">BEM-VINDO DE VOLTA</span>
           <h1  className="font-display text-4xl leading-tight sm:text-5xl">Entrar na plataforma</h1>
           <p>Acesse sua conta para reservar, alugar ou comprar livros.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="grid gap-5">
-          <div className="grid gap-2"><Field label={"Email"}><input type="email" placeholder="Digite seu email" value={email} onChange={(event) => setEmail(event.target.value)} required/></Field></div>
+          <div className="grid gap-2"><Field label={"Email"}><input autoComplete="username" type="email" placeholder="Digite seu email" value={email} onChange={(event) => setEmail(event.target.value)} required/></Field></div>
 
           <div className="grid gap-2"><Field label={"Senha"} trailing={<Button type="button" onClick={() => setMostrarSenha((prev) => !prev)} aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"} variant="ghost" className="px-2 text-xs">
                 {mostrarSenha ? "Ocultar" : "Mostrar"}
-              </Button>}><input type={mostrarSenha ? "text" : "password"} placeholder="Digite sua senha" value={senha} onChange={(event) => setSenha(event.target.value)} required/></Field><Link to="/esqueci-senha" className="text-sm underline underline-offset-4">
+              </Button>}><input type={mostrarSenha ? "text" : "password"} placeholder="Digite sua senha" autoComplete="current-password" value={senha} onChange={(event) => setSenha(event.target.value)} required/></Field><Link to="/esqueci-senha" className="text-sm underline underline-offset-4">
                 Esqueci minha senha
               </Link></div>
 
@@ -95,11 +97,12 @@ function Login() {
             </Button>
           )}
 
+          <label className="bc-auth-remember"><input type="checkbox" checked={lembrar} onChange={event=>setLembrar(event.target.checked)}/>Lembrar de mim</label>
           <Button disabled={loading} type="submit" variant="primary" className="w-full">
             {loading ? "Entrando..." : "Entrar"}
           </Button>
         </form>
-        <GoogleSignIn/>
+        <GoogleSignIn lembrar={lembrar}/>
 
         {import.meta.env.DEV && <div  className="mt-7 grid gap-1 border-l-2 border-stroke pl-4 text-xs text-muted">
           <strong>Acesso administrativo de teste</strong>
@@ -111,7 +114,7 @@ function Login() {
           Ainda não tem conta? <Link to="/cadastro">Criar cadastro</Link>
         </p>
       </div>
-    </main>
+    </AuthShell>
   );
 }
 

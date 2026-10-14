@@ -16,7 +16,10 @@ function emailLocal() {
  * variáveis EMAIL_HOST/EMAIL_PORT/EMAIL_SECURE.
  */
 export function emailConfigurado() {
-  return emailLocal() || Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS);
+  const provider=String(process.env.EMAIL_PROVIDER||"gmail").toLowerCase();
+  if(provider==="file")return emailLocal();
+  if(provider==="resend")return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM && !/[\r\n]/.test(process.env.EMAIL_FROM));
+  return ["gmail","smtp"].includes(provider) && Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS && (provider!=="smtp"||process.env.EMAIL_HOST));
 }
 
 function senhaEmail() {
@@ -102,11 +105,15 @@ export async function verificarConfiguracaoEmail() {
   if (!emailConfigurado()) {
     return {
       ok: false,
-      mensagem: "EMAIL_USER ou EMAIL_PASS não configurados.",
+      mensagem: "Provedor de email não configurado para este ambiente.",
     };
   }
 
   try {
+    if(process.env.EMAIL_PROVIDER==="resend"){
+      const response=await fetch("https://api.resend.com/domains",{headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`},signal:AbortSignal.timeout(15000)});
+      return {ok:response.ok,mensagem:response.ok?"Credencial Resend aceita; recebimento ainda precisa ser validado.":"Resend recusou a verificação de configuração.",delivered:false};
+    }
     await criarTransporterEmail().verify();
     return {
       ok: true,
@@ -133,6 +140,16 @@ export async function enviarEmailHtml({ to, subject, html }) {
     const messageId = crypto.randomUUID();
     await fs.writeFile(path.join(dir, `${Date.now()}-${messageId}.html`), html, "utf8");
     return { messageId, accepted: [to] };
+  }
+  if(!emailConfigurado())throw new Error("Provedor de email não configurado para este ambiente.");
+  if(process.env.EMAIL_PROVIDER==="resend"){
+    let response;
+    try{response=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({from:obterRemetenteEmail(),to,subject,html}),signal:AbortSignal.timeout(15000)});}
+    catch{throw new Error("Não foi possível conectar ao provedor de email.");}
+    if(!response.ok)throw Object.assign(new Error("O provedor recusou o envio de email."),{code:"EMAIL_REJECTED"});
+    const data=await response.json();
+    if(!data.id)throw new Error("O provedor não confirmou a aceitação do email.");
+    return {messageId:data.id,accepted:[to],delivered:false};
   }
   const transporter = criarTransporterEmail();
 

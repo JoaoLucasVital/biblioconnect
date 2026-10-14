@@ -32,6 +32,14 @@ it("recuperação mantém email quando servidor falha",async()=>{
   expect(api.post).toHaveBeenCalledWith("/esqueci-senha",{email:"leitor@example.test"});
   expect(screen.getByLabelText("Email cadastrado")).toHaveValue("leitor@example.test");
 });
+it("lembrar de mim respeita escolha explícita no login",async()=>{
+  const login=vi.fn().mockResolvedValue({nome:"Leitor"});
+  renderWithRouter(<AuthContext.Provider value={{login}}><Login/></AuthContext.Provider>);
+  const user=userEvent.setup();await user.type(screen.getByLabelText(/^Email$/i),"leitor@example.test");await user.type(screen.getByLabelText(/^Senha$/i),"SenhaTeste123!");
+  expect(screen.getByRole("checkbox",{name:"Lembrar de mim"})).not.toBeChecked();
+  await user.click(screen.getByRole("checkbox",{name:"Lembrar de mim"}));await user.click(screen.getByRole("button",{name:"Entrar",exact:true}));
+  expect(login).toHaveBeenCalledWith("leitor@example.test","SenhaTeste123!",true);
+});
 it("reset usa token da URL e mantém senha no erro",async()=>{
   api.patch.mockRejectedValueOnce({response:{data:{erro:"Token inválido"}}});
   renderWithRouter(<Routes><Route path="/redefinir-senha/:token" element={<ResetPassword/>}/></Routes>,{route:"/redefinir-senha/token-teste"});
