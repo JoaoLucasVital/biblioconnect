@@ -1,0 +1,326 @@
+{
+  "at": "2026-10-14T21:26:17.499Z",
+  "covers": 22,
+  "changed": 22,
+  "bookFieldsPreserved": true,
+  "originalFilesRetained": true,
+  "images": [
+    {
+      "id": 1,
+      "title": "Livro de integração",
+      "imageUrl": "/uploads/livros/cover-1-f9ab25385091.webp",
+      "width": 640,
+      "height": 960,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-1-f9ab25385091-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "Dom Casmurro",
+      "imageUrl": "/uploads/livros/cover-34-7158055552f0.webp",
+      "width": 450,
+      "height": 726,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-34-7158055552f0-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "title": "Memórias Póstumas de Brás Cubas",
+      "imageUrl": "/uploads/livros/cover-35-b7feada86aaf.webp",
+      "width": 563,
+      "height": 931,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-35-b7feada86aaf-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "title": "O Cortiço",
+      "imageUrl": "/uploads/livros/cover-36-118e7565a699.webp",
+      "width": 757,
+      "height": 1217,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-36-118e7565a699-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-36-118e7565a699-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "title": "Quincas Borba",
+      "imageUrl": "/uploads/livros/cover-67-fbb157e1b563.webp",
+      "width": 865,
+      "height": 1440,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-67-fbb157e1b563-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-67-fbb157e1b563-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "title": "Helena",
+      "imageUrl": "/uploads/livros/cover-68-7b27b87ccfdd.webp",
+      "width": 866,
+      "height": 1440,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-68-7b27b87ccfdd-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-68-7b27b87ccfdd-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "title": "Iaiá Garcia",
+      "imageUrl": "/uploads/livros/cover-69-34bd6bbca2ab.webp",
+      "width": 866,
+      "height": 1440,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-69-34bd6bbca2ab-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-69-34bd6bbca2ab-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "title": "Papéis Avulsos",
+      "imageUrl": "/uploads/livros/cover-70-ec1a19e401c3.webp",
+      "width": 422,
+      "height": 650,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-70-ec1a19e401c3-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "title": "Histórias sem Data",
+      "imageUrl": "/uploads/livros/cover-71-23d7a015c5a8.webp",
+      "width": 287,
+      "height": 445,
+      "variants": []
+    },
+    {
+      "id": 72,
+      "title": "Noite na Taverna",
+      "imageUrl": "/uploads/livros/cover-72-8c1c85e8e769.webp",
+      "width": 824,
+      "height": 1388,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-72-8c1c85e8e769-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-72-8c1c85e8e769-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "title": "Lira dos Vinte Anos",
+      "imageUrl": "/uploads/livros/cover-73-a15d9269837a.webp",
+      "width": 808,
+      "height": 1391,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-73-a15d9269837a-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-73-a15d9269837a-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "title": "Macário",
+      "imageUrl": "/uploads/livros/cover-74-d0d4fd29f4eb.webp",
+      "width": 865,
+      "height": 1440,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-74-d0d4fd29f4eb-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-74-d0d4fd29f4eb-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "title": "Corrupt",
+      "imageUrl": "/uploads/livros/cover-100-ca0016de9e87.webp",
+      "width": 562,
+      "height": 848,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-100-ca0016de9e87-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "title": "Hideaway",
+      "imageUrl": "/uploads/livros/cover-101-910a39623bee.webp",
+      "width": 563,
+      "height": 835,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-101-910a39623bee-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "title": "A empregada",
+      "imageUrl": "/uploads/livros/cover-102-ed0dbd5a21b3.webp",
+      "width": 960,
+      "height": 1381,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-102-ed0dbd5a21b3-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-102-ed0dbd5a21b3-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "title": "A hipótese do amor",
+      "imageUrl": "/uploads/livros/cover-103-e341fb42d591.webp",
+      "width": 960,
+      "height": 1380,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-103-e341fb42d591-320.webp",
+          "width": 320
+        },
+        {
+          "imageUrl": "/uploads/livros/cover-103-e341fb42d591-640.webp",
+          "width": 640
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "title": "Verity",
+      "imageUrl": "/uploads/livros/cover-104-b7ef907c16af.webp",
+      "width": 337,
+      "height": 500,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-104-b7ef907c16af-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "title": "O príncipe cruel",
+      "imageUrl": "/uploads/livros/cover-105-d6fbe440ed07.webp",
+      "width": 400,
+      "height": 594,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-105-d6fbe440ed07-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "title": "Corte de espinhos e rosas",
+      "imageUrl": "/uploads/livros/cover-106-5548ccc3cd91.webp",
+      "width": 349,
+      "height": 500,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-106-5548ccc3cd91-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "title": "Os sete maridos de Evelyn Hugo",
+      "imageUrl": "/uploads/livros/cover-107-9b08e7b87b2a.webp",
+      "width": 348,
+      "height": 500,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-107-9b08e7b87b2a-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "title": "Jantar secreto",
+      "imageUrl": "/uploads/livros/cover-108-82c9f1953ca6.webp",
+      "width": 336,
+      "height": 500,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-108-82c9f1953ca6-320.webp",
+          "width": 320
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "title": "A Biblioteca da Meia-Noite",
+      "imageUrl": "/uploads/livros/cover-109-451b802655b2.webp",
+      "width": 344,
+      "height": 500,
+      "variants": [
+        {
+          "imageUrl": "/uploads/livros/cover-109-451b802655b2-320.webp",
+          "width": 320
+        }
+      ]
+    }
+  ]
+}

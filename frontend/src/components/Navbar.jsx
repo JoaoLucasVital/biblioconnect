@@ -14,13 +14,14 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [open,setOpen] = useState(false);
   const [menuMotion,setMenuMotion] = useState("instant");
-  const items = [...publicItems,...(!loadingAuth && isAuthenticated ? clientItems : []),...(!loadingAuth && isAdmin ? [{label:"Painel",to:"/admin"}] : [])];
+  const accountItems = clientItems.map(item => isAdmin && item.to === "/meus-pedidos" ? {label:"Pedidos",to:"/admin/pedidos"} : item);
+  const items = [...publicItems,...(!loadingAuth && isAuthenticated ? accountItems : []),...(!loadingAuth && isAdmin ? [{label:"Painel",to:"/admin"}] : [])];
   const close = useCallback(() => setOpen(false), []);
   const leave = () => startTransition(() => { logout(); close(); navigate("/"); });
   const groups = [{title:"Descubra", eyebrow:"Explore", tone:"cream", links:publicItems}];
   if (!loadingAuth) {
     if (isAuthenticated) groups.push(
-      {title:"Sua biblioteca", eyebrow:"Leituras", tone:"navy", links:[...clientItems,...(isAdmin ? [{label:"Painel",to:"/admin"}] : [])]},
+      {title:"Sua biblioteca", eyebrow:"Leituras", tone:"navy", links:[...accountItems,...(isAdmin ? [{label:"Painel",to:"/admin"}] : [])]},
       {title:"Sua conta", eyebrow:"Perfil", tone:"orange", description:usuario?.nome, action:<button type="button" onClick={leave} className="bc-nav-card-link"><LogOut size={19} aria-hidden="true"/><span>Sair</span></button>},
     );
     else groups.push(

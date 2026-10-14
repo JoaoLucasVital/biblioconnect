@@ -38,7 +38,7 @@ describe("Card Nav compacto", () => {
     renderNav({...client, isAdmin:true, logout}, "/meus-pedidos");
     const {user, menu} = await openMenu();
     const library = within(menu).getByRole("region", {name:"Sua biblioteca"});
-    for (const [name, path] of [["Meus pedidos","/meus-pedidos"],["Atendimento","/chat"],["Painel","/admin"]]) {
+    for (const [name, path] of [["Pedidos","/admin/pedidos"],["Atendimento","/chat"],["Painel","/admin"]]) {
       expect(within(library).getByRole("link", {name})).toHaveAttribute("href",path);
     }
     const account = within(menu).getByRole("region", {name:"Sua conta"});

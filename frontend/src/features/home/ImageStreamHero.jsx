@@ -28,7 +28,7 @@ export default function ImageStreamHero({livros=[]}) {
     <div className="stream-heading"><p className="discovery-eyebrow"><span/>Para quem fica só mais um capítulo</p><h1>Sua próxima <br/><em>obsessão literária.</em></h1><p>Romances intensos, mundos impossíveis e mistérios que não deixam dormir.</p></div>
     {books.length>0 && <div className="stream-perspective" aria-hidden="true"><div className="stream-rails">{names.map((name,side)=>Array.from({length:cards},(_,index)=>{
       const book=books[(index+side*3)%books.length];
-      return <div key={`${name}-${index}`} className="stream-book" data-book-id={book.id} style={{animationName:name,animationDelay:`${-index*26/cards}s`}}><BookCover livro={book} className="h-full w-full"/></div>;
+      return <div key={`${name}-${index}`} className="stream-book" data-book-id={book.id} style={{animationName:name,animationDelay:`${-index*26/cards}s`}}><BookCover livro={book} className="h-full w-full" sizes="(min-width: 768px) 28vw, 45vw" priority={side===0 && index===0}/></div>;
     }))}</div></div>}
     <div className="stream-footer"><div className="stream-caption"><span className="stream-caption-line"/><p>Histórias para sentir.<br/><strong>Capas para descobrir.</strong></p></div><ClickSpark><InteractiveHoverLink to="/livros">Explorar leituras</InteractiveHoverLink></ClickSpark><div className="stream-controls"><a href="#leituras" aria-label="Ver leituras em destaque"><ArrowDown size={17}/></a></div></div>
     {!books.length && <p className="stream-empty">Nenhum livro disponível ainda</p>}

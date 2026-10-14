@@ -1,6 +1,10 @@
 # Retomada do BiblioConnect — nova direção de apresentação
 
-**Última etapa:** widgets financeiros escolhidos e implementados (1, 2, 4, 5, com referências 7/8). Veja `docs/verification/2026-10-14-finance-widgets.md`. A seleção aprovada já está no código; não repetir brainstorming ou a implementação desses componentes na retomada.
+**Última etapa:** acesso local conferido, conta do usuário confirmada pelo fluxo normal após autorização explícita, navegação administrativa “Pedidos” e cliente “Meus pedidos”. As 22 capas foram atualizadas para WebP, com 30 variantes responsivas; banco persistente aplicado, sem alterar estoque, preços ou outros campos dos livros. Veja `docs/verification/2026-10-14-access-covers.md`. Não repetir confirmação, seed ou atualização das capas.
+
+**Em espera:** perfil com foto, nome e cartão de identificação de biblioteca. O usuário pediu somente registrar a ideia e aguardar sua referência; não implementar nesta rodada.
+
+**Etapa anterior concluída:** widgets financeiros escolhidos e implementados (1, 2, 4, 5, com referências 7/8). Veja `docs/verification/2026-10-14-finance-widgets.md`. A seleção aprovada já está no código; não repetir brainstorming ou a implementação desses componentes na retomada.
 
 **Status atualizado:** descoberta implementada e marca 02 — Elo escolhida e aplicada em SVG. O usuário priorizou os painéis administrativo e financeiro, agora integrados aos dados reais. Acervo persistente: 22 livros. Consulte `docs/verification/2026-10-14-elo-dashboards.md` para esta etapa e `docs/verification/2026-10-14-discovery-redesign.md` para a anterior. Os registros abaixo preservam a conversa histórica de planejamento, não indicam trabalho ainda pausado.
 

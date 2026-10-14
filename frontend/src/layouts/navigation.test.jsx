@@ -25,6 +25,14 @@ describe("navegação por papel", () => {
     expect(screen.getByRole("link", {name:"Meus pedidos"})).toHaveAttribute("href","/meus-pedidos");
     expect(screen.getByRole("link", {name:"Atendimento"})).toHaveAttribute("href","/chat");
   });
+  it("admin abre os pedidos dos clientes no cabeçalho e no menu compacto", async () => {
+    renderAuth(<Navbar />, {...client,isAdmin:true,usuario:{nome:"Admin",role:"ADMIN"}});
+    expect(screen.getByRole("link",{name:"Pedidos",exact:true})).toHaveAttribute("href","/admin/pedidos");
+    expect(screen.queryByRole("link",{name:"Meus pedidos",exact:true})).not.toBeInTheDocument();
+    await userEvent.setup().click(screen.getByRole("button",{name:"Abrir navegação"}));
+    expect(screen.getAllByRole("link",{name:"Pedidos",exact:true})).toHaveLength(2);
+    for(const link of screen.getAllByRole("link",{name:"Pedidos",exact:true})) expect(link).toHaveAttribute("href","/admin/pedidos");
+  });
   it("cancelar o menu móvel atualiza o estado e devolve foco", async () => {
     const user = userEvent.setup();
     renderAuth(<Navbar />);

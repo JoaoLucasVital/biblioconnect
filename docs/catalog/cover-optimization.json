@@ -1,0 +1,738 @@
+{
+  "maxPixels": [
+    960,
+    1440
+  ],
+  "quality": 88,
+  "covers": [
+    {
+      "id": 1,
+      "title": "Livro de integração",
+      "file": "1-livro-de-integracao.webp",
+      "source": null,
+      "sourcePage": null,
+      "generatedTestCover": true,
+      "sourcePixels": [
+        640,
+        960
+      ],
+      "cropPixels": [
+        640,
+        960
+      ],
+      "pixels": [
+        640,
+        960
+      ],
+      "sourceBytes": 0,
+      "webpBytes": 15474,
+      "sha256": "f9ab2538509172bb189f3db4ac258e2de87582f4dd372b6824ea2bbfa11588d0",
+      "variants": [
+        {
+          "file": "1-livro-de-integracao-320.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 6718
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "Dom Casmurro",
+      "file": "34-dom-casmurro.webp",
+      "source": "/uploads/livros/845348a3-5076-435b-b5fe-f774c5097186-dom-casmurro.jpg",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        450,
+        726
+      ],
+      "cropPixels": [
+        450,
+        726
+      ],
+      "pixels": [
+        450,
+        726
+      ],
+      "sourceBytes": 39071,
+      "webpBytes": 34056,
+      "sha256": "7158055552f0125e04d96da511cef7680b4295096ec023d6b61047fb5b156376",
+      "variants": [
+        {
+          "file": "34-dom-casmurro-320.webp",
+          "width": 320,
+          "height": 516,
+          "bytes": 19244
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "title": "Memórias Póstumas de Brás Cubas",
+      "file": "35-memorias-postumas-de-bras-cubas.webp",
+      "source": "/uploads/livros/a042cb8b-04c0-4550-bd28-3a09367ff521-memorias-postumas.jpg",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        563,
+        931
+      ],
+      "cropPixels": [
+        563,
+        931
+      ],
+      "pixels": [
+        563,
+        931
+      ],
+      "sourceBytes": 50235,
+      "webpBytes": 15258,
+      "sha256": "b7feada86aaf9d7427ae953022265beacfcffb50a7bc5f174f5b632abd13da5e",
+      "variants": [
+        {
+          "file": "35-memorias-postumas-de-bras-cubas-320.webp",
+          "width": 320,
+          "height": 529,
+          "bytes": 7190
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "title": "O Cortiço",
+      "file": "36-o-cortico.webp",
+      "source": "/uploads/livros/4cf17d1d-a81c-4da9-9ded-db9c20ba7eea-o-cortico.jpg",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        757,
+        1217
+      ],
+      "cropPixels": [
+        757,
+        1217
+      ],
+      "pixels": [
+        757,
+        1217
+      ],
+      "sourceBytes": 148832,
+      "webpBytes": 163338,
+      "sha256": "118e7565a69921066c292ce3de96556c3c7138c154e7ee91f296e99eb1707c9f",
+      "variants": [
+        {
+          "file": "36-o-cortico-320.webp",
+          "width": 320,
+          "height": 514,
+          "bytes": 21552
+        },
+        {
+          "file": "36-o-cortico-640.webp",
+          "width": 640,
+          "height": 1029,
+          "bytes": 123922
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "title": "Quincas Borba",
+      "file": "67-quincas-borba.webp",
+      "source": "https://www.lpm.com.br/livros/imagens/quincas_borba_nova_9788525406682_hd.jpg",
+      "sourcePage": "https://www.lpm.com.br/livro/747731/quincas%20borba",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        1263,
+        2102
+      ],
+      "cropPixels": [
+        1263,
+        2102
+      ],
+      "pixels": [
+        865,
+        1440
+      ],
+      "sourceBytes": 445815,
+      "webpBytes": 89318,
+      "sha256": "fbb157e1b563b2758fe92e21a958409490ee85ba995df5270250780caa05d26f",
+      "variants": [
+        {
+          "file": "67-quincas-borba-320.webp",
+          "width": 320,
+          "height": 533,
+          "bytes": 28298
+        },
+        {
+          "file": "67-quincas-borba-640.webp",
+          "width": 640,
+          "height": 1065,
+          "bytes": 64796
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "title": "Helena",
+      "file": "68-helena.webp",
+      "source": "https://www.lpm.com.br/livros/imagens/helena_nova_9788525409706_hd.jpg",
+      "sourcePage": "https://www.lpm.com.br/livro/508351/helena",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        1689,
+        2807
+      ],
+      "cropPixels": [
+        1689,
+        2807
+      ],
+      "pixels": [
+        866,
+        1440
+      ],
+      "sourceBytes": 663792,
+      "webpBytes": 145892,
+      "sha256": "7b27b87ccfdd3c3f41ceba3a6051725e1d0cc379827a2bdd0216427d6eb9c9c5",
+      "variants": [
+        {
+          "file": "68-helena-320.webp",
+          "width": 320,
+          "height": 532,
+          "bytes": 34202
+        },
+        {
+          "file": "68-helena-640.webp",
+          "width": 640,
+          "height": 1064,
+          "bytes": 93020
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "title": "Iaiá Garcia",
+      "file": "69-iaia-garcia.webp",
+      "source": "https://www.lpm.com.br/livros/imagens/iaia_garcia_nova_9788525407221_hd.jpg",
+      "sourcePage": "https://www.lpm.com.br/livro/608173/iaia%20garcia",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        1000,
+        1663
+      ],
+      "cropPixels": [
+        1000,
+        1663
+      ],
+      "pixels": [
+        866,
+        1440
+      ],
+      "sourceBytes": 958687,
+      "webpBytes": 176260,
+      "sha256": "34bd6bbca2ab11fe93cf0fcd8bd2bbc06f4a78cfa938e725d9b34bf76cb8db4b",
+      "variants": [
+        {
+          "file": "69-iaia-garcia-320.webp",
+          "width": 320,
+          "height": 532,
+          "bytes": 35962
+        },
+        {
+          "file": "69-iaia-garcia-640.webp",
+          "width": 640,
+          "height": 1064,
+          "bytes": 109368
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "title": "Papéis Avulsos",
+      "file": "70-papeis-avulsos.webp",
+      "source": "https://cdl-static.s3-sa-east-1.amazonaws.com/covers/gg/9788563560148/papeis-avulsos-introducao-de-john-gledson-e-notas-de-helio-guimaraes.jpg",
+      "sourcePage": "https://n.companhiadasletras.com.br/livro/9788563560148/papeis-avulsos",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        422,
+        650
+      ],
+      "cropPixels": [
+        422,
+        650
+      ],
+      "pixels": [
+        422,
+        650
+      ],
+      "sourceBytes": 123552,
+      "webpBytes": 13942,
+      "sha256": "ec1a19e401c3bfd8ccc74daab0de8157b477dc5c7e7f7eaeb7defcdd5b85b2d5",
+      "variants": [
+        {
+          "file": "70-papeis-avulsos-320.webp",
+          "width": 320,
+          "height": 493,
+          "bytes": 10042
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "title": "Histórias sem Data",
+      "file": "71-historias-sem-data.webp",
+      "source": "https://images.tcdn.com.br/img/img_prod/1271663/historias_sem_data_2835_1_0f5aa7c3565300e853eace4eadad47b1.jpg",
+      "sourcePage": "https://www.editoraonline.com.br/feirao-de-livros/historias-sem-data",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        287,
+        445
+      ],
+      "cropPixels": [
+        287,
+        445
+      ],
+      "pixels": [
+        287,
+        445
+      ],
+      "sourceBytes": 26089,
+      "webpBytes": 27360,
+      "sha256": "23d7a015c5a8eded1082fb092ddbeb6af669400dbdf1106aa837512f1564d620",
+      "variants": []
+    },
+    {
+      "id": 72,
+      "title": "Noite na Taverna",
+      "file": "72-noite-na-taverna.webp",
+      "source": "https://www.lpm.com.br/livros/imagens/noite_na_taverna_9788525408648_hd.jpg",
+      "sourcePage": "https://www.lpm.com.br/livro/514448/noite%20na%20taverna",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        824,
+        1388
+      ],
+      "cropPixels": [
+        824,
+        1388
+      ],
+      "pixels": [
+        824,
+        1388
+      ],
+      "sourceBytes": 210611,
+      "webpBytes": 111888,
+      "sha256": "8c1c85e8e7694d04e93df0f373be361609d060f83f1a0f6e70e61c9bd425885b",
+      "variants": [
+        {
+          "file": "72-noite-na-taverna-320.webp",
+          "width": 320,
+          "height": 539,
+          "bytes": 22604
+        },
+        {
+          "file": "72-noite-na-taverna-640.webp",
+          "width": 640,
+          "height": 1078,
+          "bytes": 76298
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "title": "Lira dos Vinte Anos",
+      "file": "73-lira-dos-vinte-anos.webp",
+      "source": "https://www.lpm.com.br/livros/imagens/lira_dos_20_anos_9788525421715_8525408433_hd.jpg",
+      "sourcePage": "https://www.lpm.com.br/site/default.asp?ID=828450&Template=..%2Flivros%2Flayout_produto.asp",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        808,
+        1391
+      ],
+      "cropPixels": [
+        808,
+        1391
+      ],
+      "pixels": [
+        808,
+        1391
+      ],
+      "sourceBytes": 157682,
+      "webpBytes": 291616,
+      "sha256": "a15d9269837a8ec7a4180ffd2edbcd0f622e133d466ce504e7c62ee4dff60737",
+      "variants": [
+        {
+          "file": "73-lira-dos-vinte-anos-320.webp",
+          "width": 320,
+          "height": 551,
+          "bytes": 55868
+        },
+        {
+          "file": "73-lira-dos-vinte-anos-640.webp",
+          "width": 640,
+          "height": 1102,
+          "bytes": 239144
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "title": "Macário",
+      "file": "74-macario.webp",
+      "source": "https://www.lpm.com.br/livros/imagens/macario_9788525410498_hd.jpg",
+      "sourcePage": "https://www.lpm.com.br/livro/488272/macario",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        1263,
+        2102
+      ],
+      "cropPixels": [
+        1263,
+        2102
+      ],
+      "pixels": [
+        865,
+        1440
+      ],
+      "sourceBytes": 764411,
+      "webpBytes": 155698,
+      "sha256": "d0d4fd29f4eb1d95641dbb98306d2037c9b613360df5e1d7074620a4b43ca0e6",
+      "variants": [
+        {
+          "file": "74-macario-320.webp",
+          "width": 320,
+          "height": 533,
+          "bytes": 30970
+        },
+        {
+          "file": "74-macario-640.webp",
+          "width": 640,
+          "height": 1065,
+          "bytes": 99646
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "title": "Corrupt",
+      "file": "100-corrupt.webp",
+      "source": "https://images.tcdn.com.br/img/img_prod/1277055/corrupt_69_1_26b0a74e6f66e776ce155bd8311c9af2.jpg",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        1080,
+        1080
+      ],
+      "cropPixels": [
+        562,
+        848
+      ],
+      "pixels": [
+        562,
+        848
+      ],
+      "sourceBytes": 62102,
+      "webpBytes": 99872,
+      "sha256": "ca0016de9e875aa39bbcb9ab1bb01469dbfe9f77352d07f3bd35124fa40e0d9a",
+      "variants": [
+        {
+          "file": "100-corrupt-320.webp",
+          "width": 320,
+          "height": 483,
+          "bytes": 35486
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "title": "Hideaway",
+      "file": "101-hideaway.webp",
+      "source": "https://images.tcdn.com.br/img/img_prod/1277055/hideaway_89_1_731dcb8d65649e8377abb8fd3c12b8ce.jpg",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        1080,
+        1080
+      ],
+      "cropPixels": [
+        563,
+        835
+      ],
+      "pixels": [
+        563,
+        835
+      ],
+      "sourceBytes": 48507,
+      "webpBytes": 66166,
+      "sha256": "910a39623bee2dfcbe6e19355be48979b565df5fd8fdf93f2858867419d52180",
+      "variants": [
+        {
+          "file": "101-hideaway-320.webp",
+          "width": 320,
+          "height": 475,
+          "bytes": 29684
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "title": "A empregada",
+      "file": "102-a-empregada.webp",
+      "source": "https://www.editoraarqueiro.com.br/media/livros_livro/9786555655063.jpeg",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        2085,
+        3000
+      ],
+      "cropPixels": [
+        2085,
+        3000
+      ],
+      "pixels": [
+        960,
+        1381
+      ],
+      "sourceBytes": 2260747,
+      "webpBytes": 116900,
+      "sha256": "ed0dbd5a21b36bddb480e8760cf7489ed0dca9c31797a5f9bcc470397c76de2a",
+      "variants": [
+        {
+          "file": "102-a-empregada-320.webp",
+          "width": 320,
+          "height": 460,
+          "bytes": 25462
+        },
+        {
+          "file": "102-a-empregada-640.webp",
+          "width": 640,
+          "height": 921,
+          "bytes": 68452
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "title": "A hipótese do amor",
+      "file": "103-a-hipotese-do-amor.webp",
+      "source": "https://www.editoraarqueiro.com.br/media/livros_livro/hipotese-do-amor_sobrecapa_imprensa-2.jpg",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        3780,
+        5433
+      ],
+      "cropPixels": [
+        3780,
+        5433
+      ],
+      "pixels": [
+        960,
+        1380
+      ],
+      "sourceBytes": 11898165,
+      "webpBytes": 273044,
+      "sha256": "e341fb42d591f2c25de546cdd695df300f764a6f16b8ef7526b29a5d8155fb7d",
+      "variants": [
+        {
+          "file": "103-a-hipotese-do-amor-320.webp",
+          "width": 320,
+          "height": 460,
+          "bytes": 30846
+        },
+        {
+          "file": "103-a-hipotese-do-amor-640.webp",
+          "width": 640,
+          "height": 920,
+          "bytes": 113882
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "title": "Verity",
+      "file": "104-verity.webp",
+      "source": "https://covers.openlibrary.org/b/isbn/9788501117847-L.jpg?default=false",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        337,
+        500
+      ],
+      "cropPixels": [
+        337,
+        500
+      ],
+      "pixels": [
+        337,
+        500
+      ],
+      "sourceBytes": 48132,
+      "webpBytes": 37054,
+      "sha256": "b7ef907c16af37c6132af3825b9752c48397ee6caa9e9fc157ab2c64a5c7179b",
+      "variants": [
+        {
+          "file": "104-verity-320.webp",
+          "width": 320,
+          "height": 475,
+          "bytes": 33314
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "title": "O príncipe cruel",
+      "file": "105-o-principe-cruel.webp",
+      "source": "https://img.travessa.com.br/livro/GR/3a/3a108121-146a-4b0b-a453-2e09b939db2b.jpg",
+      "sourcePage": "https://www.travessa.com.br/o-principe-cruel/artigo/3a108121-146a-4b0b-a453-2e09b939db2b",
+      "generatedTestCover": false,
+      "sourcePixels": [
+        400,
+        594
+      ],
+      "cropPixels": [
+        400,
+        594
+      ],
+      "pixels": [
+        400,
+        594
+      ],
+      "sourceBytes": 48249,
+      "webpBytes": 48478,
+      "sha256": "d6fbe440ed07fc3a867bbc1fa42b52b54b2ba2dc8f39f335b6635723608d8f8e",
+      "variants": [
+        {
+          "file": "105-o-principe-cruel-320.webp",
+          "width": 320,
+          "height": 475,
+          "bytes": 34842
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "title": "Corte de espinhos e rosas",
+      "file": "106-corte-de-espinhos-e-rosas.webp",
+      "source": "https://covers.openlibrary.org/b/isbn/9786559810727-L.jpg?default=false",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        349,
+        500
+      ],
+      "cropPixels": [
+        349,
+        500
+      ],
+      "pixels": [
+        349,
+        500
+      ],
+      "sourceBytes": 68757,
+      "webpBytes": 52486,
+      "sha256": "5548ccc3cd91d56e55a84846b861ee7a4f5c75f4e1ba072399c2a1ef6f652186",
+      "variants": [
+        {
+          "file": "106-corte-de-espinhos-e-rosas-320.webp",
+          "width": 320,
+          "height": 458,
+          "bytes": 46146
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "title": "Os sete maridos de Evelyn Hugo",
+      "file": "107-os-sete-maridos-de-evelyn-hugo.webp",
+      "source": "https://covers.openlibrary.org/b/isbn/9788584391509-L.jpg?default=false",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        348,
+        500
+      ],
+      "cropPixels": [
+        348,
+        500
+      ],
+      "pixels": [
+        348,
+        500
+      ],
+      "sourceBytes": 39459,
+      "webpBytes": 29832,
+      "sha256": "9b08e7b87b2a2beb735fa62f1bd11ec124a2c39caeae4163ec5f0038867fef50",
+      "variants": [
+        {
+          "file": "107-os-sete-maridos-de-evelyn-hugo-320.webp",
+          "width": 320,
+          "height": 460,
+          "bytes": 26148
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "title": "Jantar secreto",
+      "file": "108-jantar-secreto.webp",
+      "source": "https://covers.openlibrary.org/b/isbn/9788535928358-L.jpg?default=false",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        336,
+        500
+      ],
+      "cropPixels": [
+        336,
+        500
+      ],
+      "pixels": [
+        336,
+        500
+      ],
+      "sourceBytes": 31121,
+      "webpBytes": 20356,
+      "sha256": "82c9f1953ca6f06976c9aad9274602b4d59265b84afa1071f4fb824bf0a63d31",
+      "variants": [
+        {
+          "file": "108-jantar-secreto-320.webp",
+          "width": 320,
+          "height": 476,
+          "bytes": 18464
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "title": "A Biblioteca da Meia-Noite",
+      "file": "109-a-biblioteca-da-meia-noite.webp",
+      "source": "https://covers.openlibrary.org/b/isbn/9786558380542-L.jpg?default=false",
+      "sourcePage": null,
+      "generatedTestCover": false,
+      "sourcePixels": [
+        344,
+        500
+      ],
+      "cropPixels": [
+        344,
+        500
+      ],
+      "pixels": [
+        344,
+        500
+      ],
+      "sourceBytes": 65830,
+      "webpBytes": 40114,
+      "sha256": "451b802655b2c454da050e5063666c530652f7af18508f84eb98ac0ffc5c6ef1",
+      "variants": [
+        {
+          "file": "109-a-biblioteca-da-meia-noite-320.webp",
+          "width": 320,
+          "height": 465,
+          "bytes": 36264
+        }
+      ]
+    }
+  ]
+}
