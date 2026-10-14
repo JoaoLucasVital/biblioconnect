@@ -8,6 +8,7 @@ import FadeInput from "../components/ui/FadeInput.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import ProfileCard from "../features/account/ProfileCard.jsx";
 import GoogleSignIn from "../features/account/GoogleSignIn.jsx";
+import SavedBooks from "../features/community/SavedBooks.jsx";
 const ProfilePhotoEditor=lazy(()=>import("../features/account/ProfilePhotoEditor.jsx"));
 const fields=[['nome','Nome completo','name'],['telefone','Telefone','tel'],['cep','CEP','postal-code'],['rua','Rua / Avenida','address-line1'],['numero','Número','off'],['bairro','Bairro','off'],['cidade','Cidade','address-level2'],['estado','Estado','address-level1'],['complemento','Complemento','address-line2'],['pontoReferencia','Ponto de referência','off']];
 const draft=user=>Object.fromEntries(fields.map(([key])=>[key,user?.[key]||""]));
@@ -30,6 +31,6 @@ export default function Profile(){
       <div className="flex justify-end border-t border-stroke pt-5"><Button type="submit" disabled={busy}>{busy?"Salvando…":"Salvar alterações"}</Button></div>
     </form></div>
     {photoOpen&&<Suspense fallback={<p role="status">Abrindo editor de foto…</p>}><ProfilePhotoEditor onClose={()=>setPhotoOpen(false)} onSaved={data=>{accept(data);setMessage("Foto atualizada.");}}/></Suspense>}
-    <section className="mt-16 border-t border-stroke pt-8" aria-labelledby="profile-saved"><h2 id="profile-saved" className="font-display text-3xl">Sua próxima leitura</h2><p className="mt-3 text-sm text-muted">Seus livros salvos aparecerão aqui.</p></section>
+    <SavedBooks/>
   </main>;
 }

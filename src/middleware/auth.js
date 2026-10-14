@@ -45,6 +45,7 @@ export function createAuth({prisma,secret,allowedOrigins,production=false,clock=
   async function sessionResponse(req,res,next){
     try{const session=await load(req,res);res.json({usuario:session?.usuario||null,csrfToken:session?csrf(session.id):null});}catch(error){next(error);}
   }
+  async function optional(req,res,next){try{await load(req,res);next();}catch(error){next(error);}}
   async function signIn(res,{usuarioId,lembrar=false}){
     const session=await createSession(prisma,{usuarioId,lembrar:lembrar===true,now:clock()});
     res.set("Cache-Control","no-store");setCookie(res,session);
@@ -65,5 +66,5 @@ export function createAuth({prisma,secret,allowedOrigins,production=false,clock=
       }catch(error){next(error);}
     };
   }
-  return {authenticate,requireOrigin,sessionResponse,signIn,signOut,rateLimit};
+  return {authenticate,optional,requireOrigin,sessionResponse,signIn,signOut,rateLimit};
 }

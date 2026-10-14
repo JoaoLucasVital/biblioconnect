@@ -79,5 +79,5 @@ it("erro de catálogo oferece nova tentativa com a mesma API", async () => {
   api.get.mockRejectedValueOnce(new Error("offline")); mount(); const user=userEvent.setup();
   await user.click(await screen.findByRole("button",{name:"Tentar novamente"}));
   expect(await within(await screen.findByRole("region",{name:"Catálogo de livros"})).findByRole("heading",{name:livroDisponivel.titulo})).toBeVisible();
-  expect(api.get).toHaveBeenCalledTimes(2);
+  expect(api.get.mock.calls.filter(([path])=>path==="/livros")).toHaveLength(2);
 });

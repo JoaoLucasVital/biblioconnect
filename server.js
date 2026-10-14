@@ -1,4 +1,5 @@
 import {createProfileRoutes} from "./src/routes/profileRoutes.js";
+import {createFavoritesRoutes} from "./src/routes/favoritesRoutes.js";
 import {issueAccountToken,consumeAccountToken} from "./src/services/accountTokenService.js";
 import { origensPermitidas } from "./src/utils/corsOrigins.js";
 import { assinaturaValida, aplicarPagamento } from "./src/services/paymentWebhook.js";
@@ -1121,6 +1122,7 @@ app.post(
 // ======================
 // LISTAR LIVROS
 // ======================
+app.use(createFavoritesRoutes({prisma,auth}));
 app.get("/livros", async (req, res) => {
   try {
     const livros = await prisma.livro.findMany({
