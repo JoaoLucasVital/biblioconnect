@@ -31,6 +31,22 @@ it("importação mantém foto inteira com fundo original",async()=>{
   expect(screen.queryByText(/fundo é removido/i)).not.toBeInTheDocument();
   expect(screen.queryByLabelText("Zoom",{exact:true})).not.toBeInTheDocument();
 });
+it("envia o PNG produzido pelo navegador com o nome e MIME corretos",async()=>{
+  const create=vi.spyOn(URL,"createObjectURL").mockReturnValue("blob:portrait-preview");
+  const revoke=vi.spyOn(URL,"revokeObjectURL").mockImplementation(()=>{});
+  try{
+    processPortrait.mockResolvedValueOnce({blob:new Blob(["png"],{type:"image/png"}),width:640,height:480});
+    api.post.mockResolvedValueOnce({data:{...user,avatarUrl:"/me/foto?v=updated"}});
+    renderProfile();await screen.findByLabelText("Nome completo");
+    await userEvent.click(screen.getByRole("button",{name:"Importar foto"}));
+    await userEvent.upload(await screen.findByLabelText("Escolher foto"),new File(["jpeg"],"photo.jpeg",{type:"image/jpeg"}));
+    await screen.findByAltText("Prévia da foto completa com fundo original");
+    await userEvent.click(screen.getByRole("button",{name:"Salvar foto"}));
+    await waitFor(()=>expect(api.post).toHaveBeenCalled());
+    const uploaded=api.post.mock.calls[0][1].get("foto");
+    expect(uploaded.type).toBe("image/png");expect(uploaded.name).toBe("portrait.png");
+  }finally{create.mockRestore();revoke.mockRestore();}
+});
 it("resposta lenta do perfil não sobrescreve um rascunho já editado",async()=>{
   let finish;api.get.mockImplementation(path=>path==="/me"?new Promise(resolve=>{finish=resolve;}):Promise.resolve({data:{googleEnabled:false}}));
   renderProfile();const input=screen.getByLabelText("Nome completo");await userEvent.clear(input);await userEvent.type(input,"Meu rascunho");

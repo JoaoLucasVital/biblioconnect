@@ -23,7 +23,7 @@ export default function ProfilePhotoEditor({onClose,onSaved}){
   }
   async function save(){
     if(!photo||saving||progress)return;setSaving(true);setError("");
-    try{const form=new FormData();form.append("foto",photo.blob,"portrait.webp");const {data}=await api.post("/me/foto",form);if(alive.current){onSaved(data);onClose();}}
+    try{const form=new FormData();const extension={"image/webp":"webp","image/png":"png","image/jpeg":"jpg"}[photo.blob.type];form.append("foto",photo.blob,`portrait.${extension}`);const {data}=await api.post("/me/foto",form);if(alive.current){onSaved(data);onClose();}}
     catch(failure){if(alive.current)setError(failure.response?.data?.erro||"Não foi possível salvar a foto. A anterior foi preservada.");}
     finally{if(alive.current)setSaving(false);}
   }

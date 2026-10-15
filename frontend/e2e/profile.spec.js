@@ -2,6 +2,40 @@ import sharp from "sharp";
 import {test,expect} from "@playwright/test";
 import {createConfirmedClient,loginUi,authHeaders} from "./helpers.js";
 import {captureReview} from "./capture-review.js";
+test("foto salva em WebP mesmo quando o navegador só consegue produzir PNG",async({page,request})=>{
+  await page.addInitScript(()=>{
+    const NativeWorker=window.Worker;
+    window.Worker=class extends NativeWorker{
+      constructor(url,options){
+        const source=String(url);
+        const wrapper=source.includes("photo-processing.worker")?URL.createObjectURL(new Blob([
+          `import ${JSON.stringify(source)};
+           const encode=OffscreenCanvas.prototype.convertToBlob;
+           OffscreenCanvas.prototype.convertToBlob=function(options){return encode.call(this,{...options,type:"image/png"});};`,
+        ],{type:"text/javascript"})):null;
+        super(wrapper||url,options);this.wrapper=wrapper;
+      }
+      terminate(){super.terminate();if(this.wrapper)URL.revokeObjectURL(this.wrapper);}
+    };
+  });
+  const client=await createConfirmedClient({request});await loginUi(page,client);await page.goto("/perfil");
+  const input=await sharp({create:{width:1600,height:1200,channels:3,background:"#385c74"}}).jpeg().toBuffer();
+  await page.getByRole("button",{name:"Importar foto"}).click();
+  await page.getByLabel("Escolher foto").setInputFiles({name:"iphone-photo.jpeg",mimeType:"image/jpeg",buffer:input});
+  await expect(page.getByAltText("Prévia da foto completa com fundo original")).toBeVisible();
+  await expect(page.getByRole("alert")).toHaveCount(0);
+  expect(await page.getByAltText("Prévia da foto completa com fundo original").evaluate(async image=>(await fetch(image.src)).headers.get("content-type"))).toBe("image/png");
+  const [upload]=await Promise.all([
+    page.waitForResponse(res=>new URL(res.url()).pathname==="/me/foto"&&res.request().method()==="POST"),
+    page.getByRole("button",{name:"Salvar foto",exact:true}).click(),
+  ]);
+  expect(upload.status()).toBe(200);
+  const saved=await request.get(`${process.env.QA_API_URL}/me/foto`,{headers:authHeaders(client.token)});
+  expect(saved.status()).toBe(200);expect(saved.headers()["content-type"]).toBe("image/webp");
+  const metadata=await sharp(await saved.body()).metadata();
+  expect(metadata.format).toBe("webp");expect(metadata.width/metadata.height).toBeCloseTo(4/3,2);
+  await captureReview(page,"perfil-foto-png-fallback");
+});
 test("perfil edita dados, mantém cartão e cabe no celular com movimento reduzido",async({page,request})=>{
   const client=await createConfirmedClient({request});await loginUi(page,client);await page.goto("/perfil");
   await page.getByLabel("Nome completo",{exact:true}).fill("Uma leitora com nome completo e sobrenome extenso");await page.getByRole("button",{name:"Salvar alterações"}).click();await expect(page.getByRole("status")).toContainText("Perfil atualizado");
