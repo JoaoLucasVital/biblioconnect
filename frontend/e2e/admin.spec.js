@@ -59,7 +59,7 @@ test("administrador aprova avaliação e responde atendimento",async({page,reque
   expect((await request.post(`${process.env.QA_API_URL}/livros/${book.id}/avaliacoes`,{headers,data:{nota:5,comentario:"Comentário aguardando revisão editorial."}})).ok()).toBe(true);
   expect((await request.post(`${process.env.QA_API_URL}/chat/mensagens`,{headers,data:{texto:"Dúvida de teste sobre retirada."}})).ok()).toBe(true);
   await loginUi(page,credentials);await page.goto("/admin/avaliacoes");
-  await page.getByRole("article").filter({hasText:book.titulo}).getByRole("button",{name:"Aprovar",exact:true}).click();
+  await page.getByRole("article").filter({hasText:book.titulo}).getByRole("button",{name:"Aprovar avaliação",exact:true}).click();
   await expect.poll(async()=>(await(await request.get(`${process.env.QA_API_URL}/livros/${book.id}/avaliacoes`)).json()).total).toBe(1);
   await page.goto("/admin/chat");
   await page.getByRole("button").filter({hasText:"Dúvida de teste sobre retirada."}).click();

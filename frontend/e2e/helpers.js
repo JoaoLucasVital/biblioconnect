@@ -24,12 +24,12 @@ export async function loginUi(page, { email, senha }) {
 }
 export async function holdToConfirm(button){await button.press("Space",{delay:1250});}
 
-export async function createConfirmedClient({ request, emailDir = process.env.EMAIL_OUTPUT_DIR }) {
+export async function createConfirmedClient({ request, emailDir = process.env.EMAIL_OUTPUT_DIR, nome = 'Leitor QA' }) {
   const before = new Set(await fs.readdir(emailDir));
   const email = `leitor-${crypto.randomUUID()}@example.test`;
   const senha = "TesteLocal123!";
   const response = await request.post(`${process.env.QA_API_URL}/usuarios`, { headers:{Origin:process.env.QA_BASE_URL}, data: {
-    nome: "Leitor QA", email, senha, cep: "57000000", rua: "Rua de teste", bairro: "Centro",
+    nome, email, senha, cep: "57000000", rua: "Rua de teste", bairro: "Centro",
     cidade: "Maceió", estado: "AL", numero: "10",
   } });
   expect(response.status()).toBe(201);

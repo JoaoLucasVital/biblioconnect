@@ -1,5 +1,9 @@
 # Componentes e recursos incorporados
 
+## Atendimento administrativo
+
+`SupportInbox.jsx` reutiliza o Field descrito abaixo, com seu aviso MIT, e os componentes de texto locais já usados pelo projeto. Organização de mensagens inspirada em [21st.dev MessageList](https://agent-elements.21st.dev/docs/message-list) e [shadcn-chat](https://github.com/jakobhoeg/shadcn-chat); busca consultada em [Uiverse/jjiubs](https://uiverse.io/jjiubs/afraid-yak-33). Essas referências não tiveram código incorporado. Implementação e verificações: `docs/verification/2026-10-15-support-inbox.md`.
+
 ## Campo de busca Tailwind
 
 Fonte: https://uiverse.io/emmanuelh-dev/plastic-rattlesnake-49
