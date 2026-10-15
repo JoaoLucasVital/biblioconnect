@@ -33,3 +33,11 @@ Segredos novos de sessão e cron configurados como Secret, login Google configur
 A liberação da origem `https://biblioconnect-olive.vercel.app` no cliente OAuth permanece pendente: o Google Cloud mostrou “Falha ao carregar” ao editar esse cliente tanto para o agente quanto para o proprietário. O backend anuncia Google habilitado, mas isso não comprova login Google funcionando nessa origem. O login local Google já tinha sido validado antes desta etapa; o acesso online do administrador só poderá ser validado após corrigir a origem no Google Cloud.
 
 Stripe e envio externo de e-mail continuam sem credenciais de produção. Não foram realizados cobrança, cadastro público de teste ou envio de e-mail no ambiente publicado. O cadastro por e-mail não deve ser considerado validado em produção. Frete mantém a chave ORS anteriormente configurada; não foi feita nova cotação real nesta etapa.
+
+## Acesso alternativo autorizado após falha do console Google
+
+O proprietário relatou a mesma falha em janela anônima e em dados móveis. Nova inspeção confirmou que o projeto e seu número correspondem ao cliente usado pela aplicação; a página IAM também falhou ao carregar. O painel público de status não anunciava incidente geral, o que não exclui falha específica. Nenhuma configuração OAuth foi alterada; `origin_mismatch` permanece pendente.
+
+O proprietário autorizou habilitar senha na conta administrativa existente como alternativa. Gerada senha aleatória forte, armazenada em arquivo privado ignorado e no banco somente como hash bcrypt; preservados os identificadores Google, o e-mail confirmado e o papel ADMIN. Backup privado dos hashes anteriores; sessões anteriores revogadas. Não criada outra conta nem exceção de autorização.
+
+Verificação real, online e local: POST de login HTTP 200, painel administrativo HTTP 200 e 131 livros; logout HTTP 200 e reutilização da sessão encerrada HTTP 401. As credenciais e cookies não foram impressos nos resultados nem colocados no Git. Acesso com senha validado; isso não comprova correção do login Google nem do cadastro por e-mail de novos usuários.
