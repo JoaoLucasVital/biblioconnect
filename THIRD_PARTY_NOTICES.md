@@ -97,7 +97,7 @@ shadcn/ui dashboard-01 (https://ui.shadcn.com/blocks) e Tremor (https://www.trem
 
 Profile Card source and CSS adapted from [React Bits / David Haz](https://github.com/DavidHDev/react-bits/tree/main/src/content/Components/ProfileCard), MIT + Commons Clause; full notice at frontend/src/features/account/vendor/LICENSE.react-bits.md. Existing Lucide icons replace additional icon dependencies; reduced motion, restrained tilt and library identity are applied.
 
-MediaPipe Tasks Vision 1.1.1 and Google SelfieMulticlass 256x256 model version 1: Apache-2.0. Model source, SHA256 and model card: frontend/public/models/portrait-v1/provenance.json. Runtime files are copied unmodified from the pinned official npm package. Inference runs in a local browser worker; photos are not sent to Google. Sharp 0.35.5: Apache-2.0; dependencies retain their respective package notices.
+MediaPipe Tasks Vision 1.1.1 and Google SelfieMulticlass 256x256 model version 1: Apache-2.0. Model source, SHA256 and model card: frontend/public/models/portrait-v1/provenance.json. Runtime files are copied unmodified from the pinned official npm package. These retained assets are no longer loaded by the profile photo flow: full images keep their original background and are only resized/re-encoded locally. Photos are not sent to Google. Sharp 0.35.5: Apache-2.0; dependencies retain their respective package notices.
 
 ## Community and motion references (2026-10-14)
 

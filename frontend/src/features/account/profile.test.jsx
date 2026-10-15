@@ -25,6 +25,12 @@ it("cancelar processamento não envia foto nem troca o retrato salvo",async()=>{
   await userEvent.click(screen.getByRole("button",{name:"Cancelar"}));finish({blob:new Blob(["result"],{type:"image/webp"})});
   await waitFor(()=>expect(screen.queryByRole("dialog")).not.toBeInTheDocument());expect(api.post).not.toHaveBeenCalled();expect(screen.getByText("Leitor original")).toBeVisible();
 });
+it("importação mantém foto inteira com fundo original",async()=>{
+  renderProfile();await screen.findByLabelText("Nome completo");await userEvent.click(screen.getByRole("button",{name:"Importar foto"}));
+  expect(screen.getByRole("dialog")).toHaveTextContent("O fundo original e a foto inteira serão mantidos");
+  expect(screen.queryByText(/fundo é removido/i)).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Zoom",{exact:true})).not.toBeInTheDocument();
+});
 it("resposta lenta do perfil não sobrescreve um rascunho já editado",async()=>{
   let finish;api.get.mockImplementation(path=>path==="/me"?new Promise(resolve=>{finish=resolve;}):Promise.resolve({data:{googleEnabled:false}}));
   renderProfile();const input=screen.getByLabelText("Nome completo");await userEvent.clear(input);await userEvent.type(input,"Meu rascunho");

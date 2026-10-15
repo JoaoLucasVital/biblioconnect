@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import sharp from "sharp";
 import {test,expect} from "@playwright/test";
 import {createConfirmedClient,loginUi,authHeaders} from "./helpers.js";
@@ -12,32 +10,26 @@ test("perfil edita dados, mantém cartão e cabe no celular com movimento reduzi
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await captureReview(page,"perfil-360");
   await page.getByRole("button",{name:"Importar foto"}).click();await expect(page.getByRole("dialog",{name:"Sua foto no cartão"})).toBeVisible();await page.getByRole("button",{name:"Cancelar",exact:true}).click();await expect(page.getByRole("dialog")).toHaveCount(0);
 });
-test("worker real remove fundo, preserva transparência e salva somente resultado privado",async({page,request})=>{
-  const fixture=path.resolve("../.superpowers/portrait-fixture.jpg");test.skip(!fs.existsSync(fixture),"Requer a imagem pública de QA MediaPipe, fora dos artefatos publicados.");test.setTimeout(120000);
+test("foto inteira mantém fundo, proporção e bordas após salvar e recarregar",async({page,request})=>{
   const client=await createConfirmedClient({request});await loginUi(page,client);await page.goto("/perfil");
-  const external=[];page.on("request",req=>{if(new URL(req.url()).origin!==process.env.QA_API_URL&&new URL(req.url()).origin!==process.env.QA_BASE_URL)external.push(req.url());});
-  page.on("console",message=>{if(message.text().startsWith("Portrait runtime:"))console.log(message.text());});
-  await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles(fixture);
-  await expect(page.locator(".bc-photo-preview, [role=alert]")).toBeVisible({timeout:90000});await expect(page.getByRole("alert")).toHaveCount(0);expect(external).toEqual([]);
-  await page.getByLabel("Zoom",{exact:true}).fill("1.2");
+  const external=[],models=[];page.on("request",req=>{const url=new URL(req.url());if(url.origin!==process.env.QA_API_URL&&url.origin!==process.env.QA_BASE_URL)external.push(req.url());if(url.pathname.includes("/models/"))models.push(req.url());});
+  // Deliberately no face: both differently colored edges must survive intact.
+  const pixels=Buffer.alloc(800*400*3);
+  for(let y=0;y<400;y++)for(let x=0;x<800;x++){const i=(y*800+x)*3;const color=x<400?[20,50,180]:[230,120,30];pixels.set(color,i);}
+  const input=await sharp(pixels,{raw:{width:800,height:400,channels:3}}).png().toBuffer();
+  await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles({name:"complete-photo.png",mimeType:"image/png",buffer:input});
+  await expect(page.getByAltText("Prévia da foto completa com fundo original")).toBeVisible();
+  await expect(page.getByRole("alert")).toHaveCount(0);await expect(page.getByLabel("Zoom",{exact:true})).toHaveCount(0);
   const [upload]=await Promise.all([page.waitForResponse(res=>new URL(res.url()).pathname==="/me/foto"&&res.request().method()==="POST"),page.getByRole("button",{name:"Salvar foto",exact:true}).click()]);expect(upload.status()).toBe(200);
-  await expect(page.getByRole("dialog")).toHaveCount(0);const photo=await request.get(`${process.env.QA_API_URL}/me/foto`,{headers:authHeaders(client.token)});expect(photo.status()).toBe(200);
-  const bytes=await photo.body(),metadata=await sharp(bytes).metadata();expect(metadata.format).toBe("webp");expect(metadata.hasAlpha).toBe(true);expect(metadata.exif).toBeUndefined();expect(bytes.length).toBeLessThan(2*1024*1024);
-  const raw=await sharp(bytes).ensureAlpha().raw().toBuffer();let transparent=0,opaque=0;for(let i=3;i<raw.length;i+=4){if(raw[i]<20)transparent++;if(raw[i]>220)opaque++;}expect(transparent).toBeGreaterThan(1000);expect(opaque).toBeGreaterThan(1000);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  const photo=await request.get(`${process.env.QA_API_URL}/me/foto`,{headers:authHeaders(client.token)});expect(photo.status()).toBe(200);
+  const bytes=await photo.body(),metadata=await sharp(bytes).metadata();expect(metadata.format).toBe("webp");expect(metadata.width/metadata.height).toBe(2);expect(metadata.exif).toBeUndefined();expect(bytes.length).toBeLessThan(2*1024*1024);
+  const {data,info}=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+  for(const [x,y,color] of [[0,0,[20,50,180]],[info.width-1,info.height-1,[230,120,30]]]){const i=(y*info.width+x)*4;expect(data[i+3]).toBe(255);for(let c=0;c<3;c++)expect(Math.abs(data[i+c]-color[c])).toBeLessThan(15);}
   await page.reload();await expect(page.getByAltText("Leitor QA",{exact:true})).toBeVisible();
-  // Same public fixture under different light, with CPU throttling for the
-  // second pass. No personal portrait is written into review screenshots.
-  const cdp=await page.context().newCDPSession(page);
-  for(const [index,brightness] of [.7,1.15].entries()){
-    if(index===1){await cdp.send("Emulation.setCPUThrottlingRate",{rate:4});await page.setViewportSize({width:360,height:900});}
-    const adjusted=await sharp(fixture).modulate({brightness}).jpeg().toBuffer();
-    await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles({name:"lighting-test.jpg",mimeType:"image/jpeg",buffer:adjusted});
-    await expect(page.locator(".bc-photo-preview, [role=alert]")).toBeVisible({timeout:90000});await expect(page.getByRole("alert")).toHaveCount(0);
-    await page.getByRole("button",{name:"Cancelar",exact:true}).click();
-  }
-  await cdp.send("Emulation.setCPUThrottlingRate",{rate:1});await cdp.detach();
-  const noFace=await sharp({create:{width:400,height:500,channels:3,background:"#f7f3eb"}}).png().toBuffer();
-  await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles({name:"no-face.png",mimeType:"image/png",buffer:noFace});
-  await expect(page.getByRole("alert")).toContainText("rosto",{timeout:90000});await page.getByRole("button",{name:"Cancelar",exact:true}).click();
-  const unchanged=await request.get(`${process.env.QA_API_URL}/me/foto`,{headers:authHeaders(client.token)});expect(await unchanged.body()).toEqual(bytes);expect(external).toEqual([]);
+  const card=page.locator(".profile-card__photo");await expect(card).toHaveCSS("object-fit","contain");await expect(card).toHaveCSS("transform","none");
+  await captureReview(page,"perfil-foto-completa");
+  await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles({name:"replacement.png",mimeType:"image/png",buffer:input});
+  await expect(page.getByAltText("Prévia da foto completa com fundo original")).toBeVisible();await page.getByRole("button",{name:"Cancelar",exact:true}).click();
+  const unchanged=await request.get(`${process.env.QA_API_URL}/me/foto`,{headers:authHeaders(client.token)});expect(await unchanged.body()).toEqual(bytes);expect(external).toEqual([]);expect(models).toEqual([]);
 });
