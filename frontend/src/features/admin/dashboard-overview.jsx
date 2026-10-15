@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowDownLeft, ArrowUpRight, BookOpen, Bookmark, Check, CircleAlert, LibraryBig, ShoppingBag, Users } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import "./dashboard.css";
+import {AnimatedHeading} from '../../components/motion/TextAnimations.jsx';
 
 const number = (value) => Number(value || 0).toLocaleString("pt-BR");
 const money = (value) => Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -52,7 +53,7 @@ export default function DashboardOverview({ stats }) {
   const hasMovements = movements.some((item) => Number(item.valor) > 0);
   return <>
     <header className="dashboard-header">
-      <div><p className="dashboard-breadcrumb">Administração <span aria-hidden="true">/</span> Painel</p><h1>Visão geral da biblioteca<span>.</span></h1><p className="dashboard-intro">O acervo, os leitores e a operação, em perspectiva.</p></div>
+      <div><p className="dashboard-breadcrumb">Administração <span aria-hidden="true">/</span> Painel</p><AnimatedHeading>Visão geral da biblioteca<span>.</span></AnimatedHeading><p className="dashboard-intro">O acervo, os leitores e a operação, em perspectiva.</p></div>
       <div className="dashboard-header-actions"><Link className="dashboard-secondary-link" to="/admin/financeiro">Ver financeiro<ArrowUpRight size={16} aria-hidden="true"/></Link><Link className="dashboard-primary-link" to="/admin/pedidos">Gerenciar pedidos <ArrowUpRight size={17} aria-hidden="true" /></Link></div>
     </header>
 

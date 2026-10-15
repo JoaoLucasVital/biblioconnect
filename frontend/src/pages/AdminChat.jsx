@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import { useRef, useCallback, useEffect, useState } from "react";
@@ -75,7 +76,7 @@ function AdminChat() {
     <main  className="py-10 sm:py-14">
       <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8 grid min-w-0 gap-7 xl:grid-cols-[260px_minmax(0,1fr)]">
         <aside  className="grid content-start gap-3">
-          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Atendimentos</h1>
+          <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Atendimentos</AnimatedHeading>
           {feedback && <StatusMessage type={"error"}>{feedback}</StatusMessage>}
           {conversas.map((conversa) => (
             <Button key={conversa.id} onClick={() => abrir(conversa.id)} type="button" variant="secondary" className="grid min-w-0 gap-2 border border-stroke p-4 text-left text-sm [&_small]:truncate [&_small]:text-xs [&_small]:text-muted">

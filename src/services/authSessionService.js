@@ -1,7 +1,7 @@
 import {createHash,randomBytes} from "node:crypto";
 
 const DAY=86400000;
-export const publicUserSelect={id:true,nome:true,email:true,role:true,emailConfirmado:true,telefone:true,endereco:true,cep:true,rua:true,bairro:true,cidade:true,estado:true,numero:true,complemento:true,pontoReferencia:true};
+export const publicUserSelect={id:true,nome:true,email:true,role:true,emailConfirmado:true,welcomeSeenAt:true,telefone:true,endereco:true,cep:true,rua:true,bairro:true,cidade:true,estado:true,numero:true,complemento:true,pontoReferencia:true};
 const userSelect={...publicUserSelect,bloqueado:true,avatarKey:true};
 export const hashSessionSecret=secret=>createHash("sha256").update(secret).digest("hex");
 const allowed=user=>user && !user.bloqueado && (user.role==="ADMIN"||user.emailConfirmado);

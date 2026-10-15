@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import AuthShell from "../features/account/AuthShell.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
@@ -70,7 +71,7 @@ function ResetPassword() {
       <section  className="mx-auto max-w-lg">
         <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Nova senha</span>
 
-        <h1  className="font-display text-4xl leading-tight sm:text-5xl">Redefinir senha</h1>
+        <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Redefinir senha</AnimatedHeading>
 
         <p>Crie uma nova senha para acessar sua conta no BiblioConnect.</p>
 

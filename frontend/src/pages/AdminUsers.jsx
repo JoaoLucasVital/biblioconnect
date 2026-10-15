@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
@@ -179,7 +180,7 @@ function AdminUsers() {
   return (
     <main  className="py-10 sm:py-14">
       <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-        <h1  className="font-display text-4xl leading-tight sm:text-5xl">Usuários Cadastrados</h1>
+        <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Usuários Cadastrados</AnimatedHeading>
 
         <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
           Visualize clientes, endereço completo, pendências, dados de contato e

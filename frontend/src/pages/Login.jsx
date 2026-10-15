@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import Field from "../components/ui/Field.jsx";
 import GoogleSignIn from "../features/account/GoogleSignIn.jsx";
 import AuthShell from "../features/account/AuthShell.jsx";
@@ -75,7 +76,7 @@ function Login() {
       <div  className="mx-auto max-w-lg">
         <div  className="mb-8 space-y-3">
           <span className="text-xs font-medium uppercase tracking-widest text-muted">BEM-VINDO DE VOLTA</span>
-          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Entrar na plataforma</h1>
+          <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Entrar na plataforma</AnimatedHeading>
           <p>Acesse sua conta para reservar, alugar ou comprar livros.</p>
         </div>
 

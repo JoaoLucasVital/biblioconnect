@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
@@ -116,7 +117,7 @@ function AdminDashboard() {
     return <main className="bc-dashboard"><BookLoader label="Carregando painel administrativo…" /></main>;
   }
   if(erroCarga){
-    return <main className="bc-dashboard"><header className="dashboard-header"><div><p className="dashboard-breadcrumb">Administração / Painel</p><h1>Visão geral da biblioteca.</h1><p className="dashboard-intro">Os indicadores estarão disponíveis após a conexão ser restabelecida.</p></div></header><StatusMessage type="error" onRetry={carregarDashboard}>{erroCarga}</StatusMessage></main>;
+    return <main className="bc-dashboard"><header className="dashboard-header"><div><p className="dashboard-breadcrumb">Administração / Painel</p><AnimatedHeading>Visão geral da biblioteca.</AnimatedHeading><p className="dashboard-intro">Os indicadores estarão disponíveis após a conexão ser restabelecida.</p></div></header><StatusMessage type="error" onRetry={carregarDashboard}>{erroCarga}</StatusMessage></main>;
   }
 
   return (

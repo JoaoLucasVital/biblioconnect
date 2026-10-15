@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, within } from "@testing-library/react";
+import { act, fireEvent, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { useLocation } from "react-router-dom";
@@ -45,7 +45,7 @@ describe("Card Nav compacto", () => {
     expect(within(account).getByText("Leitora")).toBeVisible();
     await user.click(within(account).getByRole("button", {name:"Sair"}));
     expect(logout).toHaveBeenCalledOnce();
-    expect(screen.getByLabelText("Destino")).toHaveTextContent("/");
+    await waitFor(()=>expect(screen.getByLabelText('Destino').textContent).toBe('/'));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 

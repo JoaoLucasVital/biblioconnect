@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import {useEffect,useRef,useState} from "react";
 import {Link,useNavigate,useParams} from "react-router-dom";
 import {ArrowLeft,ArrowRight,BookOpen,MapPin,Package,Truck} from "lucide-react";
@@ -85,7 +86,7 @@ function CheckoutContent({livroId}){
   const delivery=modalidade==="entrega",freight=delivery?Number(quote?.valorEntrega||0):0;
   return <main className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
     <Link to="/livros#catalogo" className="mb-8 inline-flex min-h-11 items-center gap-2 text-sm text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true"/>Voltar ao acervo</Link>
-    <header className="mb-10 border-b border-stroke pb-8"><p className="text-xs uppercase tracking-[0.18em] text-muted">BIBLIOCONNECT / CHECKOUT</p><h1 className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">Finalize sua leitura.</h1><p className="mt-3 text-sm leading-relaxed text-muted">Seu livro está escolhido. Agora, como ele chega até você?</p><ol aria-label="Etapas da compra" className="mt-7 flex flex-wrap items-center gap-4 text-xs"><li className="font-semibold text-ink" aria-current="step">01 · Recebimento e revisão</li><ArrowRight size={14} className="text-muted" aria-hidden="true"/><li className="text-muted">02 · Pagamento</li></ol></header>
+    <header className="mb-10 border-b border-stroke pb-8"><p className="text-xs uppercase tracking-[0.18em] text-muted">BIBLIOCONNECT / CHECKOUT</p><AnimatedHeading className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">Finalize sua leitura.</AnimatedHeading><p className="mt-3 text-sm leading-relaxed text-muted">Seu livro está escolhido. Agora, como ele chega até você?</p><ol aria-label="Etapas da compra" className="mt-7 flex flex-wrap items-center gap-4 text-xs"><li className="font-semibold text-ink" aria-current="step">01 · Recebimento e revisão</li><ArrowRight size={14} className="text-muted" aria-hidden="true"/><li className="text-muted">02 · Pagamento</li></ol></header>
     <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.8fr)] lg:gap-16">
       <form onSubmit={event=>event.preventDefault()} className="grid min-w-0 gap-8">
         <fieldset disabled={busy} className="grid min-w-0 gap-3 border-0 p-0"><legend className="mb-5 font-display text-2xl">Como deseja receber?</legend>

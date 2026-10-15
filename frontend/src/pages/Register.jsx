@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import AuthShell from "../features/account/AuthShell.jsx";
 import Field from "../components/ui/Field.jsx";
 import GoogleSignIn from "../features/account/GoogleSignIn.jsx";
@@ -293,7 +294,7 @@ function Register() {
       <div  className="mx-auto max-w-lg max-w-none">
         <div  className="mb-8 space-y-3">
           <span className="text-xs font-medium uppercase tracking-widest text-muted">SUA PRÓXIMA LEITURA COMEÇA AQUI</span>
-          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Criar cadastro</h1>
+          <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Criar cadastro</AnimatedHeading>
           <p>
             Cadastre-se para acessar reservas, compras e aluguéis. Após o
             cadastro, confirme seu email para liberar o login.

@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/auth.js";
+import BookLoader from './ui/BookLoader.jsx';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loadingAuth } = useAuth();
@@ -7,9 +8,7 @@ function ProtectedRoute({ children }) {
   if (loadingAuth) {
     return (
       <main className="mx-auto max-w-7xl px-5 py-16">
-        <div role="status">
-          <p className="text-muted">Verificando autenticação...</p>
-        </div>
+        <BookLoader label="Verificando autenticação..."/>
       </main>
     );
   }

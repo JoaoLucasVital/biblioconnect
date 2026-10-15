@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import Dialog from "../components/ui/Dialog.jsx";
@@ -119,7 +120,7 @@ function AdminBooks() {
       <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
         <div  className="mb-5 flex flex-wrap items-start justify-between gap-5">
           <div>
-            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Gerenciar Livros</h1>
+            <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Gerenciar Livros</AnimatedHeading>
             <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
               Edite, pause, destaque ou exclua livros do catálogo.
             </p>

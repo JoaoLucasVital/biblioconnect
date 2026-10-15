@@ -7,6 +7,7 @@ import BrandLogo from "./BrandLogo.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
 import Button from "./ui/Button.jsx";
 import CardNav from "./CardNav.jsx";
+import {ShinyText} from './motion/TextAnimations.jsx';
 
 const navClass = ({isActive}) => `inline-flex min-h-11 items-center border-b-2 px-1 text-sm font-medium ${isActive ? "border-accent text-ink" : "border-transparent text-muted hover:text-ink"}`;
 export default function Navbar() {
@@ -51,7 +52,7 @@ export default function Navbar() {
     <div className="mx-auto flex min-h-22 max-w-7xl items-center justify-between gap-2 px-5 sm:gap-5 sm:px-8">
       <Link to="/" aria-label="BiblioConnect — início" className="flex min-h-11 shrink-0 items-center gap-2 sm:gap-2.5">
         <BrandLogo className="h-6 w-9 sm:h-8 sm:w-12"/>
-        <span className="font-sans text-[18px] font-semibold leading-tight tracking-[-0.055em] sm:text-[22px]">BiblioConnect<span className="mt-1 block text-[8px] font-medium uppercase tracking-[0.13em] text-muted sm:text-[9px] sm:tracking-[0.17em]">Sua próxima leitura</span></span>
+        <span className="font-sans text-[18px] font-semibold leading-tight tracking-[-0.055em] sm:text-[22px]"><ShinyText>BiblioConnect</ShinyText><span className="mt-1 block text-[8px] font-medium uppercase tracking-[0.13em] text-muted sm:text-[9px] sm:tracking-[0.17em]">Sua próxima leitura</span></span>
       </Link>
       <div className="hidden items-center gap-6 xl:flex">{links()}</div>
       <div className="flex shrink-0 items-center gap-1"><ThemeToggle/>

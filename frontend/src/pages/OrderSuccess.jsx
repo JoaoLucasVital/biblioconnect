@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
@@ -110,7 +111,7 @@ function OrderSuccess() {
         <section  className="mb-8 flex flex-wrap items-start justify-between gap-6 [&_h1]:font-display [&_h1]:text-4xl [&_p]:mt-3 [&_p]:text-sm [&_p]:text-muted">
           <div>
             <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Pedido registrado</span>
-            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Pedido #{pedido.id}</h1>
+            <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Pedido #{pedido.id}</AnimatedHeading>
             <p>Confira os dados do pedido e finalize o pagamento pelo gateway seguro.</p>
           </div>
           <div  className="grid gap-1 border-l-2 border-accent bg-soft p-4 text-sm">

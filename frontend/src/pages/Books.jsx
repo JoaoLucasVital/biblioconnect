@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -269,7 +270,7 @@ function Books() {
     <AtlasExplorer livros={livrosDisponiveis} error={catalogLoadError?feedback.text:""} onRetry={carregarLivros} embedded onConsultBook={livro=>{setBusca(livro.titulo);setCategoria("todas");setTipoFiltro("todos");}}/>
     <section id="catalogo" aria-label="Catálogo de livros" className="scroll-mt-6 pt-12 sm:pt-16">
     <header className="mb-8 flex flex-wrap items-end justify-between gap-6">
-      <div><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">O acervo</p><h1 className="font-display text-4xl leading-tight sm:text-5xl">Livros disponíveis</h1><p className="mt-4 max-w-xl text-muted">Encontre a sua próxima leitura. Compre, alugue ou reserve um livro para retirar.</p></div>
+      <div><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">O acervo</p><AnimatedHeading className="font-display text-4xl leading-tight sm:text-5xl">Livros disponíveis</AnimatedHeading><p className="mt-4 max-w-xl text-muted">Encontre a sua próxima leitura. Compre, alugue ou reserve um livro para retirar.</p></div>
       {!catalogLoadError && <p role="status" className="text-sm text-muted"><strong className="text-xl font-medium text-ink">{livrosVisiveis.length}</strong> {livrosVisiveis.length===1?"livro encontrado":"livros encontrados"}</p>}
     </header>
     {feedback.text && !catalogLoadError && !livroCompra && !livroAluguel && !livroReserva && <div className="mb-6"><StatusMessage type={feedback.type==="error"?"error":"info"}>{feedback.text}</StatusMessage></div>}

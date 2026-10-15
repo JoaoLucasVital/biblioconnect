@@ -3,8 +3,10 @@ import multer from "multer";
 import {sanitizeProfileImage} from "../services/profileImageService.js";
 import {createMediaStorage} from "../services/mediaStorage.js";
 import {updateProfile,profileSelect,presentProfile} from "../services/profileService.js";
+import {claimWelcome} from "../services/welcomeService.js";
 export function createProfileRoutes({prisma,auth,storage=createMediaStorage()}){
   const router=Router(),upload=multer({storage:multer.memoryStorage(),limits:{fileSize:2*1024*1024,files:1,fields:0}}).single("foto");
+  router.post("/me/welcome/claim",auth.authenticate,async(req,res,next)=>{try{res.json(await claimWelcome(prisma,req.usuario.id));}catch(error){next(error);}});
   router.get("/me",auth.authenticate,async(req,res,next)=>{try{const user=await prisma.usuario.findUnique({where:{id:req.usuario.id},select:profileSelect});res.json(presentProfile(user));}catch(error){next(error);}});
   router.patch("/me",auth.authenticate,async(req,res,next)=>{try{res.json(await updateProfile(prisma,{usuarioId:req.usuario.id,data:req.body}));}catch(error){if(error.status)return res.status(error.status).json({erro:error.message});next(error);}});
   router.get("/me/foto",auth.authenticate,async(req,res)=>{

@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import ResponsiveTable from "../components/ui/ResponsiveTable.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
@@ -39,7 +40,7 @@ function AdminDeliveries() {
   useInitialLoad(carregar);
 
   return <main className="py-10 sm:py-14"><div className="mx-auto grid w-full min-w-0 max-w-7xl gap-7 px-5 sm:px-8">
-    <header><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">Logística</p><h1 className="font-display text-4xl">Entregas</h1><p className="mt-3 max-w-2xl text-sm text-muted">Acompanhe entregas próprias ou abra um parceiro terceirizado quando não houver entregador disponível.</p></header>
+    <header><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">Logística</p><AnimatedHeading className="font-display text-4xl">Entregas</AnimatedHeading><p className="mt-3 max-w-2xl text-sm text-muted">Acompanhe entregas próprias ou abra um parceiro terceirizado quando não houver entregador disponível.</p></header>
     {feedback && <StatusMessage type="error">{feedback}</StatusMessage>}
     <div className="flex flex-wrap gap-3">{links.map(link=><a className="inline-flex min-h-11 items-center rounded border border-muted bg-surface px-4 text-sm" href={link.url} target="_blank" rel="noreferrer" key={link.nome}>{link.nome}</a>)}</div>
     {entregas.length===0 ? <p className="border-t border-stroke py-10 text-sm text-muted">Nenhuma entrega para acompanhar.</p> :

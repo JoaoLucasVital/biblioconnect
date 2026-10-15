@@ -1,0 +1,11 @@
+html{scrollbar-gutter:stable}
+.bc-welcome{position:fixed;inset:0;z-index:100;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;overflow:hidden;background:transparent;color:#fff7ed}
+.bc-welcome[open]{display:grid;place-items:center}.bc-welcome::backdrop{background:transparent}
+.bc-welcome::before{content:'';position:absolute;top:0;left:-10%;width:120%;height:calc(100% + 16vw);border-radius:0 0 50% 50% / 0 0 16vw 16vw;background:#0f172a;animation:bc-welcome-exit 850ms var(--ease-in-out) 2800ms forwards}
+.bc-welcome-stage{position:relative;width:calc(100% - 40px);height:clamp(100px,15vw,200px);pointer-events:none}
+.bc-welcome-stage span{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-size:clamp(40px,8.5vw,140px);line-height:1.02;letter-spacing:-.045em;text-align:center;color:#f7b45f;opacity:0;animation:bc-welcome-word 780ms ease both}
+.bc-welcome-stage span:nth-child(1){animation-delay:100ms}.bc-welcome-stage span:nth-child(2){animation-delay:730ms}.bc-welcome-stage span:nth-child(3){animation-delay:1360ms;font-size:clamp(36px,7vw,115px)}.bc-welcome-stage span:nth-child(4){animation-delay:1990ms}
+.bc-welcome-skip{position:absolute;right:24px;bottom:24px;min-height:44px;padding:8px 16px;color:#fff7ed;border:1px solid #ffffff45;border-radius:99px;background:transparent;animation:bc-welcome-word 3200ms ease both}
+@keyframes bc-welcome-word{0%{opacity:0}20%,80%{opacity:1}100%{opacity:0}}
+@keyframes bc-welcome-exit{to{transform:translateY(-100%)}}
+@media(prefers-reduced-motion:reduce){.bc-welcome::before,.bc-welcome-stage span,.bc-welcome-skip{animation:none}}

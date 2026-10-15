@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -42,7 +43,8 @@ function ClientChat() {
   }, [carregar]);
 
   useEffect(() => {
-    fimRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" });
+    const list=fimRef.current?.parentElement;
+    if(list)list.scrollTop=list.scrollHeight;
   }, [mensagens.length]);
 
   return (
@@ -50,7 +52,7 @@ function ClientChat() {
       <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8 grid max-w-4xl gap-7">
         <div>
           <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Atendimento</span>
-          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Chat com a BiblioConnect</h1>
+          <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Chat com a BiblioConnect</AnimatedHeading>
           <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Envie dúvidas, solicitações ou feedback. As mensagens ficam registradas no sistema.</p>
         </div>
         {feedback && <StatusMessage type={"error"}>{feedback}</StatusMessage>}

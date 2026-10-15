@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import OrderCard from "../features/orders/OrderCard.jsx";
 import Button from "../components/ui/Button.jsx";
@@ -155,7 +156,7 @@ function MyOrders() {
   return (
     <main  className="py-10 sm:py-14">
       <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-        <header className="mb-8 flex flex-wrap items-end justify-between gap-5 border-b border-stroke pb-7"><div><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">ÁREA DO LEITOR / PEDIDOS</p><h1 className="font-display text-4xl leading-tight sm:text-5xl">Meus Pedidos</h1></div><Link to="/livros#catalogo" className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4">Encontrar minha próxima leitura ↗</Link></header>
+        <header className="mb-8 flex flex-wrap items-end justify-between gap-5 border-b border-stroke pb-7"><div><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">ÁREA DO LEITOR / PEDIDOS</p><AnimatedHeading className="font-display text-4xl leading-tight sm:text-5xl">Meus Pedidos</AnimatedHeading></div><Link to="/livros#catalogo" className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4">Encontrar minha próxima leitura ↗</Link></header>
 
         <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
           Compras, reservas e aluguéis, com os próximos passos de cada leitura.

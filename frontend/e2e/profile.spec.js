@@ -28,9 +28,8 @@ test("foto inteira mantém fundo, proporção e bordas após salvar e recarregar
   const bytes=await photo.body(),metadata=await sharp(bytes).metadata();expect(metadata.format).toBe("webp");expect(metadata.width/metadata.height).toBe(2);expect(metadata.exif).toBeUndefined();expect(bytes.length).toBeLessThan(2*1024*1024);
   const {data,info}=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});
   for(const [x,y,color] of [[0,0,[20,50,180]],[info.width-1,info.height-1,[230,120,30]]]){const i=(y*info.width+x)*4;expect(data[i+3]).toBe(255);for(let c=0;c<3;c++)expect(Math.abs(data[i+c]-color[c])).toBeLessThan(15);}
-  await page.reload();await expect(page.getByAltText("Leitor QA",{exact:true})).toBeVisible();
-  const card=page.locator(".profile-card__photo");await expect(card).toHaveCSS("object-fit","contain");await expect(card).toHaveCSS("transform","none");
-  const tileRatio=await page.locator(".profile-card__tile").evaluate(element=>element.clientWidth/element.clientHeight);expect(tileRatio).toBeCloseTo(2,1);
+  await page.reload();await expect(page.locator('.lanyard-canvas')).toBeVisible({timeout:15000});
+  const restored=await request.get(`${process.env.QA_API_URL}/me/foto`,{headers:authHeaders(client.token)});expect(await restored.body()).toEqual(bytes);
   await captureReview(page,"perfil-foto-completa");
   const portrait=await sharp({create:{width:450,height:600,channels:3,background:"#1e3a5f"}}).png().toBuffer();
   await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles({name:"portrait.png",mimeType:"image/png",buffer:portrait});

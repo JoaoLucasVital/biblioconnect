@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import {lazy,Suspense,useEffect,useRef,useState} from "react";
 import {Upload,Trash2} from "lucide-react";
 import {useAuth} from "../context/auth.js";
@@ -6,7 +7,8 @@ import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
 import FadeInput from "../components/ui/FadeInput.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
-import ProfileCard from "../features/account/ProfileCard.jsx";
+import ProfileCard from "../features/account/LanyardCard.jsx";
+import '../features/account/profile-card.css';
 
 import SavedBooks from "../features/community/SavedBooks.jsx";
 const ProfilePhotoEditor=lazy(()=>import("../features/account/ProfilePhotoEditor.jsx"));
@@ -21,8 +23,8 @@ export default function Profile(){
   async function save(event){event.preventDefault();if(busy)return;setBusy(true);setError("");setMessage("");try{const {data}=await api.patch("/me",form);accept(data);dirty.current=false;setForm(draft(data));setMessage("Perfil atualizado.");}catch(failure){setError(failure.response?.data?.erro||"Não foi possível salvar. Seus dados digitados foram preservados.");}finally{setBusy(false);}}
   async function removePhoto(){if(busy)return;setBusy(true);setError("");try{const {data}=await api.delete("/me/foto");accept(data);setMessage("Foto removida.");}catch{setError("Não foi possível remover a foto.");}finally{setBusy(false);}}
   if(!saved)return null;
-  return <main className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
-    <header className="mb-10 max-w-2xl"><span className="text-xs uppercase tracking-widest text-muted">SUA CONTA</span><h1 className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">Seu lugar entre histórias.</h1><p className="mt-4 text-sm leading-relaxed text-muted">Seu cartão da biblioteca e as informações para acompanhar suas leituras.</p></header>
+  return <main className="bc-profile-page mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
+    <header className="mb-10 max-w-2xl"><span className="text-xs uppercase tracking-widest text-muted">SUA CONTA</span><AnimatedHeading className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">Seu lugar entre histórias.</AnimatedHeading><p className="mt-4 text-sm leading-relaxed text-muted">Seu cartão da biblioteca e as informações para acompanhar suas leituras.</p></header>
     <div className="bc-profile-layout"><aside className="grid min-w-0 gap-5"><ProfileCard usuario={saved}/><div className="flex flex-wrap justify-center gap-2"><Button variant="secondary" onClick={()=>setPhotoOpen(true)} disabled={busy}><Upload size={16} aria-hidden="true"/>Importar foto</Button>{saved.avatarUrl&&<Button variant="ghost" onClick={removePhoto} disabled={busy}><Trash2 size={16} aria-hidden="true"/>Remover foto</Button>}</div><p className="mx-auto max-w-xs text-center text-xs leading-relaxed text-muted">A foto é opcional e fica privada na sua conta.</p></aside>
     <form onSubmit={save} className="bc-profile-fields"><div className="border-b border-stroke pb-5"><h2 className="font-display text-2xl">Informações pessoais</h2><p className="mt-2 text-sm text-muted">Mantenha seu contato e endereço atualizados para as entregas.</p></div>
       <Field label="Email"><input type="email" value={saved.email} readOnly autoComplete="email"/></Field>

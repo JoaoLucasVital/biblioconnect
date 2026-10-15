@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
@@ -173,7 +174,7 @@ function OrderReceipt() {
           <div>
             <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Comprovante</span>
 
-            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Comprovante do pedido</h1>
+            <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Comprovante do pedido</AnimatedHeading>
 
             <p>
               Documento de registro interno da operação realizada no

@@ -1,5 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/auth.js";
+import BookLoader from './ui/BookLoader.jsx';
+import {AnimatedHeading} from './motion/TextAnimations.jsx';
 
 function AdminRoute({ children }) {
   const { isAuthenticated, isAdmin, loadingAuth } = useAuth();
@@ -7,9 +9,7 @@ function AdminRoute({ children }) {
   if (loadingAuth) {
     return (
       <main className="mx-auto max-w-7xl px-5 py-16">
-        <div role="status">
-          <p className="text-muted">Verificando autenticação...</p>
-        </div>
+        <BookLoader label="Verificando autenticação..."/>
       </main>
     );
   }
@@ -23,7 +23,7 @@ function AdminRoute({ children }) {
       <main className="mx-auto max-w-7xl px-5 py-20">
         <div>
           <div className="border-l-2 border-accent pl-6">
-            <h1 className="mb-3 font-display text-4xl">Acesso negado</h1>
+            <AnimatedHeading className="mb-3 font-display text-4xl">Acesso negado</AnimatedHeading>
             <p className="text-muted">Esta área é exclusiva para administradores.</p>
           </div>
         </div>

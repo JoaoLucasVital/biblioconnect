@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../../components/motion/TextAnimations.jsx';
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import BookCover from "../../components/ui/BookCover.jsx";
@@ -24,7 +25,7 @@ export default function ImageStreamHero({livros=[]}) {
   const books=livros.slice(0,12),cards=Math.max(9,books.length);
   return <section ref={ref} className="image-stream-hero" aria-label="Histórias em movimento" data-paused={hidden||offscreen||reduced}>
     <style>{css}</style>
-    <div className="stream-heading"><p className="discovery-eyebrow"><span/>Para quem fica só mais um capítulo</p><h1>Sua próxima <br/><em>obsessão literária.</em></h1><p>Romances intensos, mundos impossíveis e mistérios que não deixam dormir.</p></div>
+    <div className="stream-heading"><p className="discovery-eyebrow"><span/>Para quem fica só mais um capítulo</p><AnimatedHeading>Sua próxima <br/><em>obsessão literária.</em></AnimatedHeading><p>Romances intensos, mundos impossíveis e mistérios que não deixam dormir.</p></div>
     {books.length>0 && <div className="stream-perspective" aria-hidden="true"><div className="stream-rails">{names.map((name,side)=>Array.from({length:cards},(_,index)=>{
       const book=books[(index+side*3)%books.length];
       return <div key={`${name}-${index}`} className="stream-book" data-book-id={book.id} style={{animationName:name,animationDelay:`${-index*26/cards}s`}}><BookCover livro={book} className="h-full w-full" sizes="(min-width: 768px) 28vw, 45vw" priority={side===0 && index===0}/></div>;

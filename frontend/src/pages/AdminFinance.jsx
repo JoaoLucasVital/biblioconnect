@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, RefreshCw, ShieldCheck, TriangleAlert } from "lucide-react";
@@ -68,7 +69,7 @@ export default function AdminFinance() {
   return <main className="bc-finance" aria-busy={loading || undefined}>
     <header className="finance-header"><div>
       <nav className="finance-breadcrumb" aria-label="Localização"><Link to="/admin">Administração</Link><span aria-hidden="true">/</span><span>Financeiro</span></nav>
-      <h1>Finanças da <span>biblioteca.</span></h1><p>Receitas, pagamentos e cada movimentação em um só lugar.</p>
+      <AnimatedHeading>Finanças da <span>biblioteca.</span></AnimatedHeading><p>Receitas, pagamentos e cada movimentação em um só lugar.</p>
     </div><button type="button" className="finance-refresh" onClick={carregarFinanceiro} disabled={loading || processando}><RefreshCw size={15} aria-hidden="true" />{loading ? "Atualizando..." : "Atualizar dados"}</button></header>
     {feedback && <StatusMessage type="success">{feedback}</StatusMessage>}
     {erroCarga && <section className="finance-error" role="alert"><TriangleAlert size={22} aria-hidden="true" /><div><h2>{financeiro ? "Os dados precisam ser atualizados" : "Não foi possível carregar o financeiro"}</h2><p>{erroCarga}</p>{financeiro && <p>Os valores abaixo são da última consulta. Atualize antes de alterar pagamentos.</p>}</div><button type="button" onClick={carregarFinanceiro} disabled={loading} className="finance-refresh">Tentar novamente</button></section>}

@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Button from "../components/ui/Button.jsx";
 import Dialog from "../components/ui/Dialog.jsx";
@@ -124,7 +125,7 @@ function AdminDelays() {
       <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
         <div  className="mb-8">
           <div>
-            <h1  className="font-display text-4xl leading-tight sm:text-5xl">Atrasos e Multas</h1>
+            <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Atrasos e Multas</AnimatedHeading>
             <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
               Acompanhe reservas e aluguéis atrasados, calcule multas e resolva pendências.
             </p>

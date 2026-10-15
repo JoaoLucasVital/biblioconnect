@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Field from "../components/ui/Field.jsx";
 import Button from "../components/ui/Button.jsx";
@@ -7,6 +8,8 @@ import { Link, useParams } from "react-router-dom";
 import api from "../api/api.js";
 import { useAuth } from "../context/auth.js";
 import PeekRating from "../features/community/PeekRating.jsx";
+import RatingStars from '../features/community/RatingStars.jsx';
+import '../features/community/reviews.css';
 
 function BookReviews() {
   const { id } = useParams();
@@ -55,8 +58,8 @@ function BookReviews() {
         <div  className="mb-5 flex flex-wrap items-start justify-between gap-5">
           <div>
             <span  className="mb-3 block text-xs uppercase tracking-[0.16em] text-muted">Avaliações</span>
-            <h1  className="font-display text-4xl leading-tight sm:text-5xl">{livro?.titulo || "Livro"}</h1>
-            <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
+            <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">{livro?.titulo || "Livro"}</AnimatedHeading>
+            <div className="mt-5 flex flex-wrap items-center gap-4"><strong className="text-3xl font-semibold tabular-nums">{Number(dados.media||0).toFixed(1)}</strong><RatingStars value={dados.media}/><p className="text-xs text-muted">{dados.total} avaliações aprovadas</p></div><p  className="sr-only">
               Média {Number(dados.media || 0).toFixed(1)} / 5 · {dados.total} avaliação(ões) aprovada(s)
             </p>
           </div>
@@ -66,7 +69,7 @@ function BookReviews() {
         {feedback.text && <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>}
 
         {isAuthenticated ? (
-          <form onSubmit={enviar} className="min-w-0 border-t border-stroke py-6 grid max-w-xl gap-5">
+          <form onSubmit={enviar} className="grid min-w-0 max-w-2xl gap-5 rounded-xl border border-stroke bg-surface p-6 sm:p-8">
             <h2  className="font-display text-2xl leading-snug">Avaliar este livro</h2>
             <PeekRating label="Nota" value={nota} onChange={setNota} disabled={enviando}/>
             <div className="grid gap-2"><Field label={"Comentário"}><textarea value={comentario} onChange={(event) => setComentario(event.target.value)} minLength="3" maxLength="1500" required placeholder="Conte o que achou do livro..."/></Field></div>
@@ -81,13 +84,13 @@ function BookReviews() {
 
         <section  className="grid gap-5">
           {dados.avaliacoes?.length ? dados.avaliacoes.map((avaliacao) => (
-            <article key={avaliacao.id} className="min-w-0 border-t border-stroke py-6">
+            <article key={avaliacao.id} className="review-card">
               <div  className="mb-3 flex flex-wrap justify-between gap-3">
                 <strong>{avaliacao.usuario?.nome || "Leitor"}</strong>
-                <span>{"★".repeat(avaliacao.nota)}{"☆".repeat(5 - avaliacao.nota)}</span>
+                <RatingStars value={avaliacao.nota}/>
               </div>
-              <p>{avaliacao.comentario}</p>
-              <small>{new Date(avaliacao.createdAt).toLocaleDateString("pt-BR")}</small>
+              <p className="wrap-anywhere text-base leading-relaxed">{avaliacao.comentario}</p>
+              <small className="text-xs text-muted">{new Date(avaliacao.createdAt).toLocaleDateString("pt-BR")}</small>
             </article>
           )) : <div  className="my-8 border-y border-stroke py-12 text-muted [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink"><p>Ainda não há avaliações aprovadas.</p></div>}
         </section>

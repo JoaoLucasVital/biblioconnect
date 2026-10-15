@@ -18,8 +18,10 @@ it("filtros mantêm os valores concretos de status dos pedidos",async()=>{
 });
 it("moderação mantém pendente, aprovado e oculto",async()=>{
   api.get.mockResolvedValue({data:[]});renderWithRouter(<AdminReviews/>);
-  const select=screen.getByRole("combobox");
-  expect([...select.options].map(option=>option.value)).toEqual(["todos","pendente","aprovado","oculto"]);
+  const filters=within(screen.getByRole('navigation',{name:'Status das avaliações'}));
+  for(const label of ['Todas','Pendentes','Aprovadas','Ocultas'])expect(filters.getByRole('button',{name:new RegExp(label)})).toBeVisible();
+  await userEvent.click(filters.getByRole('button',{name:/Ocultas/}));
+  expect(filters.getByRole('button',{name:/Ocultas/})).toHaveAttribute('aria-pressed','true');
 });
 it("confirmação de congelamento envia um único contrato pendente",async()=>{
   api.get.mockResolvedValue({data:[{id:8,nome:"Leitor",email:"leitor@example.test",bloqueado:false,role:"CLIENTE",createdAt:"2026-10-13",totalPedidos:0,multaTotal:0}]});

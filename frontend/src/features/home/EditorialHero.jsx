@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../../components/motion/TextAnimations.jsx';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
@@ -32,7 +33,7 @@ export default function EditorialHero({livro,destaques,selectedIndex,onSelect,ac
   return <section ref={ref} aria-label="Descubra sua próxima leitura"
     className="grid gap-10 py-12 md:grid-cols-[1.15fr_1fr] md:items-center md:gap-12 md:py-16">
     <div><p data-hero-detail className="mb-6 flex items-center gap-3 text-xs uppercase tracking-[0.17em] text-muted"><span className="h-px w-9 bg-accent" aria-hidden="true"/>Biblioteca online</p>
-      {compact?<h2 className="max-w-md font-display text-[clamp(2.5rem,4.5vw,4.5rem)] leading-[1.05] tracking-[-0.035em]"><span data-hero-line className="block">Uma leitura em</span><span data-hero-line className="block text-accent-hover dark:text-accent">perspectiva.</span></h2>:<h1 className="font-display text-[clamp(3.2rem,7vw,6.1rem)] font-normal leading-[1.04] tracking-[-0.045em]"><span data-hero-line className="block">Encontre a sua</span><span data-hero-line className="block">próxima <span className="text-accent-hover dark:text-accent">leitura.</span></span></h1>}
+      {compact?<AnimatedHeading as="h2" className="max-w-md font-display text-[clamp(2.5rem,4.5vw,4.5rem)] leading-[1.05] tracking-[-0.035em]"><span data-hero-line className="block">Uma leitura em</span><span data-hero-line className="block text-accent-hover dark:text-accent">perspectiva.</span></AnimatedHeading>:<AnimatedHeading className="font-display text-[clamp(3.2rem,7vw,6.1rem)] font-normal leading-[1.04] tracking-[-0.045em]"><span data-hero-line className="block">Encontre a sua</span><span data-hero-line className="block">próxima <span className="text-accent-hover dark:text-accent">leitura.</span></span></AnimatedHeading>}
       <div data-hero-detail><p className="mt-6 max-w-sm text-base leading-relaxed text-muted sm:text-lg">Histórias para descobrir, ideias para levar com você. Explore o acervo e escolha como quer ler.</p>
         <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3"><Link to="/livros" className="bc-button inline-flex min-h-12 items-center gap-3 rounded bg-accent px-5 font-medium text-[#0f172a] hover:bg-accent-hover">Ver catálogo<ArrowUpRight size={19} aria-hidden="true"/></Link><Link to={accountAction.to} className="inline-flex min-h-12 items-center border-b border-ink text-sm font-medium">{accountAction.label}</Link></div>
       </div>

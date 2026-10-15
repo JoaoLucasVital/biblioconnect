@@ -1,3 +1,4 @@
+import {AnimatedHeading} from '../components/motion/TextAnimations.jsx';
 import AuthShell from "../features/account/AuthShell.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Field from "../components/ui/Field.jsx";
@@ -46,7 +47,7 @@ function ForgotPassword() {
       <div  className="mx-auto max-w-lg">
         <div  className="mb-8 space-y-3">
           <span className="text-xs font-medium uppercase tracking-widest text-muted">SUA PRÓXIMA LEITURA COMEÇA AQUI</span>
-          <h1  className="font-display text-4xl leading-tight sm:text-5xl">Esqueci minha senha</h1>
+          <AnimatedHeading  className="font-display text-4xl leading-tight sm:text-5xl">Esqueci minha senha</AnimatedHeading>
           <p>
             Informe o email cadastrado. Se ele existir no sistema, enviaremos um
             link para redefinir sua senha.
