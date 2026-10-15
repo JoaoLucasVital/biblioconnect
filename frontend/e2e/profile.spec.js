@@ -19,6 +19,8 @@ test("foto inteira mantém fundo, proporção e bordas após salvar e recarregar
   const input=await sharp(pixels,{raw:{width:800,height:400,channels:3}}).png().toBuffer();
   await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles({name:"complete-photo.png",mimeType:"image/png",buffer:input});
   await expect(page.getByAltText("Prévia da foto completa com fundo original")).toBeVisible();
+  const previewRatio=await page.locator(".bc-photo-preview").evaluate(element=>{const style=getComputedStyle(element);return (element.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight))/(element.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom));});
+  expect(previewRatio).toBeCloseTo(2,1);
   await expect(page.getByRole("alert")).toHaveCount(0);await expect(page.getByLabel("Zoom",{exact:true})).toHaveCount(0);
   const [upload]=await Promise.all([page.waitForResponse(res=>new URL(res.url()).pathname==="/me/foto"&&res.request().method()==="POST"),page.getByRole("button",{name:"Salvar foto",exact:true}).click()]);expect(upload.status()).toBe(200);
   await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -28,8 +30,12 @@ test("foto inteira mantém fundo, proporção e bordas após salvar e recarregar
   for(const [x,y,color] of [[0,0,[20,50,180]],[info.width-1,info.height-1,[230,120,30]]]){const i=(y*info.width+x)*4;expect(data[i+3]).toBe(255);for(let c=0;c<3;c++)expect(Math.abs(data[i+c]-color[c])).toBeLessThan(15);}
   await page.reload();await expect(page.getByAltText("Leitor QA",{exact:true})).toBeVisible();
   const card=page.locator(".profile-card__photo");await expect(card).toHaveCSS("object-fit","contain");await expect(card).toHaveCSS("transform","none");
+  const tileRatio=await page.locator(".profile-card__tile").evaluate(element=>element.clientWidth/element.clientHeight);expect(tileRatio).toBeCloseTo(2,1);
   await captureReview(page,"perfil-foto-completa");
-  await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles({name:"replacement.png",mimeType:"image/png",buffer:input});
-  await expect(page.getByAltText("Prévia da foto completa com fundo original")).toBeVisible();await page.getByRole("button",{name:"Cancelar",exact:true}).click();
+  const portrait=await sharp({create:{width:450,height:600,channels:3,background:"#1e3a5f"}}).png().toBuffer();
+  await page.getByRole("button",{name:"Importar foto"}).click();await page.getByLabel("Escolher foto").setInputFiles({name:"portrait.png",mimeType:"image/png",buffer:portrait});
+  await expect(page.getByAltText("Prévia da foto completa com fundo original")).toBeVisible();
+  expect(await page.locator(".bc-photo-preview").evaluate(element=>element.clientWidth/element.clientHeight)).toBeCloseTo(.75,1);
+  await page.getByRole("button",{name:"Cancelar",exact:true}).click();
   const unchanged=await request.get(`${process.env.QA_API_URL}/me/foto`,{headers:authHeaders(client.token)});expect(await unchanged.body()).toEqual(bytes);expect(external).toEqual([]);expect(models).toEqual([]);
 });

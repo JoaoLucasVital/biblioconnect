@@ -1,5 +1,7 @@
 # Conta, comunidade e checkout — entrega local parcial
 
+**Ajuste de proporção solicitado em seguida:** prévia e área de imagem do cartão acompanham a proporção natural da foto, eliminando as faixas do quadro fixo 4:5 sem cortar o conteúdo. Teste geométrico reproduziu o problema e passou após a correção; inclui imagem horizontal 2:1 e prévia vertical 3:4. Lint aprovado.
+
 **Correção posterior em 14/10/2026, solicitada pelo usuário:** o perfil agora mantém a foto inteira e o fundo original, sem recorte automático ou reconhecimento de rosto. O worker apenas redimensiona/reencodifica para WebP; o cartão usa `object-fit: contain`. Novos testes: 4/4 React, 2/2 E2E de produção e lint aprovados. O E2E comprova proporção e cores das bordas preservadas, ausência de chamadas a modelos/serviços externos, persistência e cancelamento sem perder a foto anterior. Fotos antigas que já tiveram o fundo removido precisam ser reimportadas a partir do original, pois esse original não era armazenado. As descrições de remoção de fundo abaixo documentam a entrega anterior e ficam substituídas por esta decisão.
 
 Verificação em 14/10/2026. A execução continua no worktree `biblioconnect-editorial`. O plano completo ainda não está concluído: o proprietário confirmou que precisa criar/configurar as contas externas.
