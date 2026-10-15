@@ -2,7 +2,6 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import BookCover from "../../components/ui/BookCover.jsx";
 import InteractiveHoverLink from "../../components/ui/InteractiveHoverLink.jsx";
-import { ClickSpark } from "./DiscoveryMotion.jsx";
 import { streamKeyframes } from "./streamGeometry.js";
 import useMediaQuery from "./useMediaQuery.js";
 import "./discovery.css";
@@ -30,7 +29,7 @@ export default function ImageStreamHero({livros=[]}) {
       const book=books[(index+side*3)%books.length];
       return <div key={`${name}-${index}`} className="stream-book" data-book-id={book.id} style={{animationName:name,animationDelay:`${-index*26/cards}s`}}><BookCover livro={book} className="h-full w-full" sizes="(min-width: 768px) 28vw, 45vw" priority={side===0 && index===0}/></div>;
     }))}</div></div>}
-    <div className="stream-footer"><div className="stream-caption"><span className="stream-caption-line"/><p>Histórias para sentir.<br/><strong>Capas para descobrir.</strong></p></div><ClickSpark><InteractiveHoverLink to="/livros">Explorar leituras</InteractiveHoverLink></ClickSpark><div className="stream-controls"><a href="#leituras" aria-label="Ver leituras em destaque"><ArrowDown size={17}/></a></div></div>
+    <div className="stream-footer"><div className="stream-caption"><span className="stream-caption-line"/><p>Histórias para sentir.<br/><strong>Capas para descobrir.</strong></p></div><InteractiveHoverLink to="/livros">Explorar leituras</InteractiveHoverLink><div className="stream-controls"><a href="#leituras" aria-label="Ver leituras em destaque"><ArrowDown size={17}/></a></div></div>
     {!books.length && <p className="stream-empty">Nenhum livro disponível ainda</p>}
     <div className="stream-accessible-books sr-only"><p>Capas da seleção do acervo:</p><ul>{books.map(book=><li key={book.id}>{book.titulo}, de {book.autor}</li>)}</ul></div>
   </section>;

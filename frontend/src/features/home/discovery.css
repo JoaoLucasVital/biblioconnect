@@ -19,8 +19,6 @@ body.dark .stream-heading h1 em{color:var(--accent)}
 .stream-empty{position:absolute;inset:67% 0 auto;text-align:center;color:var(--muted)}
 .stream-hero-loading{min-height:590px;display:grid;place-items:center;border-bottom:1px solid var(--border)}
 .discovery-expand{transform-origin:50% 50%}
-.discovery-spark-target{position:relative;display:inline-flex}
-.discovery-spark{position:absolute;z-index:5;width:8px;height:2px;background:var(--accent);pointer-events:none;transform-origin:left center}
 .discovery-star-border{position:relative;isolation:isolate;overflow:hidden;border:1px solid var(--border);border-radius:8px;padding:1px}
 .discovery-orbit{position:absolute;z-index:-1;inset:-150%;background:conic-gradient(from 0deg,transparent 0deg 270deg,var(--accent) 310deg,transparent 350deg);animation:discovery-star 8s linear infinite}
 .discovery-atlas-invite{position:relative;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;padding:36px;background:var(--bg);border-radius:7px}

@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import api from "../api/api.js";
 import { useAuth } from "../context/auth.js";
+import PeekRating from "../features/community/PeekRating.jsx";
 
 function BookReviews() {
   const { id } = useParams();
@@ -67,13 +68,7 @@ function BookReviews() {
         {isAuthenticated ? (
           <form onSubmit={enviar} className="min-w-0 border-t border-stroke py-6 grid max-w-xl gap-5">
             <h2  className="font-display text-2xl leading-snug">Avaliar este livro</h2>
-            <div className="grid gap-2"><Field label={"Nota"}><select value={nota} onChange={(event) => setNota(event.target.value)}>
-                <option value="5">5 - Excelente</option>
-                <option value="4">4 - Muito bom</option>
-                <option value="3">3 - Bom</option>
-                <option value="2">2 - Regular</option>
-                <option value="1">1 - Ruim</option>
-              </select></Field></div>
+            <PeekRating label="Nota" value={nota} onChange={setNota} disabled={enviando}/>
             <div className="grid gap-2"><Field label={"Comentário"}><textarea value={comentario} onChange={(event) => setComentario(event.target.value)} minLength="3" maxLength="1500" required placeholder="Conte o que achou do livro..."/></Field></div>
             <Button type="submit" variant="primary" busy={enviando}>Enviar para moderação</Button>
           </form>

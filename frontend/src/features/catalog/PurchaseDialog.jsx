@@ -1,11 +1,12 @@
 import Dialog from "../../components/ui/Dialog.jsx";
 import Button from "../../components/ui/Button.jsx";
+import HoldButton from "../../components/ui/HoldButton.jsx";
 import Field from "../../components/ui/Field.jsx";
 import StatusMessage from "../../components/ui/StatusMessage.jsx";
 import { formatarMoeda } from "./format.js";
 export default function PurchaseDialog({livro,modalidadeEntrega,enderecoEntrega,cotacaoEntrega,loadingCotacao,loadingCompra,onModalidadeChange,onEnderecoChange,onCotar,onConfirmar,onClose,error}) {
   const busy=loadingCompra || loadingCotacao;
-  return <Dialog open={Boolean(livro)} title="Confirmar compra" busy={busy} onClose={onClose} footer={<><Button variant="secondary" disabled={busy} onClick={onClose}>Cancelar</Button><Button busy={loadingCompra} disabled={loadingCotacao || (modalidadeEntrega==="entrega" && !cotacaoEntrega)} onClick={onConfirmar}>Confirmar compra</Button></>}>
+  return <Dialog open={Boolean(livro)} title="Confirmar compra" busy={busy} onClose={onClose} footer={<><Button variant="secondary" disabled={busy} onClick={onClose}>Cancelar</Button><HoldButton busy={loadingCompra} disabled={loadingCotacao || (modalidadeEntrega==="entrega" && !cotacaoEntrega)} onConfirm={onConfirmar}>Confirmar compra</HoldButton></>}>
     {livro && <><div><h3 className="wrap-anywhere font-display text-2xl">{livro.titulo}</h3><p className="mt-1 text-sm text-muted">{livro.autor} · {livro.categoria}</p><p className="mt-3 text-xl font-semibold">{formatarMoeda(livro.precoCompra)}</p></div>
     <fieldset disabled={busy} className="grid min-w-0 gap-3 border-0 p-0"><legend className="mb-3 text-sm font-medium">Como deseja receber?</legend>
       {[["retirada","Buscar na loja","Sem frete. Retire em até 7 dias."],["entrega","Receber em casa","Calcule o frete para seu endereço."]].map(([value,title,description])=><label key={value} className={`flex min-h-16 cursor-pointer items-start gap-3 rounded border p-4 ${modalidadeEntrega===value?"border-ink bg-soft":"border-stroke"}`}><input className="mt-1 accent-accent" type="radio" name="modalidadeEntrega" value={value} checked={modalidadeEntrega===value} onChange={()=>onModalidadeChange(value)}/><span className="text-sm"><strong className="block font-medium">{title}</strong><span className="text-muted">{description}</span></span></label>)}

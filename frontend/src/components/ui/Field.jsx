@@ -1,4 +1,5 @@
 import { Children, cloneElement, useId } from "react";
+import FadeInput from "./FadeInput.jsx";
 
 /** Input group adapted from emmanuelh-dev's Uiverse Tailwind component; see notices. */
 export default function Field({ id, label, error, hint, children, leading, trailing }) {
@@ -6,11 +7,14 @@ export default function Field({ id, label, error, hint, children, leading, trail
   const child = Children.only(children);
   const controlId = id || child.props.id || generatedId;
   const describedBy = [child.props["aria-describedby"], hint && `${controlId}-hint`, error && `${controlId}-error`].filter(Boolean).join(" ");
+  const secure=/password/i.test(child.props.autoComplete||"")||/senha|password/i.test(child.props.name||"");
+  const animateNative=!secure&&!child.props.readOnly&&(child.type==="textarea"||(child.type==="input"&&[undefined,"text","search","email","tel","url"].includes(child.props.type)));
+  const control=animateNative?<FadeInput {...child.props} as={child.type}/>:child;
   return <div className="grid min-w-0 gap-2">
     <label htmlFor={controlId} className="text-sm font-medium text-ink">{label}</label>
     <div className={`flex min-w-0 items-center overflow-hidden rounded-md border bg-surface focus-within:border-ink focus-within:ring-2 focus-within:ring-ink/20 ${error ? "border-red-700" : "border-muted"}`}>
       {leading && <span className="grid w-11 shrink-0 place-items-center border-r border-stroke text-muted" aria-hidden="true">{leading}</span>}
-      {cloneElement(child, {
+      {cloneElement(control, {
         id: controlId,
         "aria-describedby": describedBy || undefined,
         "aria-invalid": error ? true : child.props["aria-invalid"],

@@ -22,6 +22,7 @@ export async function loginUi(page, { email, senha }) {
   await page.getByRole("button", { name: /^entrar$/i }).click();
   await page.waitForURL(url => url.pathname !== "/login");
 }
+export async function holdToConfirm(button){await button.press("Space",{delay:1250});}
 
 export async function createConfirmedClient({ request, emailDir = process.env.EMAIL_OUTPUT_DIR }) {
   const before = new Set(await fs.readdir(emailDir));

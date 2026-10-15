@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Check, CornerUpLeft, ListFilter, Search, WalletCards } from "lucide-react";
 import { formatarData, formatarMoeda, normalizarBusca, traduzirPagamento, traduzirTipo } from "./finance-format.js";
+import FadeInput from "../../components/ui/FadeInput.jsx";
 
 export default function FinanceOrders({ pedidos, onPayment, disabled }) {
   const [busca, setBusca] = useState("");
@@ -12,7 +13,7 @@ export default function FinanceOrders({ pedidos, onPayment, disabled }) {
   return <section className="finance-panel finance-orders" aria-labelledby="finance-orders-title">
     <header className="finance-panel-heading"><div><span className="finance-eyebrow">Últimas movimentações</span><h2 id="finance-orders-title">Pedidos financeiros</h2><p>Os {pedidos.length} pedidos mais recentes retornados pelo sistema.</p></div><span className="finance-tag"><WalletCards size={13} aria-hidden="true" />Histórico recente</span></header>
     <div className="finance-filters">
-      <label className="finance-search"><Search size={16} aria-hidden="true" /><input type="search" aria-label="Buscar pedidos" placeholder="Buscar livro, cliente ou pedido" value={busca} onChange={event => setBusca(event.target.value)} /></label>
+      <label className="finance-search"><Search size={16} aria-hidden="true" /><FadeInput type="search" aria-label="Buscar pedidos" placeholder="Buscar livro, cliente ou pedido" value={busca} onChange={event => setBusca(event.target.value)} /></label>
       <label className="finance-select"><span>Pagamento</span><select value={pagamento} onChange={event => setPagamento(event.target.value)}><option value="todos">Todos os pagamentos</option><option value="pendente">Pendente</option><option value="pago">Pago</option><option value="cancelado">Cancelado</option><option value="estornado">Estornado</option></select></label>
       <label className="finance-select"><span>Tipo de pedido</span><select value={tipo} onChange={event => setTipo(event.target.value)}><option value="todos">Todos os tipos</option><option value="compra">Compra</option><option value="aluguel">Aluguel</option><option value="reserva">Reserva</option></select></label>
     </div>

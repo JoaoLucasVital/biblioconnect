@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { screen, within, fireEvent, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, it, expect, vi } from "vitest";
 import Books from "../../pages/Books.jsx";
@@ -47,6 +47,8 @@ it("compra retirada mantém payload e bloqueia duplicação pendente", async () 
   await user.click(await screen.findByRole("button",{name:"Comprar",exact:true}));
   const dialog=screen.getByRole("dialog",{name:"Confirmar compra"});
   const confirm=within(dialog).getByRole("button",{name:"Confirmar compra"});
+  fireEvent.pointerDown(confirm,{button:0});
+  await act(async()=>{await new Promise(resolve=>setTimeout(resolve,1200));});
   await user.dblClick(confirm);
   expect(api.post).toHaveBeenCalledExactlyOnceWith("/comprar",{livroId:7,modalidadeEntrega:"retirada",enderecoEntrega:undefined});
   expect(confirm).toBeDisabled();

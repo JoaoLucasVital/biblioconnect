@@ -3,7 +3,7 @@ import useMediaQuery from "../../features/home/useMediaQuery.js";
 import "./fade-input.css";
 
 /** Native editing remains authoritative; the short-lived mirror is purely visual. */
-export default function FadeInput({ref:forwardedRef,type="text",value,defaultValue,className="",style,
+export default function FadeInput({ref:forwardedRef,as:Control="input",type="text",value,defaultValue,className="",style,
   onChange,onKeyDown,onPointerDown,onSelect,onScroll,onBlur,onCompositionStart,onCompositionEnd,...props}) {
   const inputRef=useRef(null);
   const previous=useRef(String(value??defaultValue??""));
@@ -24,9 +24,10 @@ export default function FadeInput({ref:forwardedRef,type="text",value,defaultVal
     cancel();
     const added=next.slice(before.length);
     const native=event.nativeEvent;
-    const supported=(type==="text" || type==="search") && !reduced && !forced;
-    const append=next.startsWith(before) && added.length>0 && added.length<=2 && input.selectionStart===next.length && input.selectionEnd===next.length;
-    if(supported && append && !composing.current && !native.isComposing && native.inputType==="insertText" && input.scrollWidth<=input.clientWidth){
+    const supported=["text","search","email","tel","url"].includes(type) && !reduced && !forced;
+    const atEnd=input.selectionStart===null||(input.selectionStart===next.length&&input.selectionEnd===next.length);
+    const append=next.startsWith(before) && added.length>0 && added.length<=2 && atEnd;
+    if(supported && append && !composing.current && !native.isComposing && native.inputType==="insertText" && input.scrollWidth<=input.clientWidth && input.scrollHeight<=input.clientHeight+1){
       const cs=getComputedStyle(input);
       if(cs.direction!=="rtl"){
         const styles=Object.fromEntries(["fontFamily","fontSize","fontWeight","fontStyle","fontStretch","letterSpacing","lineHeight","textAlign","paddingTop","paddingRight","paddingBottom","paddingLeft","textIndent"].map(key=>[key,cs[key]]));
@@ -37,13 +38,13 @@ export default function FadeInput({ref:forwardedRef,type="text",value,defaultVal
     }
     onChange?.(event);
   }
-  return <span className="bc-fade-field">
-    <input {...props} ref={inputRef} type={type} value={value} defaultValue={defaultValue} className={className}
+  return <span className="bc-fade-field" data-multiline={Control==="textarea"?"true":undefined}>
+    <Control {...props} ref={inputRef} type={Control==="input"?type:undefined} value={value} defaultValue={defaultValue} className={className}
       data-fading={active?"true":undefined} style={{...style,...(active?{color:"transparent",WebkitTextFillColor:"transparent"}:{})}}
       onChange={change}
       onKeyDown={event=>{if(event.ctrlKey||event.metaKey||event.altKey||event.key.length!==1)cancel();onKeyDown?.(event);}}
       onPointerDown={event=>{cancel();onPointerDown?.(event);}}
-      onSelect={event=>{if(event.target.selectionStart!==event.target.value.length || event.target.selectionEnd!==event.target.value.length)cancel();onSelect?.(event);}}
+      onSelect={event=>{if(event.target.selectionStart!==null&&(event.target.selectionStart!==event.target.value.length || event.target.selectionEnd!==event.target.value.length))cancel();onSelect?.(event);}}
       onScroll={event=>{cancel();onScroll?.(event);}}
       onBlur={event=>{cancel();onBlur?.(event);}}
       onCompositionStart={event=>{composing.current=true;cancel();onCompositionStart?.(event);}}

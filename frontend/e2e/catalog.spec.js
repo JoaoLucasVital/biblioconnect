@@ -1,6 +1,6 @@
 import {sessionCredentials} from "./helpers.js";
 import { test, expect } from "@playwright/test";
-import { createConfirmedClient, createBook, loginUi } from "./helpers.js";
+import { createConfirmedClient, createBook, loginUi, holdToConfirm } from "./helpers.js";
 async function bookFor(request,overrides={}) {
   const login=await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL},data:{email:"admin@biblioconnect.com",senha:"admin123"}});
   return createBook({request,adminToken:await sessionCredentials(login),overrides});
@@ -23,7 +23,7 @@ for (const [action,endpoint,payload] of [
   page.on("request",req=>{if(req.method()==="POST" && new URL(req.url()).pathname===endpoint)sends++;});
   const [response]=await Promise.all([
     page.waitForResponse(res=>res.request().method()==="POST" && new URL(res.url()).pathname===endpoint),
-    dialog.getByRole("button",{name:`Confirmar ${action}`,exact:true}).click()
+    action==="compra"?holdToConfirm(dialog.getByRole("button",{name:`Confirmar ${action}`,exact:true})):dialog.getByRole("button",{name:`Confirmar ${action}`,exact:true}).click()
   ]);
   expect(response.ok()).toBe(true);
   expect(response.request().postDataJSON()).toEqual(payload(livro));
