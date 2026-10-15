@@ -30,14 +30,26 @@ Projeto verificado `joaolucasdev/biblioconnect`, ID `prj_rcrGQvHa9oIDy7ejLSFzZuj
 
 Segredos novos de sessão e cron configurados como Secret, login Google configurado com o cliente existente, URLs de frontend/backend no domínio público, armazenamento Blob e simulação de pagamento desativada. Não foram enfraquecidas as proteções de previews da Vercel.
 
-A liberação da origem `https://biblioconnect-olive.vercel.app` no cliente OAuth permanece pendente: o Google Cloud mostrou “Falha ao carregar” ao editar esse cliente tanto para o agente quanto para o proprietário. O backend anuncia Google habilitado, mas isso não comprova login Google funcionando nessa origem. O login local Google já tinha sido validado antes desta etapa; o acesso online do administrador só poderá ser validado após corrigir a origem no Google Cloud.
+A liberação da origem `https://biblioconnect-olive.vercel.app` ficou inicialmente bloqueada por “Falha ao carregar” no Google Cloud, tanto para o agente quanto para o proprietário. Essa pendência foi resolvida após renovar a sessão Google, conforme a verificação de produção abaixo.
 
 Stripe e envio externo de e-mail continuam sem credenciais de produção. Não foram realizados cobrança, cadastro público de teste ou envio de e-mail no ambiente publicado. O cadastro por e-mail não deve ser considerado validado em produção. Frete mantém a chave ORS anteriormente configurada; não foi feita nova cotação real nesta etapa.
 
 ## Acesso alternativo autorizado após falha do console Google
 
-O proprietário relatou a mesma falha em janela anônima e em dados móveis. Nova inspeção confirmou que o projeto e seu número correspondem ao cliente usado pela aplicação; a página IAM também falhou ao carregar. O painel público de status não anunciava incidente geral, o que não exclui falha específica. Nenhuma configuração OAuth foi alterada; `origin_mismatch` permanece pendente.
+O proprietário relatou a mesma falha em janela anônima e em dados móveis. Nova inspeção confirmou que o projeto e seu número correspondem ao cliente usado pela aplicação; a página IAM também falhou ao carregar. O painel público de status não anunciava incidente geral, o que não excluía falha específica. Naquele momento, nenhuma configuração OAuth tinha sido alterada e `origin_mismatch` ainda estava pendente.
 
 O proprietário autorizou habilitar senha na conta administrativa existente como alternativa. Gerada senha aleatória forte, armazenada em arquivo privado ignorado e no banco somente como hash bcrypt; preservados os identificadores Google, o e-mail confirmado e o papel ADMIN. Backup privado dos hashes anteriores; sessões anteriores revogadas. Não criada outra conta nem exceção de autorização.
 
 Verificação real, online e local: POST de login HTTP 200, painel administrativo HTTP 200 e 131 livros; logout HTTP 200 e reutilização da sessão encerrada HTTP 401. As credenciais e cookies não foram impressos nos resultados nem colocados no Git. Acesso com senha validado; isso não comprova correção do login Google nem do cadastro por e-mail de novos usuários.
+
+## Login Google de produção validado
+
+Após encerrar a sessão Google e o proprietário concluir o CAPTCHA e a autenticação novamente, as telas de criação, listagem e edição de clientes voltaram a carregar. O aviso de feedback “Ask your parent” não foi tratado como prova de supervisão; o proprietário informou que sua conta é pessoal e não supervisionada.
+
+Com confirmação explícita no momento de salvar, adicionada somente a origem JavaScript `https://biblioconnect-olive.vercel.app` ao cliente Web existente, preservando `http://localhost:5173` e `http://localhost`. O Google exibiu “Cliente OAuth salvo”; a reabertura do editor confirmou as três origens persistidas. Nenhum cliente ou segredo novo foi criado, e nenhuma alteração de código ou deploy foi necessária.
+
+Verificação no navegador interno: aberta a rota pública `/login`, acionado “Continuar com o Google” e observada a navegação para a home com a sessão de Jão Dev, os links Perfil/Painel e o botão Sair. Em seguida, o painel administrativo `/admin` carregou os dados reais: 131 livros, um usuário cadastrado e zero movimentações após o reset. Não houve novo cadastro nem uso da senha alternativa neste teste. Evidência visual privada em `.superpowers/google-login-production-verified.png`.
+
+O login Google da conta administrativa foi validado na origem de produção. Não foi realizado cadastro com uma segunda conta Google nesta verificação. As pendências de Stripe e envio de e-mail continuam independentes desta correção.
+
+Inspeção adicional: público Externo, status Testando e somente o proprietário listado como teste; nenhuma permissão adicional cadastrada na página Acesso a dados. O fluxo usa Sign in with Google para identidade básica. Segundo https://support.google.com/cloud/answer/15549945, esse fluxo é uma exceção à exigência de usuários de teste, desde que não solicite outros escopos. O status Testando não foi tratado como um novo bloqueio comprovado, e nenhuma configuração de publicação/branding foi alterada nesta correção.
