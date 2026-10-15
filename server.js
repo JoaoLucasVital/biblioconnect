@@ -34,7 +34,7 @@ import {
   calcularCotacaoEntrega,
   cotarModalidadeEntrega,
   getLinksEntregasTerceirizadas,
-  mapsConfigurado,
+  freteConfigurado,
 } from "./src/services/deliveryService.js";
 import { buscarLivroPorIsbn, normalizarIsbn } from "./src/services/isbnService.js";
 import { enviarNotificacao } from "./src/services/notificationService.js";
@@ -2271,7 +2271,8 @@ app.patch("/pedidos/:id/simular-pagamento", autenticar, async (req, res) => {
 app.get("/integracoes/status", autenticar, async (req, res) => {
   res.json({
     mercadoPago: pagamentoGatewayConfigurado(),
-    googleMaps: mapsConfigurado(),
+    frete: freteConfigurado(),
+    provedorFrete: "openrouteservice",
     googleBooks: true,
     email: emailConfigurado(),
     simulacao: process.env.NODE_ENV !== "production" && process.env.ALLOW_PAYMENT_SIMULATION === "true",

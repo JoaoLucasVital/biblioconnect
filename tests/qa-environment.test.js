@@ -28,7 +28,7 @@ test("QA neutraliza destinos e credenciais herdados antes de iniciar a API", () 
     MERCADO_PAGO_ACCESS_TOKEN: "foreign-payment-key",
     STRIPE_SECRET_KEY: "foreign-stripe-key", STRIPE_PUBLISHABLE_KEY: "foreign-publishable",
     STRIPE_WEBHOOK_SECRET: "foreign-webhook", GOOGLE_CLIENT_ID: "foreign-oauth-client",
-    GOOGLE_CLIENT_SECRET: "foreign-oauth-secret", RESEND_API_KEY: "foreign-email-key",
+    GOOGLE_CLIENT_SECRET: "foreign-oauth-secret", RESEND_API_KEY: "foreign-email-key", ORS_API_KEY:"foreign-routing-key",
     BLOB_READ_WRITE_TOKEN: "foreign-blob-key", BLOB_STORE_ID: "foreign-store", VERCEL_OIDC_TOKEN: "foreign-oidc",
   };
   const previous = Object.fromEntries(Object.keys(overrides).map(key => [key, process.env[key]]));
@@ -48,6 +48,7 @@ test("QA neutraliza destinos e credenciais herdados antes de iniciar a API", () 
     assert.equal(env.EMAIL_PASS, "");
     assert.equal(env.MERCADO_PAGO_ACCESS_TOKEN, "");
     assert.equal(env.GOOGLE_MAPS_API_KEY, "");
+    assert.equal(env.ORS_API_KEY, "");
     assert.equal(env.DISABLE_DELAY_EMAIL_JOB, "true");
     for (const key of ["STRIPE_SECRET_KEY","STRIPE_PUBLISHABLE_KEY","STRIPE_WEBHOOK_SECRET","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","RESEND_API_KEY","BLOB_READ_WRITE_TOKEN","BLOB_STORE_ID","VERCEL_OIDC_TOKEN"]) assert.equal(env[key],"",`${key} precisa ser isolada`);
   } finally {

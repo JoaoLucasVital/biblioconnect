@@ -1,5 +1,7 @@
 # BiblioConnect — conta, comunidade, frete e checkout
 
+> Atualização aprovada em 15/10/2026: substituir o provedor do item 7 por HeiGIT/openrouteservice Standard gratuito, devido ao pré-pagamento exigido pelo Google Maps. Google permanece no login. Mantêm-se tarifas, origem, contratos de cotação e recálculo no servidor. A chave agora é `ORS_API_KEY`, somente backend; resultados ao nível da rua são identificados como aproximados. O detalhamento e a evidência real estão em [verificação do frete](../../verification/2026-10-15-openrouteservice.md). Esta decisão substitui as exigências anteriores de Routes API/faturamento, sem alterar as demais integrações.
+
 Data: 14/10/2026. Estado: especificação escrita aprovada pelo usuário em “pode seguir”; plano de implementação apresentado para revisão/escolha de execução. Implementação ainda não iniciada. Base local: branch `codex/biblioconnect-editorial`, commit de pesquisa `ec3de1b`.
 
 ## 1. Resultado esperado e escolhas confirmadas

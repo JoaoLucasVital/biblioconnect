@@ -7,7 +7,7 @@ export function checkIntegrations(env = {}) {
   const service = required => ({ configured:false, verified:false, missing:required.filter(key=>!present(key)), invalid:[] });
   const services = {
     database:service(["DATABASE_URL"]),session:service(["AUTH_SECRET"]),
-    googleMaps:service(["GOOGLE_MAPS_API_KEY","STORE_ADDRESS"]),
+    delivery:service(["ORS_API_KEY","STORE_ADDRESS"]),
     googleLogin:service(["GOOGLE_CLIENT_ID"]),
     stripe:service(["STRIPE_SECRET_KEY","STRIPE_PUBLISHABLE_KEY","STRIPE_WEBHOOK_SECRET"]),
     email:service([]),storage:service([]),

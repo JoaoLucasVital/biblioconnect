@@ -24,7 +24,7 @@ export function buildQaEnv({ apiPort, frontendPort, databasePort, emailDir, jwtS
   }
   if (new Set([apiPort, frontendPort, databasePort]).size !== 3) throw new Error("As portas QA precisam ser distintas.");
   return {
-    ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^(STRIPE_|GOOGLE_|RESEND_|BLOB_|VERCEL_|EMAIL_|MERCADO_PAGO_)/.test(key))),
+    ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^(STRIPE_|GOOGLE_|ORS_|RESEND_|BLOB_|VERCEL_|EMAIL_|MERCADO_PAGO_)/.test(key))),
     NODE_ENV: "development",
     PORT: String(apiPort),
     BACKEND_URL: `http://127.0.0.1:${apiPort}`,
@@ -40,6 +40,7 @@ export function buildQaEnv({ apiPort, frontendPort, databasePort, emailDir, jwtS
     EMAIL_USER: "", EMAIL_PASS: "", EMAIL_HOST: "",
     MERCADO_PAGO_ACCESS_TOKEN: "", MERCADO_PAGO_WEBHOOK_SECRET: "",
     GOOGLE_MAPS_API_KEY: "", GOOGLE_BOOKS_API_KEY: "",
+    ORS_API_KEY: "",
     GOOGLE_CLIENT_ID: "", GOOGLE_CLIENT_SECRET: "",
     STRIPE_SECRET_KEY: "", STRIPE_PUBLISHABLE_KEY: "", STRIPE_WEBHOOK_SECRET: "",
     RESEND_API_KEY: "", BLOB_READ_WRITE_TOKEN: "", BLOB_STORE_ID: "", VERCEL_OIDC_TOKEN: "",

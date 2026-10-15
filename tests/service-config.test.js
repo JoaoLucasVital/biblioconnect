@@ -9,16 +9,16 @@ test("diagnóstico identifica configurações ausentes sem revelar segredos",()=
   assert.equal(typeof checkIntegrations,"function","Diagnóstico de integração precisa existir");
   const result=checkIntegrations({NODE_ENV:"production",STRIPE_SECRET_KEY:"private-credential-that-must-never-appear"});
   assert.equal(result.productionReady,false);
-  assert.ok(result.services.googleMaps.missing.includes("GOOGLE_MAPS_API_KEY"));
-  assert.ok(result.services.googleMaps.missing.includes("STORE_ADDRESS"));
+  assert.ok(result.services.delivery.missing.includes("ORS_API_KEY"));
+  assert.ok(result.services.delivery.missing.includes("STORE_ADDRESS"));
   assert.ok(!JSON.stringify(result).includes("private-credential-that-must-never-appear"));
 });
 
 test("configuração presente não é declarada como integração validada e file não é envio externo",()=>{
   assert.equal(typeof checkIntegrations,"function");
-  const result=checkIntegrations({NODE_ENV:"production",EMAIL_PROVIDER:"file",GOOGLE_MAPS_API_KEY:"key-local-for-test",STORE_ADDRESS:"Biblioteca pública"});
-  assert.equal(result.services.googleMaps.configured,true);
-  assert.equal(result.services.googleMaps.verified,false);
+  const result=checkIntegrations({NODE_ENV:"production",EMAIL_PROVIDER:"file",ORS_API_KEY:"key-local-for-test",STORE_ADDRESS:"Biblioteca pública"});
+  assert.equal(result.services.delivery.configured,true);
+  assert.equal(result.services.delivery.verified,false);
   assert.equal(result.services.email.configured,false);
   assert.equal(result.services.email.externalDelivery,false);
   assert.ok(result.services.email.invalid.includes("EMAIL_PROVIDER"));

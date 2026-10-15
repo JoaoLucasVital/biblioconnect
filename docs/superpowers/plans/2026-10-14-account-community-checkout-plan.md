@@ -127,7 +127,9 @@ Cada task abaixo tem ciclo vermelho → implementação → verde → commit loc
 - [ ] Aplicar Hold Button na confirmação de compra após modalidade/frete válidos; confirmação verde só significa prosseguir. Avaliação continua enviando ao endpoint/moderação existente. Overlay global captura cliques da aplicação/portais com 8 partículas por explosão, máximo 32 nós simultâneos e limpeza das animações; nunca tenta ler iframe externo.
 - [ ] Rodar testes React afetados, lint, build e E2E de home/catálogo/avaliação. Registrar desktop/mobile e reduced-motion. Commit.
 
-### Task 8: Google Routes e integridade do frete
+### Task 8: openrouteservice e integridade do frete (troca aprovada em 15/10)
+
+Ruling: provedor alterado para HeiGIT/openrouteservice Standard gratuito por aprovação do proprietário após pré-pagamento do Maps. Usar `ORS_API_KEY` exclusivamente backend, Pelias `/pelias/v1/search` e Directions `/openrouteservice/v2/directions/driving-car/json` em `api.heigit.org`. As menções abaixo a Google Routes/field mask/faturamento são históricas e substituídas por essa decisão. Preservar resposta, tarifas e recálculo; acrescentar locais encontrados, atribuição e aviso quando só a rua for localizada. Evidência real e verificações em `docs/verification/2026-10-15-openrouteservice.md`.
 
 **Files:** modify `src/services/deliveryService.js`, rotas de cotação/compra em `server.js`, `Books.jsx`, `PurchaseDialog.jsx`, `.env.example`; create `tests/delivery.test.js`, adicionar cenários em catalog-flows/E2E.
 

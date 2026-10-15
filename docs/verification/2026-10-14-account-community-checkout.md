@@ -47,7 +47,7 @@ As operações atuais sem o header de idempotência continuam compatíveis. A in
 
 ## Etapas ainda pendentes
 
-1. **Google:** login local configurado e validado com Google real em 15/10; faltam origem/cliente HTTPS da hospedagem, ativação/faturamento da Routes API, credencial restrita e teste real de frete. Testes com respostas controladas não são prova de frete ativo.
+1. **Google:** login local configurado e validado com Google real em 15/10; falta origem/cliente HTTPS da hospedagem. Frete migrado para HeiGIT/openrouteservice por aprovação do proprietário; não depende mais do faturamento Google Maps.
 2. **E-mail:** configurar remetente/provedor e comprovar recebimento externo de confirmação/reset. O runtime local atual grava mensagens em arquivo e não envia e-mail real.
 3. **Stripe (tasks 9–10):** idempotência de pedidos concluída; SDK/PaymentIntents, webhook, cartão/Pix e formulário com giro ainda não implementados, conforme a dependência de conta/sandbox prevista no plano. Nenhuma cobrança real executada. A função legada de simulação local permanece explicitamente de demonstração.
 4. **Hospedagem (task 11):** login, PostgreSQL/Blob, upload direto e migração conferidos em 15/10; ainda faltam URLs/segredos das demais integrações, acesso administrativo seguro e preview real. A configuração Services ainda precisa ser validada na plataforma autenticada.
