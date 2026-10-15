@@ -32,3 +32,12 @@ User approved the bounded design in chat: physical reader card with viewport tet
 ## Overall plan
 
 Email-provider activation, real Stripe payments, hosted OAuth, hosted data reconciliation, secure hosted admin and deployment remain separate pending work. This stage does not claim deployment readiness.
+
+## Follow-up: document-top tether
+
+The user corrected the scroll behavior after reviewing the profile: the tether belongs to the top of the document, so the badge must leave the viewport with the beginning of the profile. This supersedes the viewport-fixed tether and mobile shrink described above.
+
+- The visual scene is portaled to the body and positioned absolutely at document top. The inline holder still reserves layout space and supplies accessible identification. The existing drag, rope elasticity, entrance and card-only hit target remain unchanged.
+- Removed the mobile scroll listener and compact transform. The scene has a viewport width limit to prevent horizontal overflow during responsive resizing.
+- A new browser regression failed against the previous fixed positioning (557px document-anchor error), then passed with the correction at desktop and mobile widths. Final focused browser run: 2/2 passed, including welcome persistence, profile control click-through and no mobile overflow. Lint, production build and whitespace checks passed; the existing lazy Three.js chunk warning remains.
+- Native browser verification confirmed the frame at -720px with document scroll at 720px; saved books remain unobstructed. The original application and database stayed running throughout. Private screenshot: `.superpowers/lanyard-document-top.jpg`.

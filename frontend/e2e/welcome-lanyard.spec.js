@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 import {createConfirmedClient,loginUi,authHeaders} from './helpers.js';
 import {captureReview} from './capture-review.js';
-test('apresentação uma vez, rolagem ao topo e carteirinha presa à janela',async({page,request,browser})=>{
+test('apresentação uma vez, rolagem ao topo e carteirinha presa ao início da página',async({page,request,browser})=>{
   test.setTimeout(60000);
   const client=await createConfirmedClient({request});
   await loginUi(page,client);
@@ -13,13 +13,13 @@ test('apresentação uma vez, rolagem ao topo e carteirinha presa à janela',asy
   await expect(page.locator('.bc-google-button')).toHaveCount(0);
   await page.getByRole('button',{name:'Importar foto'}).evaluate(node=>window.scrollTo(0,node.getBoundingClientRect().top+scrollY-100));
   await page.getByRole('button',{name:'Importar foto'}).click();await expect(page.getByRole('dialog',{name:'Sua foto no cartão'})).toBeVisible();await page.getByRole('button',{name:'Cancelar',exact:true}).click();
-  const before=await page.locator('.bc-lanyard-frame').boundingBox();
   await page.evaluate(()=>window.scrollTo(0,500));
-  const after=await page.locator('.bc-lanyard-frame').boundingBox();expect(after.y).toBe(before.y);
+  await expect.poll(()=>page.locator('.bc-lanyard-frame').evaluate(node=>Math.abs(node.getBoundingClientRect().top+scrollY))).toBeLessThan(1);
   await page.getByRole('link',{name:'Atendimento',exact:true}).click();await expect(page.getByRole('heading',{name:'Chat com a BiblioConnect'})).toBeVisible();await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
   await page.reload();await expect(page.getByRole('dialog',{name:'Boas-vindas ao BiblioConnect'})).toHaveCount(0);
   const second=await browser.newContext({baseURL:process.env.QA_BASE_URL});const secondPage=await second.newPage();await loginUi(secondPage,client);await expect(secondPage.getByRole('dialog',{name:'Boas-vindas ao BiblioConnect'})).toHaveCount(0);await second.close();
   const response=await request.post(`${process.env.QA_API_URL}/me/welcome/claim`,{headers:authHeaders(client.token)});expect(await response.json()).toEqual({show:false});
   await page.goto('/perfil');await page.setViewportSize({width:360,height:800});await expect(page.getByLabel('Nome completo',{exact:true})).toBeVisible();await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.evaluate(()=>window.scrollTo(0,600));await expect(page.locator('.bc-lanyard-frame')).toHaveClass(/bc-lanyard-compact/);
+  await page.evaluate(()=>window.scrollTo(0,600));await expect(page.locator('.bc-lanyard-frame')).not.toHaveClass(/bc-lanyard-compact/);
+  await expect.poll(()=>page.locator('.bc-lanyard-frame').evaluate(node=>Math.abs(node.getBoundingClientRect().top+scrollY))).toBeLessThan(1);
 });
