@@ -1,5 +1,5 @@
 import {test,expect} from "@playwright/test";
-import {loginUi} from "./helpers.js";
+import {loginUi,createBook,createConfirmedClient,sessionCredentials} from "./helpers.js";
 
 async function contrast(locator) {
   return locator.evaluate(element=>{
@@ -28,6 +28,25 @@ test("texto secundário conserva contraste mínimo sobre a página clara",async(
   await page.goto("/login");
   await expect(page.getByRole("button",{name:"Entrar",exact:true})).toBeVisible();
   await expect.poll(()=>contrast(page.locator("main .text-muted").first())).toBeGreaterThanOrEqual(4.5);
+});
+test("salvar livro mantém contraste de texto e contador nos dois temas",async({page,request})=>{
+  const admin=await request.post(`${process.env.QA_API_URL}/login`,{headers:{Origin:process.env.QA_BASE_URL},data:{email:"admin@biblioconnect.com",senha:"admin123"}});
+  await createBook({request,adminToken:await sessionCredentials(admin),overrides:{destaque:true}});
+  await loginUi(page,await createConfirmedClient({request}));
+  for(const path of ["/","/livros"]){
+    await page.goto(path);const heart=page.locator(".bc-pulse-heart").first();await expect(heart).toBeEnabled();
+    for(const dark of [false,true]){
+      await page.getByRole("switch",{name:"Tema escuro",exact:true}).setChecked(dark);
+      for(const saved of [false,true]){
+        if(await heart.getAttribute("aria-pressed")!==String(saved))await heart.click();
+        await expect(heart).toHaveAttribute("aria-pressed",String(saved));await expect(heart).toBeEnabled();
+        for(const hovered of [false,true]){
+          if(hovered)await heart.hover();else await page.mouse.move(0,0);
+          for(const label of await heart.locator("span").all())await expect.poll(()=>contrast(label)).toBeGreaterThanOrEqual(4.5);
+        }
+      }
+    }
+  }
 });
 
 test("resumos de vendas separam o título e o gênero de suas quantidades",async({page})=>{

@@ -1,8 +1,9 @@
 .bc-save-control{min-width:0}
-.bc-pulse-heart{display:inline-flex;gap:8px;align-items:center;min-height:44px;padding:8px 10px;border-radius:6px;color:var(--color-ink);font-size:13px;border:1px solid transparent;cursor:pointer;transition:background-color 150ms ease,border-color 150ms ease}
-.bc-pulse-heart[aria-pressed=true]{color:var(--color-accent-hover)}
+.bc-pulse-heart{display:inline-flex;gap:8px;align-items:center;min-height:44px;padding:8px 10px;border-radius:6px;color:var(--text);background:var(--soft);font-size:13px;border:1px solid var(--border);cursor:pointer;transition:background-color 150ms ease,border-color 150ms ease}
+.bc-pulse-heart[aria-pressed=true] svg{color:#984900}
+body.dark .bc-pulse-heart[aria-pressed=true] svg{color:#ffb865}
 .bc-pulse-heart:disabled{cursor:wait;opacity:.6}
-.bc-pulse-heart:focus-visible{outline:2px solid var(--color-ink);outline-offset:3px}
+.bc-pulse-heart:focus-visible{outline:2px solid var(--text);outline-offset:3px}
 .bc-save-error{display:block;max-width:24em;font-size:11px;line-height:1.5;color:var(--color-muted);padding:0 10px 4px}
-@media(hover:hover) and (pointer:fine){.bc-pulse-heart:hover{background:var(--color-soft);border-color:var(--color-stroke)}}
+@media(hover:hover) and (pointer:fine){.bc-pulse-heart:enabled:hover{background:var(--card);border-color:var(--text)}}
 @media(prefers-reduced-motion:reduce){.bc-pulse-heart{transition:none}}
