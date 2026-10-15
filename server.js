@@ -660,7 +660,7 @@ app.post("/usuarios", async (req, res) => {
         usuarioCriado,
         tokenConfirmacaoEmail
       );
-    } catch (emailError) {
+    } catch {
       console.error("Falha no envio de confirmação.");
 
       return res.status(201).json({
@@ -668,7 +668,7 @@ app.post("/usuarios", async (req, res) => {
           "Usuário cadastrado, mas o email de confirmação não foi enviado.",
         usuario: usuarioCriado,
         emailEnviado: false,
-        avisoEmail: descreverErroEmail(emailError),
+        avisoEmail: "O envio da confirmação está temporariamente indisponível. Tente reenviar em alguns minutos.",
       });
     }
 

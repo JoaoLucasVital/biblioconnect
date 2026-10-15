@@ -197,7 +197,7 @@ function Register() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (loading) return;
+    if (loading || emailCadastroPendente) return;
 
     setErro("");
     setSucesso("");
@@ -228,13 +228,11 @@ function Register() {
       };
 
       const resultado = await register(dadosCadastro);
+      setEmailCadastroPendente(dadosCadastro.email);
 
       if (resultado.emailEnviado === false) {
-        setEmailCadastroPendente(dadosCadastro.email);
         setErro(
-          `Sua conta foi criada, mas o email de confirmação não pôde ser enviado. ${
-            resultado.avisoEmail || "Confira a configuração de email do servidor."
-          }`
+          "Sua conta foi criada. Não conseguimos enviar a confirmação agora. Tente reenviar em alguns minutos."
         );
         return;
       }
@@ -254,7 +252,7 @@ function Register() {
   }
 
   async function handleReenviarConfirmacao() {
-    if (!emailCadastroPendente) return;
+    if (!emailCadastroPendente || reenviandoEmail) return;
 
     setErro("");
     setSucesso("");
@@ -265,7 +263,6 @@ function Register() {
       setSucesso(resultado.mensagem || "Email de confirmação reenviado com sucesso.");
     } catch (error) {
       setErro(
-        error.response?.data?.detalhe ||
           error.response?.data?.erro ||
           "Não foi possível reenviar o email de confirmação."
       );
@@ -302,6 +299,7 @@ function Register() {
         </div>
 
         <form onSubmit={handleSubmit} className="grid gap-5">
+          <fieldset disabled={Boolean(emailCadastroPendente)} className="contents">
           <div  className="mb-8 grid gap-5 border-t border-stroke pt-6">
             <h2  className="font-display text-2xl leading-snug">Dados pessoais</h2>
 
@@ -368,6 +366,7 @@ function Register() {
             <div className="grid gap-2"><Field label={"Ponto de referência"}><input type="text" name="pontoReferencia" placeholder="Ex: próximo à praça, mercado, escola..." value={form.pontoReferencia} onChange={handleChange}/></Field></div>
           </div>
 
+          </fieldset>
           {erro && <StatusMessage type={"error"}>{erro}</StatusMessage>}
           {sucesso && <StatusMessage type={"info"}>{sucesso}</StatusMessage>}
 
@@ -377,8 +376,8 @@ function Register() {
             </Button>
           )}
 
-          <Button disabled={cadastroBloqueado} type="submit" variant="primary" className="w-full">
-            {loading ? "Cadastrando..." : "Criar conta"}
+          <Button disabled={cadastroBloqueado || Boolean(emailCadastroPendente)} type="submit" variant="primary" className="w-full">
+            {loading ? "Cadastrando..." : emailCadastroPendente ? "Conta criada" : "Criar conta"}
           </Button>
         </form>
         <GoogleSignIn/>
