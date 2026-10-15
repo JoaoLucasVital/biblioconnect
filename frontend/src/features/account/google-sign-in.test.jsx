@@ -26,6 +26,6 @@ it('login Google usa botão oficial arredondado e compatível com tema escuro',a
   api.post.mockResolvedValue({data:{nonce:'test-nonce',challengeId:'test-challenge'}});
   renderWithRouter(<GoogleSignIn/>);
   await vi.waitFor(()=>expect(renderButton).toHaveBeenCalled());
-  expect(renderButton.mock.calls.at(-1)[1]).toMatchObject({shape:'pill',theme:'filled_black'});
+  expect(renderButton.mock.calls.at(-1)[1]).toMatchObject({shape:'pill',theme:'filled_black',size:'medium',logo_alignment:'left',text:'continue_with'});
   document.body.classList.remove('dark');delete window.google;
 });

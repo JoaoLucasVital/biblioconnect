@@ -23,7 +23,7 @@ export default function GoogleSignIn({lembrar=false,link=false}){
   const [state,setState]=useState("loading"),[error,setError]=useState(""),[attempt,setAttempt]=useState(0);
   const dark=useSyncExternalStore(subscribeTheme,getDarkTheme,getDarkTheme);
   useEffect(()=>{
-    let active=true;
+    let active=true,resizeObserver;
     async function prepare(){
       try{
         const {data:config}=await api.get("/auth/config");
@@ -42,12 +42,22 @@ export default function GoogleSignIn({lembrar=false,link=false}){
             acceptSession(data);navigate(link?"/perfil":"/");
           }catch(failure){if(active){setError(failure.response?.data?.erro||"Não foi possível continuar com Google.");setState("error");}}
         }});
-        container.current.replaceChildren();
-        gis.renderButton(container.current,{theme:dark?"filled_black":"outline",size:"large",type:"standard",text:"continue_with",shape:"pill",locale:"pt_BR",width:Math.min(400,container.current.parentElement.clientWidth||320)});
+        let previousWidth;
+        const parent=container.current.parentElement;
+        function renderButton(){
+          if(!active)return;
+          const width=Math.min(400,Math.floor((parent.clientWidth||320)/1.5));
+          if(width===previousWidth)return;
+          previousWidth=width;container.current.replaceChildren();
+          // Medium disables personalization; uniform native zoom gives a crisp 48px control.
+          gis.renderButton(container.current,{theme:dark?"filled_black":"outline",size:"medium",type:"standard",text:"continue_with",shape:"pill",logo_alignment:"left",locale:"pt_BR",width});
+        }
+        renderButton();
+        if(typeof ResizeObserver!=="undefined"){resizeObserver=new ResizeObserver(renderButton);resizeObserver.observe(parent);}
         setState("ready");
       }catch{if(active){setError("Não foi possível carregar o login Google.");setState("error");}}
     }
-    prepare();return()=>{active=false;};
+    prepare();return()=>{active=false;resizeObserver?.disconnect();};
   },[acceptSession,navigate,lembrar,link,attempt,dark]);
   return <div className="mt-6 grid gap-3">
     <div className="flex items-center gap-4 text-xs text-muted"><span className="h-px flex-1 bg-stroke"/>ou continue com<span className="h-px flex-1 bg-stroke"/></div>

@@ -1,4 +1,4 @@
-.bc-google-button{display:flex;justify-content:center;min-height:44px;max-width:100%;color-scheme:light}
+.bc-google-button{display:flex;justify-content:center;min-height:32px;max-width:100%;color-scheme:light;zoom:1.5}
 .bc-google-button.hidden{display:none}
 /* Keep the GIS iframe canvas transparent under the application's dark color scheme. */
-.bc-google-button iframe{color-scheme:light;border:0;background:transparent;border-radius:999px;max-width:100%}
+.bc-google-button iframe{color-scheme:light;border:0;background:transparent;border-radius:999px}

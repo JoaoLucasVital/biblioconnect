@@ -23,4 +23,6 @@ User-requested UI correction stage, following the live ORS integration. No schem
 
 ## Remaining overall-plan work
 
+Follow-up: user requested the generic Google button rather than the personalized avatar/email variant. Official GIS `size: medium` suppresses personalization; native uniform zoom renders a crisp 48px pill with left logo, centered Portuguese text and no custom authentication overlay. ResizeObserver redraws only when available width changes, without issuing another challenge. Regression test observed RED with large/personalized configuration, then 3/3 Google tests GREEN; lint/build/whitespace passed. Real signed-in Google browser showed the generic button; 360px responsive check had no horizontal overflow (358px document). Viewport reset; no new Google login or account mutation performed.
+
 Real email provider and Nodemailer security upgrade, Stripe payment integration, hosted OAuth origins, secure hosted admin, reconciliation of local data changes since the Neon snapshot, protected preview, final review and deployment remain pending. This UI stage does not claim those integrations are complete.
