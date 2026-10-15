@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createTestDatabase} from './helpers/database.js';
+import {resetForOwner} from '../scripts/lib/release-reset.mjs';
+
+test('release reset preserves verified Google owner and catalog, clears usage and is repeatable',async t=>{
+  const {prisma}=await createTestDatabase(t);
+  const owner=await prisma.usuario.create({data:{nome:'Dona da biblioteca',email:'owner@example.test',emailConfirmado:true,identidades:{create:{provider:'google',subject:'verified-owner'}}}});
+  const customer=await prisma.usuario.create({data:{nome:'Cliente',email:'customer@example.test'}});
+  await prisma.usuario.create({data:{nome:'Admin antigo',email:'old@example.test',role:'ADMIN'}});
+  const book=await prisma.livro.create({data:{titulo:'Livro preservado',autor:'Autora',redator:'Editora',ano:2020,categoria:'Romance',sinopse:'Descrição',precoCompra:30,precoAluguel:5,diasInclusos:7,precoDiaExtra:1,estoque:4}});
+  await prisma.pedido.create({data:{tipo:'compra',status:'pendente',valor:30,retiradaLimite:new Date(),usuarioId:customer.id,livroId:book.id}});
+  await prisma.favorito.create({data:{usuarioId:customer.id,livroId:book.id}});
+  const identity=await prisma.identidadeExterna.findFirst({where:{usuarioId:owner.id}});
+  const connection=client=>({query:async(sql,params=[])=>({rows:await client.$queryRawUnsafe(sql,...params)}),transaction:callback=>client.$transaction(tx=>callback(connection(tx)),{timeout:30000})});
+  const source={user:owner,identity};
+  await resetForOwner(connection(prisma),source);
+  assert.equal(await prisma.usuario.count(),1);assert.equal(await prisma.pedido.count(),0);assert.equal(await prisma.favorito.count(),0);
+  assert.deepEqual(await prisma.livro.findUnique({where:{id:book.id}}),book);
+  const saved=await prisma.usuario.findUnique({where:{id:owner.id}});assert.equal(saved.role,'ADMIN');assert.equal(saved.senha,null);assert.equal(saved.bloqueado,false);
+  assert.equal((await prisma.identidadeExterna.findFirst()).subject,'verified-owner');
+  await resetForOwner(connection(prisma),source);assert.equal(await prisma.usuario.count(),1);
+  await assert.rejects(resetForOwner(connection(prisma),{...source,identity:{...identity,provider:'other'}}),/Google/);
+  assert.equal(await prisma.usuario.count(),1);
+  const imported={user:{...owner,id:999,email:'imported@example.test'},identity:{...identity,usuarioId:999,subject:'imported-verified-google'}};
+  await resetForOwner(connection(prisma),imported);
+  assert.equal(await prisma.usuario.count(),1);
+  assert.equal((await prisma.usuario.findFirst()).email,'imported@example.test');
+  assert.equal((await prisma.identidadeExterna.findFirst()).subject,'imported-verified-google');
+  assert.equal(await prisma.livro.count(),1);
+});

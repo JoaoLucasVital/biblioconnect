@@ -24,13 +24,11 @@ it("dados zerados válidos conservam métricas e acesso ao financeiro",async()=>
   expect(within(metrics).getAllByText("0")).toHaveLength(3);
   expect(screen.getByRole("link",{name:"Ver financeiro"})).toHaveAttribute("href","/admin/financeiro");
 });
-it("reset continua exigindo confirmação textual exata antes de qualquer envio",async()=>{
-  renderWithRouter(<AdminDashboard/>);const user=userEvent.setup();
-  await user.click(await screen.findByRole("button",{name:"Abrir área restrita"}));
-  await user.type(screen.getByLabelText("Senha do administrador"),"senha-de-teste");
-  await user.type(screen.getByLabelText("Confirmação textual"),"RESETAr");
-  await user.click(screen.getByRole("button",{name:"Preparar reset"}));
-  expect(screen.getByRole("alert")).toHaveTextContent('Digite exatamente "RESETAR"');
+it("painel publicado não oferece reset de apresentação nem apaga dados",async()=>{
+  renderWithRouter(<AdminDashboard/>);
+  await screen.findByRole("region",{name:"Indicadores da biblioteca"});
+  expect(screen.queryByRole("button",{name:"Abrir área restrita"})).not.toBeInTheDocument();
+  expect(screen.queryByText(/Resetar dados para apresentação/)).not.toBeInTheDocument();
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   expect(api.post).not.toHaveBeenCalled();
 });

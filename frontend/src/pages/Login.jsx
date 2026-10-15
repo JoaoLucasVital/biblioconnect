@@ -105,12 +105,6 @@ function Login() {
         </form>
         <GoogleSignIn lembrar={lembrar}/>
 
-        {import.meta.env.DEV && <div  className="mt-7 grid gap-1 border-l-2 border-stroke pl-4 text-xs text-muted">
-          <strong>Acesso administrativo de teste</strong>
-          <span>admin@biblioconnect.com</span>
-          <span>admin123</span>
-        </div>}
-
         <p  className="mt-7 text-sm text-muted [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-4">
           Ainda não tem conta? <Link to="/cadastro">Criar cadastro</Link>
         </p>

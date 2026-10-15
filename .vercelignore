@@ -12,3 +12,9 @@
 **/coverage
 uploads
 frontend/dist
+.impeccable
+docs
+tests
+frontend/e2e
+frontend/src/**/*.test.*
+scripts/catalog

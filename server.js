@@ -281,6 +281,8 @@ function somenteAdmin(req, res, next) {
 // ADMIN PADRÃO
 // ======================
 async function criarAdminPadrao() {
+  // A configured owner must not cause a second, predictable admin to reappear.
+  if (await prisma.usuario.findFirst({where:{role:"ADMIN"},select:{id:true}})) return;
   const adminEmail = process.env.ADMIN_EMAIL || "admin@biblioconnect.com";
   const adminSenha =
     process.env.ADMIN_PASSWORD ||

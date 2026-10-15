@@ -37,14 +37,11 @@ function OrderSuccess() {
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState({ type: "", text: "" });
   const [pagando, setPagando] = useState(false);
-  const [simulacao, setSimulacao] = useState(false);
 
   const carregarPedido = useCallback(async () => {
     try {
       const response = await api.get(`/pedidos/${id}`);
       setPedido(response.data);
-      const integracoes = await api.get("/integracoes/status");
-      setSimulacao(Boolean(integracoes.data.simulacao));
     } catch (error) {
       setFeedback({ type: "error", text: error.response?.data?.erro || "Erro ao carregar pedido." });
     } finally {
@@ -78,16 +75,6 @@ function OrderSuccess() {
     }, 5000);
     return () => clearInterval(timer);
   }, [id, pedido]);
-
-  async function simularPagamento() {
-    if (pagando) return;
-    setPagando(true);
-    try {
-      await api.patch(`/pedidos/${id}/simular-pagamento`);
-      await carregarPedido();
-    } catch (error) { setFeedback({ type: "error", text: error.response?.data?.erro || "Erro na simulação" }); }
-    finally { setPagando(false); }
-  }
 
   if (loading) {
     return <main  className="py-10 sm:py-14"><div  className="mx-auto w-full max-w-7xl px-5 sm:px-8"><p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">Carregando pedido...</p></div></main>;
@@ -166,8 +153,6 @@ function OrderSuccess() {
               O BiblioConnect abre o checkout do Mercado Pago. Os meios disponíveis na sua conta do gateway podem incluir cartão e Pix.
               Dados sensíveis de cartão não passam pelo servidor da biblioteca.
             </p>
-
-            {simulacao && precisaPagamento && <Button disabled={pagando} onClick={simularPagamento} type="button" variant="secondary">Simular pagamento (demonstração)</Button>}
 
             {precisaPagamento ? (
               <Button onClick={iniciarPagamento} disabled={pagando} type="button" variant="primary">

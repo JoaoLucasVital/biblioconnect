@@ -16,7 +16,8 @@ it("pagamento continua pendente até resposta do servidor",async()=>{
   renderWithRouter(<Routes><Route path="/pedido-confirmado/:id" element={<OrderSuccess/>}/></Routes>,{route:"/pedido-confirmado/41"});
   expect((await screen.findAllByText("Pagamento pendente")).length).toBeGreaterThan(0);
   expect(screen.queryByText("Pagamento aprovado")).not.toBeInTheDocument();
-  expect(screen.getByRole("button",{name:"Simular pagamento (demonstração)"})).toBeVisible();
+  expect(screen.queryByRole("button",{name:/Simular pagamento/})).not.toBeInTheDocument();
+  expect(screen.getByRole("button",{name:"Pagar com cartão ou Pix"})).toBeVisible();
   expect(api.patch).not.toHaveBeenCalled();
 });
 it("pedido cancelado não oferece cobrança nem envia API",async()=>{
