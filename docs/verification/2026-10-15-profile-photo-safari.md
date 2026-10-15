@@ -13,3 +13,9 @@ Verificação:
 - A validação de fallback usa Chromium com codificação PNG forçada no worker. Não equivale a execução em um iPhone físico; o proprietário deve repetir a seleção da foto no aparelho após atualizar o site.
 
 A correção não exige migração, alteração de credenciais nem limpeza de dados.
+
+## Publicação
+
+Commit da correção: `51df862`. Deploy Vercel `dpl_tJGEc4SkdJ8G8QimQNnrpRtjaJM1`, promovido para https://biblioconnect-olive.vercel.app. Build remoto concluído. A conferência HTTP no domínio público confirmou o novo entrypoint e SHA-256 idêntico ao build local para o worker `photo-processing.worker-ChR133RI.js` e o editor `ProfilePhotoEditor-IRE_G3na.js`; catálogo com 131 livros, login Google habilitado com o mesmo cliente e foto privada retornando 401 sem sessão.
+
+No navegador interno, o perfil autenticado e o editor atualizado carregaram no domínio público. Nenhuma foto real foi substituída durante a validação de produção. Evidência privada em `.superpowers/profile-photo-release.png` e relatório HTTP em `.superpowers/photo-release-http-result.json`.
