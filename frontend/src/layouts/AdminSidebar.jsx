@@ -51,12 +51,12 @@ export default function AdminSidebar({onNavigate,compact=false,onToggleCompact})
   const expanded=selection?.path===pathname?selection.group:activeGroup;
   return <nav aria-label="Administração" className={`bc-admin-nav${compact?' is-compact':''}`}>
     <div className="bc-admin-nav-skin" aria-hidden="true"/>
+    <div className="bc-admin-nav-spine" aria-hidden="true"/>
     <div className="bc-admin-nav-top">
-      <span className="bc-admin-nav-emblem" aria-hidden="true"><BookOpen size={21} strokeWidth={1.6}/></span>
-      <span className="bc-admin-nav-identity"><ShinyText>Biblioteca</ShinyText><small>ESPAÇO DE GESTÃO</small></span>
+      <span className="bc-admin-nav-emblem" aria-hidden="true"><img src="/brandmark.svg" alt=""/></span>
+      <span className="sr-only">Gestão da biblioteca</span>
       {onToggleCompact&&<button type="button" className="bc-admin-collapse" aria-label={compact?'Expandir menu':'Recolher menu'} aria-expanded={!compact} onClick={onToggleCompact}><ChevronLeft size={17} aria-hidden="true"/></button>}
     </div>
-    <p className="bc-admin-nav-caption">SEU ESPAÇO DE TRABALHO</p>
     <div className="bc-admin-nav-body">
       <SidebarLink item={{label:'Painel',to:'/admin'}} compact={compact} onNavigate={onNavigate}/>
       <div className="bc-admin-nav-divider"/>
