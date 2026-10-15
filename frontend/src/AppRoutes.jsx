@@ -1,10 +1,10 @@
-import { Suspense } from "react";
+import { lazy,Suspense } from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import AdminRoute from "./components/AdminRoute.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import PublicLayout from "./layouts/PublicLayout.jsx";
 import ClientLayout from "./layouts/ClientLayout.jsx";
-import AdminLayout from "./layouts/AdminLayout.jsx";
+const AdminLayout=lazy(()=>import("./layouts/AdminLayout.jsx"));
 import { publicRoutes, clientRoutes, adminRoutes } from "./routes.js";
 import BookLoader from "./components/ui/BookLoader.jsx";
 import {AnimatedHeading} from './components/motion/TextAnimations.jsx';
