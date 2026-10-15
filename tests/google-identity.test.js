@@ -1,10 +1,23 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import express from "express";
+import {generateKeyPairSync} from 'node:crypto';
+import jwt from 'jsonwebtoken';
+import {OAuth2Client} from 'google-auth-library';
 import {createTestDatabase} from "./helpers/database.js";
 let google,routes;
 try{google=await import("../src/services/googleIdentityService.js");routes=await import("../src/routes/googleAuthRoutes.js");}catch(error){if(error.code!=="ERR_MODULE_NOT_FOUND")throw error;}
 const claims={sub:"google-subject",email:"new@gmail.com",email_verified:true,name:"Leitor Google",iss:"https://accounts.google.com",aud:"client-id",nonce:"challenge",exp:Math.floor(Date.now()/1000)+300};
+test('official SDK validates RSA signatures and rejects tampered payloads without calling Google',async()=>{
+  const {privateKey,publicKey}=generateKeyPairSync('rsa',{modulusLength:2048});
+  const client=new OAuth2Client();
+  client.certificateCache={'qa-key':publicKey.export({type:'spki',format:'pem'})};client.certificateExpiry=new Date(Date.now()+60000);
+  const options={clientId:'client-id',nonce:'challenge',client};
+  const signed=jwt.sign({...claims,iat:Math.floor(Date.now()/1000)},privateKey,{algorithm:'RS256',keyid:'qa-key'});
+  assert.equal((await google.verifyGoogleCredential(signed,options)).sub,claims.sub);
+  const parts=signed.split('.');parts[1]=Buffer.from(JSON.stringify({...claims,sub:'attacker'})).toString('base64url');
+  await assert.rejects(google.verifyGoogleCredential(parts.join('.'),options),/inválid/i);
+});
 test("verificação oficial rejeita assinatura, issuer, audience, expiração e nonce inválidos",async()=>{
   assert.equal(typeof google?.verifyGoogleCredential,"function");
   const options={clientId:"client-id",nonce:"challenge",client:{verifyIdToken:async()=>({getPayload:()=>claims})}};
@@ -31,11 +44,12 @@ test("Google cria CLIENTE, preserva nome editado, não vincula por email e respe
 test("desafio Google exige cookie, expira e só pode ser consumido uma vez",async t=>{
   assert.equal(typeof routes?.createGoogleAuthRoutes,"function");const {prisma}=await createTestDatabase(t);
   const auth={requireOrigin:(req,res,next)=>next(),authenticate:(req,res,next)=>next(),rateLimit:()=>((req,res,next)=>next()),signIn:(res,{usuarioId})=>res.json({usuarioId})};
-  const app=express();app.use(express.json());app.use(routes.createGoogleAuthRoutes({prisma,auth,clientId:"client-id",enabled:true,verify:async(_credential,{nonce})=>({...claims,nonce})}));
+  const app=express();app.use(express.json());app.use('/api',routes.createGoogleAuthRoutes({prisma,auth,clientId:"client-id",enabled:true,verify:async(_credential,{nonce})=>({...claims,nonce})}));
   const server=app.listen(0,"127.0.0.1");await new Promise(resolve=>server.once("listening",resolve));t.after(()=>new Promise(resolve=>server.close(resolve)));
-  const url=`http://127.0.0.1:${server.address().port}`;
+  const url=`http://127.0.0.1:${server.address().port}/api`;
   const challenge=await fetch(url+"/auth/google/challenge",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
   const data=await challenge.json(),cookie=challenge.headers.get("set-cookie").split(";")[0];
+  assert.match(challenge.headers.get('set-cookie'),/Path=\/api\/auth\/google;/,'Browser must send the challenge cookie back to the hosted /api route');
   const send=(headers={Cookie:cookie})=>fetch(url+"/auth/google",{method:"POST",headers:{"Content-Type":"application/json",...headers},body:JSON.stringify({credential:"signed",challengeId:data.challengeId,nonce:data.nonce})});
   assert.equal((await send({})).status,401);assert.equal((await send()).status,200);assert.equal((await send()).status,401);
   const stored=await prisma.desafioGoogle.findUnique({where:{id:data.challengeId}});assert.notEqual(stored.nonceHash,data.nonce);assert.ok(stored.consumedAt);
