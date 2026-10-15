@@ -15,16 +15,18 @@ test('painel com dados cabe durante todo o recolhimento e redimensionamento',asy
     await page.setViewportSize({width,height:900});
     for(const label of ['Recolher menu','Expandir menu']){
       await page.evaluate(()=>{
-        window.sidebarScrollAudit={errors:[],done:false};const until=performance.now()+800;
+        window.sidebarScrollAudit={errors:[],widths:[],done:false};const until=performance.now()+800;
         const sample=()=>{
           const viewport=document.documentElement.clientWidth,actual=document.documentElement.scrollWidth;
           if(actual>viewport+1)window.sidebarScrollAudit.errors.push({viewport,actual});
+          window.sidebarScrollAudit.widths.push(document.querySelector('.bc-admin-rail .bc-admin-nav').getBoundingClientRect().width);
           if(performance.now()<until)requestAnimationFrame(sample);else window.sidebarScrollAudit.done=true;
         };requestAnimationFrame(sample);
       });
       await nav.getByRole('button',{name:label,exact:true}).click();
       await expect.poll(()=>page.evaluate(()=>window.sidebarScrollAudit.done)).toBe(true);
       expect(await page.evaluate(()=>window.sidebarScrollAudit.errors.slice(0,4)),`${label} a ${width}px`).toEqual([]);
+      expect(await page.evaluate(()=>window.sidebarScrollAudit.widths.some(value=>value>65&&value<195)),`${label} deve atravessar larguras intermediárias`).toBe(true);
     }
   }
   for(const width of [768,360]){

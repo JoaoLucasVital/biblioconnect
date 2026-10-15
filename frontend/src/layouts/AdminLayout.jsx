@@ -11,22 +11,23 @@ import "./admin-navigation.css";
 export default function AdminLayout() {
   const [open,setOpen] = useState(false);
   const [compact,setCompact]=useState(false);
-  const rail=useRef(null),previous=useRef(null);
+  const workspace=useRef(null),rail=useRef(null),previous=useRef(null);
   useLayoutEffect(()=>{
     const skin=rail.current.querySelector('.bc-admin-nav-skin');
     const before=previous.current;previous.current=null;
     if(!before||window.matchMedia('(prefers-reduced-motion: reduce)').matches||!window.matchMedia('(min-width:1024px)').matches)return;
     const context=gsap.context(()=>{
-      gsap.fromTo(skin,{scaleX:compact?1.08:.96},{scaleX:1,duration:.5,ease:'elastic.out(1,.6)',transformOrigin:'left center',clearProps:'transform'});
+      gsap.fromTo(workspace.current,{'--admin-rail-size':`${before}px`},{'--admin-rail-size':`${compact?80:220}px`,duration:.32,ease:'power3.inOut',clearProps:'--admin-rail-size'});
+      gsap.fromTo(skin,{scaleX:compact?1.025:.985},{scaleX:1,duration:.5,ease:'elastic.out(1,.6)',transformOrigin:'left center',clearProps:'transform'});
       if(!compact)gsap.fromTo(rail.current.querySelectorAll('.bc-admin-nav-label,.bc-admin-nav-identity'),{opacity:0,x:-6},{opacity:1,x:0,duration:.18,ease:'power3.out',clearProps:'opacity,transform'});
     });
     return()=>context.revert();
   },[compact]);
   const toggleCompact=()=>{
-    previous.current=true;
+    previous.current=parseFloat(getComputedStyle(workspace.current).gridTemplateColumns);
     setCompact(value=>!value);
   };
-  return <><Navbar/><div className={`bc-admin-workspace mx-auto grid max-w-[1600px]${compact?' is-compact':''}`}>
+  return <><Navbar/><div ref={workspace} className={`bc-admin-workspace mx-auto grid max-w-[1600px]${compact?' is-compact':''}`}>
     <aside ref={rail} className="bc-admin-rail hidden lg:block"><div className="sticky top-3"><AdminSidebar compact={compact} onToggleCompact={toggleCompact}/></div></aside>
     <div id="conteudo" tabIndex={-1} className="bc-admin-content min-w-0">
       <div className="border-b border-stroke px-5 py-2 lg:hidden"><Button variant="ghost" onClick={()=>setOpen(true)} aria-expanded={open} aria-controls="menu-admin"><PanelLeft size={18} aria-hidden="true"/>Menu administrativo</Button></div>
