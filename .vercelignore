@@ -1,0 +1,14 @@
+.git
+.worktrees
+.local
+.emails
+.superpowers
+.codegraph
+.env
+.env.*
+**/node_modules
+**/test-results
+**/playwright-report
+**/coverage
+uploads
+frontend/dist

@@ -36,6 +36,7 @@ export function buildQaEnv({ apiPort, frontendPort, databasePort, emailDir, jwtS
     EMAIL_PROVIDER: "file",
     EMAIL_OUTPUT_DIR: safeQaPath(emailDir),
     AVATAR_STORAGE_DIR: safeQaPath(path.join(path.dirname(safeQaPath(emailDir)),"avatars")),
+    BOOK_UPLOAD_DIR:safeQaPath(path.join(path.dirname(safeQaPath(emailDir)),"book-uploads")),
     EMAIL_USER: "", EMAIL_PASS: "", EMAIL_HOST: "",
     MERCADO_PAGO_ACCESS_TOKEN: "", MERCADO_PAGO_WEBHOOK_SECRET: "",
     GOOGLE_MAPS_API_KEY: "", GOOGLE_BOOKS_API_KEY: "",
@@ -43,7 +44,7 @@ export function buildQaEnv({ apiPort, frontendPort, databasePort, emailDir, jwtS
     STRIPE_SECRET_KEY: "", STRIPE_PUBLISHABLE_KEY: "", STRIPE_WEBHOOK_SECRET: "",
     RESEND_API_KEY: "", BLOB_READ_WRITE_TOKEN: "", BLOB_STORE_ID: "", VERCEL_OIDC_TOKEN: "",
     MEDIA_STORAGE: "local", STORE_ADDRESS: "", DELIVERY_BASE_FEE: "5.00", DELIVERY_PRICE_PER_KM: "2.50",
-    AUTH_SECRET: jwtSecret, CRON_SECRET: jwtSecret,
+    AUTH_SECRET: jwtSecret, CRON_SECRET: crypto.createHash("sha256").update(`cron:${jwtSecret}`).digest("hex"),
     ALLOW_PAYMENT_SIMULATION: "true",
     DISABLE_DELAY_EMAIL_JOB: "true",
   };

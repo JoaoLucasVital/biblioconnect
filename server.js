@@ -1,4 +1,6 @@
 import {createProfileRoutes} from "./src/routes/profileRoutes.js";
+import {createCronRoutes} from "./src/routes/cronRoutes.js";
+import {createRuntimeJobs} from "./src/services/runtimeJobs.js";
 import {orderIdempotency} from "./src/middleware/orderIdempotency.js";
 import {createFavoritesRoutes} from "./src/routes/favoritesRoutes.js";
 import {issueAccountToken,consumeAccountToken} from "./src/services/accountTokenService.js";
@@ -104,16 +106,15 @@ app.use(createGoogleAuthRoutes({prisma,auth,sendConfirmation:async usuario => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uploadDir = path.join(__dirname, "uploads", "livros");
+const uploadDir = process.env.BOOK_UPLOAD_DIR?path.resolve(process.env.BOOK_UPLOAD_DIR):path.join(__dirname, "uploads", "livros");
 
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
+app.use("/uploads/livros", express.static(uploadDir));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const storageLivros = multer.diskStorage({
   destination: (req, file, cb) => {
+    if(process.env.VERCEL || process.env.NODE_ENV==="production")return cb(Object.assign(new Error("Configure o armazenamento de capas antes de importar imagens."),{status:503}));
+    fs.mkdirSync(uploadDir,{recursive:true});
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
@@ -2812,59 +2813,8 @@ app.post("/me/pedidos/:id/estender-aluguel", autenticar, async (req, res) => {
 // ============================================================
 // NOTIFICAÇÕES AUTOMÁTICAS DE ATRASO
 // ============================================================
-async function notificarAtrasosPendentes() {
-  try {
-    const limite = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const pedidos = await prisma.pedido.findMany({
-      where: {
-        status: "pendente",
-        OR: [
-          { tipo: "aluguel", devolucaoPrevista: { lt: new Date() } },
-          { tipo: "reserva", retiradaLimite: { lt: new Date() } },
-        ],
-        AND: [
-          {
-            OR: [
-              { ultimaNotificacaoAtraso: null },
-              { ultimaNotificacaoAtraso: { lt: limite } },
-            ],
-          },
-        ],
-      },
-      include: { usuario: true, livro: true },
-    });
-
-    for (const pedido of pedidos) {
-      const multa = calcularMultaPedido(pedido);
-      await enviarNotificacao({
-        to: pedido.usuario.email,
-        subject: "Pendência em atraso - BiblioConnect",
-        titulo: "Existe uma pendência no seu pedido",
-        mensagem:
-          pedido.tipo === "aluguel"
-            ? "O prazo de devolução do aluguel venceu."
-            : "O prazo da sua reserva venceu.",
-        detalhes: [
-          { label: "Livro", valor: pedido.livro.titulo },
-          { label: "Multa atual", valor: formatarMoedaEmail(multa) },
-        ],
-      });
-      await prisma.pedido.update({
-        where: { id: pedido.id },
-        data: { ultimaNotificacaoAtraso: new Date() },
-      });
-    }
-  } catch (error) {
-    console.error("Erro na rotina de notificações de atraso:", error.message);
-  }
-}
-
-// Executa periodicamente enquanto o backend estiver online. Em produção, um cron externo
-// também pode chamar essa rotina para ter maior garantia de execução.
-if (process.env.DISABLE_DELAY_EMAIL_JOB !== "true") {
-  setTimeout(notificarAtrasosPendentes, 30_000).unref();
-  setInterval(notificarAtrasosPendentes, 6 * 60 * 60 * 1000).unref();
-}
+const runtimeJobs=createRuntimeJobs({prisma,enviarNotificacao,calcularMultaPedido});
+app.use(createCronRoutes({run:runtimeJobs.run}));
 
 // ======================
 // ADMIN - RESETAR SISTEMA
@@ -2987,11 +2937,14 @@ app.use((error, req, res, next) => {
   res.status(status).json({ erro: status < 500 ? (error.code === "LIMIT_FILE_SIZE" ? "A imagem deve ter no máximo 5 MB" : error.message) : "Erro interno do servidor" });
 });
 
+export default app;
+export async function startLocalServer(){
 const PORT = process.env.PORT || 3000;
 
 await prisma.$connect();
+const stopJobs=process.env.DISABLE_DELAY_EMAIL_JOB!=="true"?runtimeJobs.startLocal():()=>{};
 await criarAdminPadrao();
-const server = app.listen(PORT, "0.0.0.0", () => {
+const server = app.listen(PORT, process.env.HOST || "0.0.0.0", () => {
   console.log(`Servidor rodando na porta ${PORT} 🚀`);
 
   // O diagnóstico no startup evita que uma configuração SMTP inválida passe
@@ -3011,6 +2964,7 @@ const server = app.listen(PORT, "0.0.0.0", () => {
 
 async function encerrarServidor(signal) {
   console.log(`\n${signal} recebido. Encerrando BiblioConnect...`);
+  stopJobs();
   server.close(async () => {
     await prisma.$disconnect();
     process.exit(0);
@@ -3019,3 +2973,8 @@ async function encerrarServidor(signal) {
 
 process.on("SIGINT", () => encerrarServidor("SIGINT"));
 process.on("SIGTERM", () => encerrarServidor("SIGTERM"));
+if(process.send)process.on("message",message=>{if(message==="shutdown")encerrarServidor("parent");});
+
+return server;
+}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await startLocalServer();
