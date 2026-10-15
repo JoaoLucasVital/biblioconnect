@@ -47,9 +47,7 @@ export default function AtlasExplorer({livros=[],loading=false,error="",onRetry,
         </div>
         <AtlasBookPanel livro={selected} embedded={embedded} onConsultBook={onConsultBook}/>
       </div>
-      {model.books.length>0 && <div className="atlas-cover-strip" aria-label="Percorrer leituras">{model.books.slice(0,8).map((book,i)=><button type="button" key={book.id} onClick={()=>setSelectedId(book.id)} aria-pressed={selected?.id===book.id} aria-label={`Destacar ${book.titulo}`}>
-        <span aria-hidden="true" className="atlas-cover-index">{String(i+1).padStart(2,"0")}</span><BookCover livro={book} className="w-10 shrink-0"/><span>{book.titulo}<small>{book.autor}</small></span>
-      </button>)}</div>}
+
     </>}
   </section>;
 }

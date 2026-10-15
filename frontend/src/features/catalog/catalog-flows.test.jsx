@@ -1,6 +1,7 @@
-import { screen, within, fireEvent, act } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, it, expect, vi } from "vitest";
+import {useLocation} from "react-router-dom";
 import Books from "../../pages/Books.jsx";
 import api from "../../api/api.js";
 import { AuthContext } from "../../context/auth.js";
@@ -8,8 +9,9 @@ import { renderWithRouter } from "../../test/renderWithRouter.jsx";
 import { livroDisponivel, livroDoado, livroSemEstoque } from "../../test/fixtures.js";
 vi.mock("../../api/api.js",()=>({default:{get:vi.fn(),post:vi.fn()}}));
 beforeEach(()=>{ api.get.mockResolvedValue({data:[livroDisponivel]}); api.post.mockReset(); });
+function LocationProbe(){return <output aria-label="Caminho atual">{useLocation().pathname}</output>;}
 function mount(authenticated = true) {
-  renderWithRouter(<AuthContext.Provider value={{isAuthenticated:authenticated,usuario:{id:1,endereco:"Rua da leitura, 10"}}}><Books/></AuthContext.Provider>);
+  renderWithRouter(<AuthContext.Provider value={{isAuthenticated:authenticated,usuario:{id:1,endereco:"Rua da leitura, 10"}}}><Books/><LocationProbe/></AuthContext.Provider>);
 }
 it("busca associada e limpar recuperam os livros", async () => {
   mount(); const user=userEvent.setup();
@@ -30,53 +32,13 @@ it("livro doado mantém reserva bloqueada", async () => {
   await within(await screen.findByRole("region",{name:"Catálogo de livros"})).findByRole("heading",{name:livroDisponivel.titulo});
   expect(screen.getByRole("button",{name:"Reservar",exact:true})).toBeDisabled();
 });
-it("compra com entrega exige cotação e preserva endereço após erro", async () => {
-  api.post.mockRejectedValue({response:{data:{erro:"Cotação indisponível"}}});
-  mount(); const user=userEvent.setup();
-  await user.click(await screen.findByRole("button",{name:"Comprar",exact:true}));
-  const dialog=screen.getByRole("dialog",{name:"Confirmar compra"});
-  await user.click(within(dialog).getByRole("radio",{name:/Receber em casa/}));
-  expect(within(dialog).getByRole("button",{name:"Confirmar compra"})).toBeDisabled();
-  await user.click(within(dialog).getByRole("button",{name:"Calcular frete"}));
-  expect(await within(dialog).findByText("Cotação indisponível")).toBeVisible();
-  expect(within(dialog).getByLabelText("Endereço de entrega")).toHaveValue("Rua da leitura, 10");
-  expect(api.post).toHaveBeenCalledExactlyOnceWith("/entrega/cotacao",{endereco:"Rua da leitura, 10"});
-});
-it("compra retirada mantém payload e bloqueia duplicação pendente", async () => {
-  api.post.mockImplementation(()=>new Promise(()=>{})); mount(); const user=userEvent.setup();
-  await user.click(await screen.findByRole("button",{name:"Comprar",exact:true}));
-  const dialog=screen.getByRole("dialog",{name:"Confirmar compra"});
-  const confirm=within(dialog).getByRole("button",{name:"Confirmar compra"});
-  fireEvent.pointerDown(confirm,{button:0});
-  await act(async()=>{await new Promise(resolve=>setTimeout(resolve,1200));});
-  await user.dblClick(confirm);
-  expect(api.post).toHaveBeenCalledExactlyOnceWith("/comprar",{livroId:7,modalidadeEntrega:"retirada",enderecoEntrega:undefined});
-  expect(confirm).toBeDisabled();
-  expect(within(dialog).getByRole("button",{name:"Fechar diálogo"})).toBeDisabled();
-});
-it("mudar o endereço invalida a prévia e exige recalcular o frete",async()=>{
-  api.post.mockResolvedValue({data:{distanciaKm:2.5,valorEntrega:11.25}});mount();const user=userEvent.setup();
-  await user.click(await screen.findByRole("button",{name:"Comprar",exact:true}));
-  const dialog=screen.getByRole("dialog",{name:"Confirmar compra"});
-  await user.click(within(dialog).getByRole("radio",{name:/Receber em casa/}));
-  await user.click(within(dialog).getByRole("button",{name:"Calcular frete"}));
-  expect(await within(dialog).findByText("Distância: 2.5 km")).toBeVisible();
-  expect(within(dialog).getByRole("button",{name:"Confirmar compra"})).toBeEnabled();
-  await user.type(within(dialog).getByLabelText("Endereço de entrega")," novo");
-  expect(screen.queryByText("Distância: 2.5 km")).not.toBeInTheDocument();
-  expect(within(dialog).getByRole("button",{name:"Confirmar compra"})).toBeDisabled();
-});
-it("cotação identifica o local encontrado, aproximação e atribuição do provedor",async()=>{
-  api.post.mockResolvedValue({data:{distanciaKm:2.5,valorEntrega:11.25,provedor:"openrouteservice",destinoEncontrado:"Rua da Leitura, Maceió, Brasil",localizacaoAproximada:true}});
-  mount();const user=userEvent.setup();
-  await user.click(await screen.findByRole("button",{name:"Comprar",exact:true}));
-  const dialog=screen.getByRole("dialog",{name:"Confirmar compra"});
-  await user.click(within(dialog).getByRole("radio",{name:/Receber em casa/}));
-  await user.click(within(dialog).getByRole("button",{name:"Calcular frete"}));
-  expect(await within(dialog).findByText(/Rua da Leitura, Maceió, Brasil/)).toBeVisible();
-  expect(within(dialog).getByText(/Estimativa até a rua/)).toBeVisible();
-  expect(within(dialog).getByRole("link",{name:"openrouteservice by HeiGIT"})).toHaveAttribute("href","https://openrouteservice.org/");
-  expect(within(dialog).getByRole("link",{name:"OpenStreetMap"})).toHaveAttribute("href","https://www.openstreetmap.org/copyright");
+it("catálogo mostra prévia e encaminha ao checkout sem criar compra",async()=>{
+  mount();const user=userEvent.setup();await user.click(await screen.findByRole("button",{name:"Comprar",exact:true}));
+  const dialog=screen.getByRole("dialog",{name:"Sua próxima leitura"});
+  expect(within(dialog).queryByRole("button",{name:"Calcular frete"})).not.toBeInTheDocument();
+  expect(within(dialog).queryByRole("button",{name:"Confirmar compra",exact:true})).not.toBeInTheDocument();
+  await user.click(within(dialog).getByRole("button",{name:"Continuar para checkout"}));
+  expect(screen.getByLabelText("Caminho atual")).toHaveTextContent("/checkout/7");expect(api.post).not.toHaveBeenCalled();
 });
 it("aluguel mostra cálculo e preserva dias no erro", async () => {
   api.post.mockRejectedValue({response:{data:{erro:"Aluguel indisponível"}}}); mount(); const user=userEvent.setup();

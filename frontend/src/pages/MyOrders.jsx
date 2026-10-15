@@ -1,9 +1,9 @@
 import StatusMessage from "../components/ui/StatusMessage.jsx";
-import StatusBadge from "../components/ui/StatusBadge.jsx";
+import OrderCard from "../features/orders/OrderCard.jsx";
 import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
 import Dialog from "../components/ui/Dialog.jsx";
-import { BookOpen, ShoppingBag, Bookmark, Library } from "lucide-react";
+
 import useInitialLoad from "../components/useInitialLoad.js";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
@@ -30,35 +30,6 @@ function traduzirTipo(tipo) {
   };
 
   return tipos[tipo] || tipo;
-}
-
-function traduzirStatus(status) {
-  const statusMap = {
-    pendente: "Pendente",
-    concluido: "Concluído",
-    devolvido: "Devolvido",
-    cancelado: "Cancelado",
-  };
-
-  return statusMap[status] || status;
-}
-
-function traduzirPagamento(status) {
-  const statusMap = {
-    pendente: "Pagamento pendente",
-    pago: "Pagamento aprovado",
-    cancelado: "Pagamento cancelado",
-    estornado: "Pagamento estornado",
-  };
-
-  return statusMap[status] || status || "Pagamento pendente";
-}
-
-function getPedidoIcon(tipo) {
-  if (tipo === "compra") return <ShoppingBag size={22} aria-hidden="true"/>;
-  if (tipo === "reserva") return <Bookmark size={22} aria-hidden="true"/>;
-  if (tipo === "aluguel") return <BookOpen size={22} aria-hidden="true"/>;
-  return <Library size={22} aria-hidden="true"/>;
 }
 
 function MyOrders() {
@@ -161,7 +132,7 @@ function MyOrders() {
     },
     {
       titulo: "Compras",
-      descricao: "Livros comprados e aguardando retirada.",
+      descricao: "Livros comprados, com entrega ou retirada.",
       pedidos: compras,
     },
     {
@@ -184,16 +155,17 @@ function MyOrders() {
   return (
     <main  className="py-10 sm:py-14">
       <div  className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-        <h1  className="font-display text-4xl leading-tight sm:text-5xl">Meus Pedidos</h1>
+        <header className="mb-8 flex flex-wrap items-end justify-between gap-5 border-b border-stroke pb-7"><div><p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">ÁREA DO LEITOR / PEDIDOS</p><h1 className="font-display text-4xl leading-tight sm:text-5xl">Meus Pedidos</h1></div><Link to="/livros#catalogo" className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4">Encontrar minha próxima leitura ↗</Link></header>
 
         <p  className="my-3 max-w-2xl text-sm leading-relaxed text-muted">
-          Acompanhe separadamente suas reservas, compras e aluguéis.
+          Compras, reservas e aluguéis, com os próximos passos de cada leitura.
         </p>
 
         {feedback.text && (
           <StatusMessage type={feedback.type}>{feedback.text}</StatusMessage>
         )}
 
+        <nav aria-label="Categorias de pedidos" className="my-8 grid grid-cols-3 divide-x divide-stroke overflow-hidden rounded-lg border border-stroke bg-soft">{grupos.map(grupo=><a key={grupo.titulo} href={grupo.pedidos.length ? `#pedidos-${grupo.titulo}` : undefined} aria-disabled={!grupo.pedidos.length || undefined} className="min-w-0 px-4 py-5 transition-colors hover:bg-surface sm:px-6"><span className="block text-[10px] uppercase tracking-[0.1em] text-muted sm:text-xs">{grupo.titulo}</span><strong className="mt-2 block font-display text-3xl sm:text-4xl">{grupo.pedidos.length}</strong></a>)}</nav>
         {pedidos.length === 0 ? (
           <div  className="my-8 border-y border-stroke py-12 text-muted [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:text-ink">
             <h2  className="font-display text-2xl leading-snug">Nenhum pedido encontrado</h2>
@@ -204,8 +176,8 @@ function MyOrders() {
           </div>
         ) : (
           <div  className="mt-10 grid gap-10">
-            {grupos.map((grupo) => (
-              <section key={grupo.titulo} className="min-w-0">
+            {grupos.filter(grupo=>grupo.pedidos.length>0).map((grupo) => (
+              <section key={grupo.titulo} className="min-w-0 scroll-mt-28" id={`pedidos-${grupo.titulo}`}>
                 <div  className="mb-5 flex items-center justify-between gap-3 [&_h2]:font-display [&_h2]:text-2xl [&_p]:text-sm [&_p]:text-muted">
                   <div>
                     <h2  className="font-display text-2xl leading-snug">{grupo.titulo}</h2>
@@ -221,138 +193,7 @@ function MyOrders() {
                   </div>
                 ) : (
                   <div  className="grid gap-6">
-                    {grupo.pedidos.map((pedido) => (
-                      <div key={pedido.id} className="min-w-0 border border-stroke bg-surface p-5 sm:p-7">
-                        <div  className="flex min-w-0 items-start gap-4">
-                          <div  className="shrink-0 text-2xl">
-                            {getPedidoIcon(pedido.tipo)}
-                          </div>
-
-                          <div>
-                            <div  className="flex flex-wrap items-center gap-2 [&_h2]:w-full [&_h2]:wrap-anywhere [&_h2]:font-display [&_h2]:text-2xl">
-                              <h2  className="font-display text-2xl leading-snug">
-                                {pedido.livro?.titulo ||
-                                  "Livro não encontrado"}
-                              </h2>
-
-                              <StatusBadge>
-                                {traduzirTipo(pedido.tipo)}
-                              </StatusBadge>
-
-                              <StatusBadge>
-                                {traduzirStatus(pedido.status)}
-                              </StatusBadge>
-
-                              <StatusBadge>
-                                {traduzirPagamento(
-                                  pedido.statusPagamento || "pendente"
-                                )}
-                              </StatusBadge>
-                            </div>
-
-                            <p>
-                              {pedido.livro?.autor || "Autor não informado"}
-                            </p>
-
-                            <small>
-                              Data do pedido: {formatarData(pedido.createdAt)}
-                            </small>
-                          </div>
-                        </div>
-
-                        <div  className="my-6 grid grid-cols-2 gap-5 border-y border-stroke py-5 sm:grid-cols-3 [&_div]:grid [&_div]:gap-1 [&_span]:text-xs [&_span]:text-muted [&_strong]:wrap-anywhere [&_strong]:text-sm [&_strong]:font-medium">
-                          <div>
-                            <span>Tipo</span>
-                            <strong>{traduzirTipo(pedido.tipo)}</strong>
-                          </div>
-
-                          <div>
-                            <span>Valor</span>
-                            <strong>{formatarMoeda(pedido.valor)}</strong>
-                          </div>
-
-                          <div>
-                            <span>Retirada</span>
-                            <strong>{formatarData(pedido.retiradaLimite)}</strong>
-                          </div>
-
-                          <div>
-                            <span>Pagamento</span>
-                            <strong>
-                              {traduzirPagamento(
-                                pedido.statusPagamento || "pendente"
-                              )}
-                            </strong>
-                          </div>
-
-                          {pedido.modalidadeEntrega === "entrega" && (
-                            <>
-                              <div>
-                                <span>Entrega</span>
-                                <strong>{pedido.statusEntrega?.replaceAll("_", " ")}</strong>
-                              </div>
-                              <div>
-                                <span>Frete</span>
-                                <strong>{formatarMoeda(pedido.valorEntrega)}</strong>
-                              </div>
-                            </>
-                          )}
-
-                          {pedido.tipo === "aluguel" && (
-                            <>
-                              <div>
-                                <span>Dias de aluguel</span>
-                                <strong>{pedido.diasAluguel} dias</strong>
-                              </div>
-
-                              <div>
-                                <span>Devolução</span>
-                                <strong>
-                                  {formatarData(pedido.devolucaoPrevista)}
-                                </strong>
-                              </div>
-                            </>
-                          )}
-                        </div>
-
-                        <div  className="flex flex-wrap gap-2">
-                          <Link to={`/pedido-confirmado/${pedido.id}`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">Detalhes e pagamento</Link>
-                          <Link to={`/comprovante/${pedido.id}`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">
-                            Comprovante
-                          </Link>
-
-                          {pedido.statusPagamento !== "pago" && pedido.status !== "cancelado" && Number(pedido.valor) > 0 && (
-                            <Button disabled={processandoAcao} onClick={() => iniciarPagamento(pedido)} type="button" variant="primary">
-                              Pagar pedido
-                            </Button>
-                          )}
-
-                          {pedido.tipo === "aluguel" && pedido.statusPagamento === "pago" && pedido.status === "pendente" && (
-                            <Button onClick={() => { setPedidoExtensao(pedido); setDiasExtras("7"); }} type="button" variant="secondary">
-                              Estender aluguel
-                            </Button>
-                          )}
-
-                          {pedido.status !== "cancelado" && (
-                            <Link to={`/livros/${pedido.livroId}/avaliacoes`} className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">
-                              Avaliar livro
-                            </Link>
-                          )}
-
-                          {pedido.status === "pendente" && !(pedido.statusPagamento === "pago" && Number(pedido.valor || 0) > 0) && (
-                            <Button onClick={() => setPedidoCancelamento(pedido)} type="button" variant="danger">
-                              Cancelar pedido
-                            </Button>
-                          )}
-
-                          {pedido.statusPagamento === "pago" && Number(pedido.valor || 0) > 0 && pedido.status !== "cancelado" && (
-                            <Link to="/chat" className="bc-button inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium border-muted bg-surface text-ink hover:bg-soft">
-                              Pedir cancelamento/estorno
-                            </Link>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                    {grupo.pedidos.map(pedido=><OrderCard key={pedido.id} pedido={pedido} busy={processandoAcao} onPagar={iniciarPagamento} onEstender={item=>{setPedidoExtensao(item);setDiasExtras("7");}} onCancelar={setPedidoCancelamento}/>)}
                   </div>
                 )}
               </section>

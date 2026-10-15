@@ -69,7 +69,7 @@ function calcularAluguel(livro, dias) {
 }
 
 function Books() {
-  const { isAuthenticated, usuario } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const location = useLocation();
@@ -91,12 +91,6 @@ function Books() {
   const [loadingAluguel, setLoadingAluguel] = useState(false);
 
   const [livroCompra, setLivroCompra] = useState(null);
-  const [loadingCompra, setLoadingCompra] = useState(false);
-  const [modalidadeEntrega, setModalidadeEntrega] = useState("retirada");
-  const [enderecoEntrega, setEnderecoEntrega] = useState("");
-  const [cotacaoEntrega, setCotacaoEntrega] = useState(null);
-  const [loadingCotacao, setLoadingCotacao] = useState(false);
-
   const carregarLivros = useCallback(async () => {
     setLoading(true);
     setFeedback({type:"",text:""});
@@ -131,69 +125,7 @@ function Books() {
 
   function abrirCompra(livro) {
     if (!exigirLogin("Faça login para comprar um livro.")) return;
-
-    setFeedback({ type: "", text: "" });
-    setLivroCompra(livro);
-    setModalidadeEntrega("retirada");
-    setCotacaoEntrega(null);
-    setEnderecoEntrega(usuario?.endereco || [
-      usuario?.rua,
-      usuario?.numero ? `nº ${usuario.numero}` : "",
-      usuario?.bairro,
-      usuario?.cidade,
-      usuario?.estado,
-      usuario?.cep ? `CEP ${usuario.cep}` : "",
-    ].filter(Boolean).join(", "));
-  }
-
-  async function cotarEntrega() {
-    if (!enderecoEntrega.trim()) {
-      setFeedback({ type: "error", text: "Informe o endereço de entrega." });
-      return;
-    }
-
-    try {
-      setLoadingCotacao(true);
-      setFeedback({ type: "", text: "" });
-      const response = await api.post("/entrega/cotacao", { endereco: enderecoEntrega });
-      setCotacaoEntrega(response.data);
-    } catch (error) {
-      setCotacaoEntrega(null);
-      setFeedback({ type: "error", text: error.response?.data?.erro || "Erro ao calcular entrega." });
-    } finally {
-      setLoadingCotacao(false);
-    }
-  }
-
-  async function confirmarCompra() {
-    if (!livroCompra || loadingCompra) return;
-
-    try {
-      setLoadingCompra(true);
-      setFeedback({ type: "", text: "" });
-
-      if (modalidadeEntrega === "entrega" && !cotacaoEntrega) {
-        setFeedback({ type: "error", text: "Calcule o frete antes de confirmar a entrega." });
-        return;
-      }
-
-      const response = await api.post("/comprar", {
-        livroId: livroCompra.id,
-        modalidadeEntrega,
-        enderecoEntrega: modalidadeEntrega === "entrega" ? enderecoEntrega : undefined,
-      });
-
-      setLivroCompra(null);
-
-      navigate(`/pedido-confirmado/${response.data.id}`);
-    } catch (error) {
-      setFeedback({
-        type: "error",
-        text: error.response?.data?.erro || "Erro ao comprar livro.",
-      });
-    } finally {
-      setLoadingCompra(false);
-    }
+    setFeedback({type:"",text:""});setLivroCompra(livro);
   }
 
   function abrirAluguel(livro) {
@@ -343,7 +275,7 @@ function Books() {
     {feedback.text && !catalogLoadError && !livroCompra && !livroAluguel && !livroReserva && <div className="mb-6"><StatusMessage type={feedback.type==="error"?"error":"info"}>{feedback.text}</StatusMessage></div>}
     {!catalogLoadError && <CatalogFilters busca={busca} categoria={categoria} tipoFiltro={tipoFiltro} categorias={categorias} onBusca={setBusca} onCategoria={setCategoria} onTipo={setTipoFiltro} onClear={limparFiltros}/>}
     {!catalogLoadError && (livrosVisiveis.length===0 ? <section className="border-b border-stroke py-16"><h2 className="font-display text-3xl">Nenhum livro encontrado</h2><p className="mt-3 text-muted">Ajuste os filtros ou volte para descobrir novas leituras no acervo.</p></section> : <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{livrosVisiveis.map(livro=><CatalogBookCard key={livro.id} livro={livro} onComprar={abrirCompra} onAlugar={abrirAluguel} onReservar={abrirReserva} onAvaliacoes={item=>navigate(`/livros/${item.id}/avaliacoes`)}/>)}</div>)}
-    <PurchaseDialog livro={livroCompra} modalidadeEntrega={modalidadeEntrega} enderecoEntrega={enderecoEntrega} cotacaoEntrega={cotacaoEntrega} loadingCotacao={loadingCotacao} loadingCompra={loadingCompra} error={dialogError} onClose={()=>setLivroCompra(null)} onConfirmar={confirmarCompra} onCotar={cotarEntrega} onModalidadeChange={value=>{setModalidadeEntrega(value);if(value==="retirada")setCotacaoEntrega(null);}} onEnderecoChange={value=>{setEnderecoEntrega(value);setCotacaoEntrega(null);}}/>
+    <PurchaseDialog livro={livroCompra} onClose={()=>setLivroCompra(null)} onContinuar={()=>navigate(`/checkout/${livroCompra.id}`)}/>
     </section>
     <RentalDialog livro={livroAluguel} dias={diasAluguel} calculo={aluguelCalculado} busy={loadingAluguel} error={dialogError} onDiasChange={setDiasAluguel} onConfirmar={confirmarAluguel} onClose={()=>setLivroAluguel(null)}/>
     <ReservationDialog livro={livroReserva} dataRetirada={dataRetirada} calculo={reservaCalculada} busy={loadingReserva} error={dialogError} onDataChange={setDataRetirada} onConfirmar={confirmarReserva} onClose={()=>setLivroReserva(null)}/>

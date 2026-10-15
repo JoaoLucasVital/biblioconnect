@@ -16,7 +16,8 @@ for (const [action,endpoint,payload] of [
   await page.getByLabel("Buscar no acervo").fill(livro.titulo);
   const card=page.getByRole("article").filter({has:page.getByRole("heading",{name:livro.titulo,exact:true})});
   await card.getByRole("button",{name:action==="compra"?"Comprar":action==="aluguel"?"Alugar":"Reservar",exact:true}).click();
-  const dialog=page.getByRole("dialog",{name:`Confirmar ${action}`});
+  let dialog=page.getByRole("dialog",{name:action==="compra"?"Sua próxima leitura":`Confirmar ${action}`});
+  if(action==="compra"){await dialog.getByRole("button",{name:"Continuar para checkout"}).click();await expect(page).toHaveURL(new RegExp(`/checkout/${livro.id}$`));dialog=page.getByRole("main");}
   if(action==="aluguel")await dialog.getByLabel("Quantidade de dias").fill("9");
   if(action==="reserva")await dialog.getByLabel("Data de retirada").fill("2026-12-01");
   let sends=0;
@@ -47,13 +48,16 @@ test("entrega indisponível mantém endereço e permite mudar para retirada",asy
   const livro=await bookFor(request),client=await createConfirmedClient({request});
   await loginUi(page,client);await page.goto("/livros");await page.getByLabel("Buscar no acervo").fill(livro.titulo);
   await page.getByRole("article").filter({has:page.getByRole("heading",{name:livro.titulo,exact:true})}).getByRole("button",{name:"Comprar",exact:true}).click();
-  const dialog=page.getByRole("dialog",{name:"Confirmar compra"});await dialog.getByRole("radio",{name:/Receber em casa/}).check();
-  const address=dialog.getByLabel("Endereço de entrega");await address.fill("Praça dos Palmares, Centro, Maceió - AL");
+  await page.getByRole("dialog",{name:"Sua próxima leitura"}).getByRole("button",{name:"Continuar para checkout"}).click();
+  await page.route("https://viacep.com.br/ws/57051565/json/",route=>route.fulfill({json:{logradouro:"Rua José de Alencar",bairro:"Farol",localidade:"Maceió",uf:"AL"}}));
+  const dialog=page.getByRole("main");await dialog.getByRole("radio",{name:/Receber em casa/}).check();
+  await dialog.getByLabel("CEP",{exact:true}).fill("57051565");await expect(dialog.getByLabel("Rua / Avenida",{exact:true})).toHaveValue("Rua José de Alencar");
+  const address=dialog.getByLabel("Número",{exact:true});await address.fill("511");
   await dialog.getByRole("button",{name:"Calcular frete"}).click();
   await expect(dialog.getByRole("alert")).toContainText("temporariamente indisponível");
-  await expect(address).toHaveValue("Praça dos Palmares, Centro, Maceió - AL");
+  await expect(address).toHaveValue("511");
   await expect(dialog.getByRole("button",{name:"Confirmar compra",exact:true})).toBeDisabled();
-  await dialog.getByRole("radio",{name:/Buscar na loja/}).check();
+  await dialog.getByRole("radio",{name:/Buscar na biblioteca/}).check();
   const [response]=await Promise.all([page.waitForResponse(res=>new URL(res.url()).pathname==="/comprar"&&res.request().method()==="POST"),holdToConfirm(dialog.getByRole("button",{name:"Confirmar compra",exact:true}))]);
   expect(response.ok()).toBe(true);expect((await response.json()).valorEntrega).toBe(0);
 });
