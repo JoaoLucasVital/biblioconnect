@@ -1,4 +1,5 @@
 import {createProfileRoutes} from "./src/routes/profileRoutes.js";
+import {orderIdempotency} from "./src/middleware/orderIdempotency.js";
 import {createFavoritesRoutes} from "./src/routes/favoritesRoutes.js";
 import {issueAccountToken,consumeAccountToken} from "./src/services/accountTokenService.js";
 import { origensPermitidas } from "./src/utils/corsOrigins.js";
@@ -1373,7 +1374,7 @@ app.delete("/livros/:id", autenticar, somenteAdmin, async (req, res) => {
 // ======================
 // RESERVA - USUÁRIO LOGADO COM DATA DE RETIRADA
 // ======================
-app.post("/reservar", autenticar, async (req, res) => {
+app.post("/reservar", autenticar, orderIdempotency(prisma,"reserva"), async (req, res) => {
   try {
     const usuarioId = Number(req.usuario.id);
     const { livroId, dataRetirada } = req.body;
@@ -1401,7 +1402,7 @@ app.post("/reservar", autenticar, async (req, res) => {
       where: { id: Number(livroId) },
     });
 
-    if (!livro || livro.estoque <= 0 || livro.isDoado || !livro.disponivel) {
+    if (!livro || (!req.orderOperation && (livro.estoque <= 0 || livro.isDoado || !livro.disponivel))) {
       return res.status(400).json({ erro: "Livro indisponível" });
     }
 
@@ -1433,7 +1434,7 @@ app.post("/reservar", autenticar, async (req, res) => {
         retiradaLimite: retiradaEscolhida,
         usuarioId,
         livroId: Number(livroId),
-      });
+      }, req.orderOperation);
 
     await enviarEmail(user.email, livro, pedido);
 
@@ -1455,7 +1456,7 @@ app.post("/reservar", autenticar, async (req, res) => {
 // ======================
 // COMPRA - USUÁRIO LOGADO
 // ======================
-app.post("/comprar", autenticar, auth.rateLimit("purchase",{limit:30,windowMs:60000,key:req=>String(req.usuario.id)}), async (req, res) => {
+app.post("/comprar", autenticar, auth.rateLimit("purchase",{limit:30,windowMs:60000,key:req=>String(req.usuario.id)}), orderIdempotency(prisma,"compra"), async (req, res) => {
   try {
     const usuarioId = Number(req.usuario.id);
     const { livroId, modalidadeEntrega = "retirada", enderecoEntrega } = req.body;
@@ -1477,7 +1478,7 @@ app.post("/comprar", autenticar, auth.rateLimit("purchase",{limit:30,windowMs:60
     }
 
     const livro = await prisma.livro.findUnique({ where: { id: Number(livroId) } });
-    if (!livro || livro.estoque <= 0 || !livro.disponivel) {
+    if (!livro || (!req.orderOperation && (livro.estoque <= 0 || !livro.disponivel))) {
       return res.status(400).json({ erro: "Livro indisponível" });
     }
 
@@ -1503,7 +1504,7 @@ app.post("/comprar", autenticar, auth.rateLimit("purchase",{limit:30,windowMs:60
           statusEntrega: modalidadeEntrega === "entrega" ? "aguardando_pagamento" : "nao_aplicavel",
           usuarioId,
           livroId: Number(livroId),
-        });
+        }, req.orderOperation);
 
     await enviarEmail(user.email, livro, pedido);
 
@@ -1530,7 +1531,7 @@ app.post("/comprar", autenticar, auth.rateLimit("purchase",{limit:30,windowMs:60
 // ======================
 // ALUGUEL - USUÁRIO LOGADO
 // ======================
-app.post("/alugar", autenticar, async (req, res) => {
+app.post("/alugar", autenticar, orderIdempotency(prisma,"aluguel"), async (req, res) => {
   try {
     const usuarioId = Number(req.usuario.id);
     const { livroId, dias } = req.body;
@@ -1564,7 +1565,7 @@ app.post("/alugar", autenticar, async (req, res) => {
       where: { id: Number(livroId) },
     });
 
-    if (!livro || livro.estoque <= 0 || !livro.disponivel) {
+    if (!livro || (!req.orderOperation && (livro.estoque <= 0 || !livro.disponivel))) {
       return res.status(400).json({ erro: "Livro indisponível" });
     }
 
@@ -1586,7 +1587,7 @@ app.post("/alugar", autenticar, async (req, res) => {
         devolucaoPrevista: devolucao,
         usuarioId,
         livroId: Number(livroId),
-      });
+      }, req.orderOperation);
 
     await enviarEmail(user.email, livro, pedido);
 

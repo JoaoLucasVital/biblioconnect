@@ -1,10 +1,11 @@
+import {runIdempotentOrder} from "./idempotencyService.js";
 /** Regras compartilhadas: transações evitam pedidos parciais e estoque duplicado. */
 export function erroNegocio(mensagem, status = 400) {
   return Object.assign(new Error(mensagem), { status });
 }
 
-export async function criarPedidoComEstoque(prisma, data) {
-  return prisma.$transaction(async (tx) => {
+export async function criarPedidoComEstoque(prisma, data, operation) {
+  return prisma.$transaction(async (tx) => runIdempotentOrder(tx,operation,async()=>{
     // O predicado é reavaliado pelo banco após aguardar qualquer venda concorrente.
     const baixa = await tx.livro.updateMany({
       where: { id: data.livroId, disponivel: true, estoque: { gt: 0 },
@@ -13,7 +14,7 @@ export async function criarPedidoComEstoque(prisma, data) {
     });
     if (baixa.count !== 1) throw erroNegocio("Livro indisponível ou sem estoque", 409);
     return tx.pedido.create({ data, include: { livro: true } });
-  });
+  }));
 }
 
 export function validarTransicao(pedido, status, cliente = false) {

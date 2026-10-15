@@ -45,6 +45,15 @@ test("fluxos integrados de autenticação, acervo, pedidos, moderação e chat",
   await api(`/me/pedidos/${compra.id}/cancelar`, { method: "PATCH", token: cliente });
   await api(`/me/pedidos/${compra.id}/cancelar`, { method: "PATCH", token: cliente, status: 400 });
   assert.equal((await api(`/livros/${livro.id}`)).estoque, 1);
+  const operationKey=`qa-${Date.now()}`;
+  const repeated=await Promise.all([1,2].map(()=>cliente.fetch("/comprar",{method:"POST",idempotencyKey:operationKey,body:{livroId:livro.id}})));
+  assert.ok(repeated.every(response=>response.status===200));
+  const repeatedOrders=await Promise.all(repeated.map(response=>response.json()));assert.equal(repeatedOrders[0].id,repeatedOrders[1].id);
+  const replay=await cliente.fetch("/comprar",{method:"POST",idempotencyKey:operationKey,body:{livroId:livro.id}});
+  assert.equal(replay.headers.get("Idempotency-Replayed"),"true");assert.equal((await replay.json()).id,repeatedOrders[0].id);
+  assert.equal((await cliente.fetch("/comprar",{method:"POST",idempotencyKey:operationKey,body:{livroId:livro.id,modalidadeEntrega:"entrega",enderecoEntrega:"Outro"}})).status,409);
+  await api(`/me/pedidos/${repeatedOrders[0].id}/cancelar`,{method:"PATCH",token:cliente});
+  assert.equal((await api(`/livros/${livro.id}`)).estoque,1);
   await api("/alugar", { method: "POST", token: cliente, body: { livroId: livro.id, dias: 1.5 }, status: 400 });
   const aluguel = await api("/alugar", { method: "POST", token: cliente, body: { livroId: livro.id, dias: 7 } });
   await api(`/admin/pedidos/${aluguel.id}/pagamento`, { method: "PATCH", token: admin, body: { statusPagamento: "pago" } });
