@@ -1,0 +1,27 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import express from 'express';
+import {createAuth} from '../src/middleware/auth.js';
+import {createTestDatabase} from './helpers/database.js';
+import {createQaClient} from './helpers/qaClient.js';
+import {createMediaRoutes} from '../src/routes/mediaRoutes.js';
+test('media routes require an admin session, origin and CSRF and use private webhook configuration',async t=>{
+  const {prisma}=await createTestDatabase(t);
+  const admin=await prisma.usuario.create({data:{nome:'Admin',email:'media-admin@example.test',role:'ADMIN',emailConfirmado:true}});
+  const reader=await prisma.usuario.create({data:{nome:'Reader',email:'media-reader@example.test',emailConfirmado:true}});
+  const app=express();app.use(express.json());const server=app.listen(0,'127.0.0.1');await new Promise(resolve=>server.once('listening',resolve));t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const base=`http://127.0.0.1:${server.address().port}`,auth=createAuth({prisma,secret:'media-http-secret-at-least-thirty-two-bytes',allowedOrigins:[base]});
+  app.post('/test-login',auth.requireOrigin,async(req,res)=>auth.signIn(res,{usuarioId:req.body.admin?admin.id:reader.id}));
+  let calls=0;
+  app.use(createMediaRoutes({auth,env:{BLOB_PRIVATE_WEBHOOK_PUBLIC_KEY:'private-key'},service:{prepare:()=>({mode:'blob'}),authorize:async(id,pathname,ticket)=>{assert.equal(id,admin.id);assert.equal(ticket,'ticket');calls++;return {token:'test'};},finalize:async()=>({imagemUrl:'https://covers.example/book.webp'})},handlePresigned:async options=>{assert.equal(options.webhookPublicKey,'private-key');return options.getSignedToken(options.body.payload.pathname,options.body.payload.clientPayload);}}));
+  const anonymous=createQaClient(base),client=createQaClient(base),second=createQaClient(base);
+  await anonymous.request('/media/book-upload-ticket',{method:'POST',body:{},status:401});
+  await second.request('/test-login',{method:'POST',body:{}});await second.request('/media/book-upload-ticket',{method:'POST',body:{},status:403});
+  await client.request('/test-login',{method:'POST',body:{admin:true}});
+  const login=await fetch(`${base}/test-login`,{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:'{"admin":true}'});
+  const cookie=login.headers.getSetCookie().map(value=>value.split(';')[0]).join('; ');
+  const noCsrf=await fetch(`${base}/media/book-upload-ticket`,{method:'POST',headers:{Cookie:cookie,Origin:base,'Content-Type':'application/json'},body:'{}'});assert.equal(noCsrf.status,403);
+  await client.request('/media/book-upload-ticket',{method:'POST',body:{}});
+  await client.request('/media/book-upload-token',{method:'POST',body:{type:'blob.upload-completed'},status:400});
+  await client.request('/media/book-upload-token',{method:'POST',body:{type:'blob.generate-presigned-url',payload:{pathname:'path',clientPayload:'ticket'}}});assert.equal(calls,1);
+});

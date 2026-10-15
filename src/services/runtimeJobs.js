@@ -1,5 +1,5 @@
 import {formatarMoedaEmail} from "../utils/orderUtils.js";
-export function createRuntimeJobs({prisma,enviarNotificacao,calcularMultaPedido,clock=()=>new Date()}){
+export function createRuntimeJobs({prisma,enviarNotificacao,calcularMultaPedido,cleanupMedia=async()=>0,clock=()=>new Date()}){
   async function run(){
     const now=clock(),limite=new Date(+now-24*3600000);
     const pedidos=await prisma.pedido.findMany({where:{status:"pendente",OR:[{tipo:"aluguel",devolucaoPrevista:{lt:now}},{tipo:"reserva",retiradaLimite:{lt:now}}],AND:[{OR:[{ultimaNotificacaoAtraso:null},{ultimaNotificacaoAtraso:{lt:limite}}]}]},include:{usuario:true,livro:true},take:100,orderBy:{id:"asc"}});
@@ -22,7 +22,8 @@ export function createRuntimeJobs({prisma,enviarNotificacao,calcularMultaPedido,
       prisma.desafioGoogle.deleteMany({where:{expiresAt:{lt:now}}}),
       prisma.operacaoIdempotente.deleteMany({where:{expiresAt:{lt:new Date(+now-89*24*3600000)}}}),
     ]);
-    return {notified,failed,cleaned:events.count+limits.count+challenges.count+operations.count};
+    const mediaCleaned=await cleanupMedia();
+    return {notified,failed,cleaned:events.count+limits.count+challenges.count+operations.count+mediaCleaned};
   }
   function startLocal(){
     const execute=()=>run().catch(()=>console.error("Falha nas rotinas automáticas; será feita nova tentativa."));

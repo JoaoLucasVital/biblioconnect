@@ -31,3 +31,11 @@ test("diagnóstico distingue segredos de sessão curtos e chaves Stripe de ambie
   assert.equal(result.services.stripe.configured,false);
   assert.ok(result.services.stripe.invalid.includes("STRIPE_PUBLISHABLE_KEY"));
 });
+
+test('storage recognizes private OIDC plus a separate public token without exposing credentials',()=>{
+  const result=checkIntegrations({MEDIA_STORAGE:'blob',BLOB_PRIVATE_STORE_ID:'private-store',BLOB_PRIVATE_WEBHOOK_PUBLIC_KEY:'public-signature-key',VERCEL_OIDC_TOKEN:'short-lived-test-secret',BLOB_READ_WRITE_TOKEN:'public-store-secret'});
+  assert.equal(result.services.storage.configured,true);assert.equal(result.services.storage.verified,false);
+  assert.ok(!JSON.stringify(result).includes('short-lived-test-secret'));
+  const incomplete=checkIntegrations({MEDIA_STORAGE:'blob',BLOB_PRIVATE_STORE_ID:'private-store',BLOB_PRIVATE_WEBHOOK_PUBLIC_KEY:'public-key',BLOB_READ_WRITE_TOKEN:'public-secret'});
+  assert.ok(incomplete.services.storage.missing.includes('BLOB_PRIVATE_AUTHENTICATION'));
+});

@@ -101,4 +101,6 @@ MediaPipe Tasks Vision 1.1.1 and Google SelfieMulticlass 256x256 model version 1
 
 ## Community and motion references (2026-10-14)
 
+Vercel Blob SDK `@vercel/blob` 2.8.2, from the [official Vercel Storage repository](https://github.com/vercel/storage), is used for private portraits, staged uploads and public covers. Apache-2.0; the installed package retains its LICENSE and dependency notices. Client uploads use the public client entrypoint; server credentials are never embedded in the frontend.
+
 Controlled Pulse Heart, Peek Rating, Hold Button and global Click Spark are project implementations adapting the selected [React Bits micro interaction references](https://reactbits.dev/micro) to database state, accessibility, native forms and the existing animation stack. Existing native rating/moderation and order APIs remain authoritative. No reference demo counter or demo payment state is used. Full original Profile Card license remains in the vendor directory.

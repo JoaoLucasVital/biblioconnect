@@ -5,6 +5,7 @@ import Dialog from "../components/ui/Dialog.jsx";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/api.js";
+import {prepareBookUpload} from "../api/bookUpload.js";
 import IsbnLookup from "../components/IsbnLookup.jsx";
 
 function AddBooks() {
@@ -130,7 +131,7 @@ function AddBooks() {
     setLoading(true);
 
     try {
-      const dadosLivro = montarFormData();
+      const dadosLivro = await prepareBookUpload(montarFormData());
 
       await api.post("/livros", dadosLivro);
 

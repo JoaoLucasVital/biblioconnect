@@ -11,6 +11,7 @@ let csrfToken = null;
 let storage;try{storage=globalThis.sessionStorage;}catch{/* private browsing may block storage */}
 const orderKeys=createOrderRequestKeys(storage);
 api.setCsrfToken = value => { if(csrfToken&&!value)orderKeys.clear();csrfToken = value; };
+api.getCsrfToken = () => csrfToken;
 api.interceptors.request.use(async(config) => {
   if (csrfToken && !["get", "head", "options"].includes((config.method || "get").toLowerCase())) {
     config.headers["X-CSRF-Token"] = csrfToken;

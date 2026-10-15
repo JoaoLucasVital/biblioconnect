@@ -5,7 +5,7 @@ const safeKey=key=>typeof key==="string"&&/^avatars\/[1-9]\d*\/[a-f0-9-]{36}\.we
 export function createMediaStorage({env=process.env,localDirectory=env.AVATAR_STORAGE_DIR||path.resolve(".local/avatars")}={}){
   const directory=path.resolve(localDirectory);
   async function blob(){return import("@vercel/blob");}
-  const options=()=>({access:"private",...(env.BLOB_PRIVATE_READ_WRITE_TOKEN?{token:env.BLOB_PRIVATE_READ_WRITE_TOKEN}:{}),...(env.BLOB_PRIVATE_STORE_ID?{storeId:env.BLOB_PRIVATE_STORE_ID}:{})});
+  const options=()=>({access:"private",...(env.BLOB_PRIVATE_READ_WRITE_TOKEN?{token:env.BLOB_PRIVATE_READ_WRITE_TOKEN}:{}),...(env.BLOB_PRIVATE_STORE_ID?{storeId:env.BLOB_PRIVATE_STORE_ID}:{}),...(env.VERCEL_OIDC_TOKEN?{oidcToken:env.VERCEL_OIDC_TOKEN}:{})});
   function filePath(key){
     if(!safeKey(key))throw new Error("Chave de imagem inválida.");
     const target=path.resolve(directory,...key.split("/"));

@@ -1,4 +1,6 @@
 import {createProfileRoutes} from "./src/routes/profileRoutes.js";
+import {createMediaRoutes} from "./src/routes/mediaRoutes.js";
+import {createBookMediaService} from "./src/services/bookMediaService.js";
 import {createCronRoutes} from "./src/routes/cronRoutes.js";
 import {createRuntimeJobs} from "./src/services/runtimeJobs.js";
 import {orderIdempotency} from "./src/middleware/orderIdempotency.js";
@@ -755,6 +757,7 @@ app.post("/login", async (req,res) => {
 // ME
 // ======================
 app.use(createProfileRoutes({prisma,auth}));
+app.use(createMediaRoutes({auth}));
 // ======================
 // ADMIN - LISTAR USUÁRIOS
 // ======================
@@ -2813,7 +2816,7 @@ app.post("/me/pedidos/:id/estender-aluguel", autenticar, async (req, res) => {
 // ============================================================
 // NOTIFICAÇÕES AUTOMÁTICAS DE ATRASO
 // ============================================================
-const runtimeJobs=createRuntimeJobs({prisma,enviarNotificacao,calcularMultaPedido});
+const runtimeJobs=createRuntimeJobs({prisma,enviarNotificacao,calcularMultaPedido,cleanupMedia:createBookMediaService().cleanupStaged});
 app.use(createCronRoutes({run:runtimeJobs.run}));
 
 // ======================

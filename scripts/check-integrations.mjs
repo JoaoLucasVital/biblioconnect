@@ -30,8 +30,9 @@ export function checkIntegrations(env = {}) {
   services.email.externalDelivery=emailProvider!=="file";
   if(!["gmail","smtp","resend","file"].includes(emailProvider) || (emailProvider==="file" && env.NODE_ENV==="production"))services.email.invalid.push("EMAIL_PROVIDER");
   if(env.MEDIA_STORAGE==="blob"){
-    services.storage=service(["BLOB_AVATAR_STORE_ID","BLOB_COVER_STORE_ID"]);
-    if(!present("VERCEL_OIDC_TOKEN") && !(present("BLOB_AVATAR_READ_WRITE_TOKEN")&&present("BLOB_COVER_READ_WRITE_TOKEN")))services.storage.missing.push("BLOB_AUTHENTICATION");
+    services.storage=service(["BLOB_PRIVATE_STORE_ID","BLOB_PRIVATE_WEBHOOK_PUBLIC_KEY"]);
+    if(!present("VERCEL_OIDC_TOKEN")&&!present("BLOB_PRIVATE_READ_WRITE_TOKEN"))services.storage.missing.push("BLOB_PRIVATE_AUTHENTICATION");
+    if(!present("BLOB_READ_WRITE_TOKEN")&&!(present("BLOB_STORE_ID")&&present("VERCEL_OIDC_TOKEN")))services.storage.missing.push("BLOB_PUBLIC_AUTHENTICATION");
   }else if(env.NODE_ENV==="production")services.storage.invalid.push("MEDIA_STORAGE");
   for(const value of Object.values(services))value.configured=value.missing.length===0&&value.invalid.length===0;
   return {services,configurationComplete:Object.values(services).every(value=>value.configured),productionReady:false,note:"Presença de configuração não comprova autenticação, entrega, pagamentos ou deploy; validar os provedores separadamente."};
