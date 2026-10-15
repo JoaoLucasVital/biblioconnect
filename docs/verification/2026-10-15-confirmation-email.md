@@ -16,3 +16,9 @@ Verificação:
 ## Entrega externa pendente
 
 Não houve envio de e-mail real nesta correção. Foi solicitado ao proprietário escolher o remetente; a opção proposta é Gmail com senha de app criada pelo próprio titular e transferida somente por arquivo privado. Sem credencial válida e confirmação do recebimento, não declarar envio externo funcionando. Não usar a senha comum da conta, não imprimir segredos e não cadastrar credenciais no frontend.
+
+## Publicação da correção de mensagens e cadastro
+
+Commit `563cd46`, deploy Vercel `dpl_A6Z2DHKRgyH22QfTYCZoD55ks9kc`, promovido para https://biblioconnect-olive.vercel.app. Builds remoto de frontend/backend concluídos. Conferência HTTP do domínio público confirmou o novo entrypoint e SHA-256 do formulário `Register-DoFNnb7N.js` idêntico ao build local; a correção anterior de foto também continua publicada. Catálogo com 131 livros, Google habilitado com o mesmo cliente e acesso anônimo à foto recusado com 401.
+
+O envio externo permanece pendente da escolha e configuração do remetente. A publicação acima não o habilita nem declara teste de entrega real.
