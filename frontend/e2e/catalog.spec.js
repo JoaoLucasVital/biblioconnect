@@ -43,3 +43,17 @@ test("filtros, avaliações e estoque zero continuam disponíveis",async({page,r
   await card.getByRole("button",{name:"Avaliações",exact:true}).click();
   await expect(page).toHaveURL(new RegExp(`/livros/${livro.id}/avaliacoes$`));
 });
+test("entrega indisponível mantém endereço e permite mudar para retirada",async({page,request})=>{
+  const livro=await bookFor(request),client=await createConfirmedClient({request});
+  await loginUi(page,client);await page.goto("/livros");await page.getByLabel("Buscar no acervo").fill(livro.titulo);
+  await page.getByRole("article").filter({has:page.getByRole("heading",{name:livro.titulo,exact:true})}).getByRole("button",{name:"Comprar",exact:true}).click();
+  const dialog=page.getByRole("dialog",{name:"Confirmar compra"});await dialog.getByRole("radio",{name:/Receber em casa/}).check();
+  const address=dialog.getByLabel("Endereço de entrega");await address.fill("Praça dos Palmares, Centro, Maceió - AL");
+  await dialog.getByRole("button",{name:"Calcular frete"}).click();
+  await expect(dialog.getByRole("alert")).toContainText("temporariamente indisponível");
+  await expect(address).toHaveValue("Praça dos Palmares, Centro, Maceió - AL");
+  await expect(dialog.getByRole("button",{name:"Confirmar compra",exact:true})).toBeDisabled();
+  await dialog.getByRole("radio",{name:/Buscar na loja/}).check();
+  const [response]=await Promise.all([page.waitForResponse(res=>new URL(res.url()).pathname==="/comprar"&&res.request().method()==="POST"),holdToConfirm(dialog.getByRole("button",{name:"Confirmar compra",exact:true}))]);
+  expect(response.ok()).toBe(true);expect((await response.json()).valorEntrega).toBe(0);
+});

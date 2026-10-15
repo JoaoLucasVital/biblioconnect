@@ -54,6 +54,18 @@ it("compra retirada mantém payload e bloqueia duplicação pendente", async () 
   expect(confirm).toBeDisabled();
   expect(within(dialog).getByRole("button",{name:"Fechar diálogo"})).toBeDisabled();
 });
+it("mudar o endereço invalida a prévia e exige recalcular o frete",async()=>{
+  api.post.mockResolvedValue({data:{distanciaKm:2.5,valorEntrega:11.25}});mount();const user=userEvent.setup();
+  await user.click(await screen.findByRole("button",{name:"Comprar",exact:true}));
+  const dialog=screen.getByRole("dialog",{name:"Confirmar compra"});
+  await user.click(within(dialog).getByRole("radio",{name:/Receber em casa/}));
+  await user.click(within(dialog).getByRole("button",{name:"Calcular frete"}));
+  expect(await within(dialog).findByText("Distância: 2.5 km")).toBeVisible();
+  expect(within(dialog).getByRole("button",{name:"Confirmar compra"})).toBeEnabled();
+  await user.type(within(dialog).getByLabelText("Endereço de entrega")," novo");
+  expect(screen.queryByText("Distância: 2.5 km")).not.toBeInTheDocument();
+  expect(within(dialog).getByRole("button",{name:"Confirmar compra"})).toBeDisabled();
+});
 it("aluguel mostra cálculo e preserva dias no erro", async () => {
   api.post.mockRejectedValue({response:{data:{erro:"Aluguel indisponível"}}}); mount(); const user=userEvent.setup();
   await user.click(await screen.findByRole("button",{name:"Alugar",exact:true}));

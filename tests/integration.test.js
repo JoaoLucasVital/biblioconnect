@@ -36,7 +36,11 @@ test("fluxos integrados de autenticação, acervo, pedidos, moderação e chat",
     sinopse: "Livro criado por teste automatizado", precoCompra: 20, precoAluguel: 5,
     diasInclusos: 7, precoDiaExtra: 2, estoque: 1,
   } });
-  const compra = await api("/comprar", { method: "POST", token: cliente, body: { livroId: livro.id } });
+  const compra = await api("/comprar", { method: "POST", token: cliente, body: { livroId: livro.id,valor:0.01,valorEntrega:999,precoCompra:0.01 } });
+  assert.equal(compra.valor,20);assert.equal(compra.valorEntrega,0);
+  await api("/entrega/cotacao",{method:"POST",token:cliente,body:{endereco:{}},status:400});
+  const missingFreight=await api("/entrega/cotacao",{method:"POST",token:cliente,body:{endereco:"Praça pública, Maceió"},status:503});
+  assert.ok(!JSON.stringify(missingFreight).includes("GOOGLE_MAPS_API_KEY"));
   await api("/comprar", { method: "POST", token: cliente, body: { livroId: livro.id }, status: 400 });
   await api(`/me/pedidos/${compra.id}/cancelar`, { method: "PATCH", token: cliente });
   await api(`/me/pedidos/${compra.id}/cancelar`, { method: "PATCH", token: cliente, status: 400 });

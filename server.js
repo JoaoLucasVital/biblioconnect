@@ -27,6 +27,7 @@ import {
 } from "./src/services/paymentService.js";
 import {
   calcularCotacaoEntrega,
+  cotarModalidadeEntrega,
   getLinksEntregasTerceirizadas,
   mapsConfigurado,
 } from "./src/services/deliveryService.js";
@@ -1454,7 +1455,7 @@ app.post("/reservar", autenticar, async (req, res) => {
 // ======================
 // COMPRA - USUÁRIO LOGADO
 // ======================
-app.post("/comprar", autenticar, async (req, res) => {
+app.post("/comprar", autenticar, auth.rateLimit("purchase",{limit:30,windowMs:60000,key:req=>String(req.usuario.id)}), async (req, res) => {
   try {
     const usuarioId = Number(req.usuario.id);
     const { livroId, modalidadeEntrega = "retirada", enderecoEntrega } = req.body;
@@ -1480,17 +1481,9 @@ app.post("/comprar", autenticar, async (req, res) => {
       return res.status(400).json({ erro: "Livro indisponível" });
     }
 
-    let cotacao = null;
-    let enderecoFinal = null;
-
-    if (modalidadeEntrega === "entrega") {
-      enderecoFinal = (enderecoEntrega || montarEnderecoUsuario(user)).trim();
-      if (!enderecoFinal) {
-        return res.status(400).json({ erro: "Informe o endereço para entrega" });
-      }
-      // O frete sempre é recalculado no servidor para impedir alteração do preço no frontend.
-      cotacao = await calcularCotacaoEntrega(enderecoFinal);
-    }
+    // O servidor recalcula a rota; preço e frete enviados pelo navegador são ignorados.
+    const cotacao=await cotarModalidadeEntrega({modalidadeEntrega,enderecoEntrega:enderecoEntrega??montarEnderecoUsuario(user)});
+    const enderecoFinal=cotacao.enderecoEntrega;
 
     const valorEntrega = Number(cotacao?.valorEntrega || 0);
     const valorTotal = Number(livro.precoCompra) + valorEntrega;
@@ -1530,8 +1523,7 @@ app.post("/comprar", autenticar, async (req, res) => {
 
     res.json(pedido);
   } catch (error) {
-    console.error("Erro na compra:", error);
-    res.status(error.status || 500).json({ erro: "Erro na compra", detalhe: error.message });
+    res.status(error.status || 500).json({ erro: error.status?error.message:"Não foi possível concluir a compra agora." });
   }
 });
 
@@ -2295,14 +2287,14 @@ app.get("/isbn/:isbn", autenticar, somenteAdmin, async (req, res) => {
 });
 
 // Prévia de frete. A compra recalcula novamente o valor para não confiar no frontend.
-app.post("/entrega/cotacao", autenticar, async (req, res) => {
+app.post("/entrega/cotacao", autenticar, auth.rateLimit("delivery-quote",{limit:30,windowMs:60000,key:req=>String(req.usuario.id)}), async (req, res) => {
   try {
     const usuario = await prisma.usuario.findUnique({ where: { id: Number(req.usuario.id) } });
-    const destino = req.body?.endereco || montarEnderecoUsuario(usuario);
+    const destino = req.body?.endereco ?? montarEnderecoUsuario(usuario);
     const cotacao = await calcularCotacaoEntrega(destino);
     res.json(cotacao);
   } catch (error) {
-    res.status(400).json({ erro: error.message });
+    res.status(error.status||500).json({ erro: error.status?error.message:"Não foi possível calcular o frete agora." });
   }
 });
 
