@@ -1,59 +1,73 @@
-# BiblioConnect — edição editorial
+# BiblioConnect
 
-Sistema React + Express + Prisma para catálogo, compra, reserva, aluguel, avaliações moderadas, atendimento e administração. O frontend usa Tailwind, Source Serif 4 e IBM Plex Sans locais, GSAP na abertura e uma cena Three.js carregada sob demanda. As URLs e os contratos da API permanecem os mesmos.
+Biblioteca online com catálogo, reservas, aluguéis, compras, avaliações, atendimento e administração. Projeto acadêmico com **React + Express + Prisma + PostgreSQL**.
 
-O redesign está na branch `codex/biblioconnect-editorial`. A migração não exige reset, seed ou alteração do schema Prisma. Preserve seu arquivo de configuração e faça o procedimento normal de backup antes de trocar versões em um ambiente com dados reais.
+**Aplicação:** [biblioconnect-olive.vercel.app](https://biblioconnect-olive.vercel.app) · **Atualização:** 15/10/2026.
 
-## Verificar sem tocar nos dados existentes
+![Arquitetura do BiblioConnect](docs/diagrams/arquitetura.svg)
 
-Execute os comandos na raiz do projeto:
+## Documentação
 
-```powershell
-rtk proxy npm --prefix frontend test
-rtk proxy npm --prefix frontend run lint
-rtk proxy npm --prefix frontend run build
-rtk proxy node scripts/qa-environment.js --integration
-rtk proxy node scripts/qa-environment.js --e2e-production
-```
+- [Documentação técnica completa](docs/documentacao-tecnica.md): arquitetura, funcionalidades, segurança, integrações e operação.
+- [PDF para leitura e apresentação](output/pdf/biblioconnect-documentacao-tecnica.pdf): inclui diagramas, dicionário de dados e mapa de rotas.
+- [Dicionário das 15 entidades](docs/dicionario-de-dados.md): todos os campos, chaves, índices e relacionamentos do schema.
+- [Mapa das rotas](docs/api-rotas.md): endpoints e telas encontrados no código.
+- [Hospedagem e deploy](docs/setup/vercel.md) e [atribuições de terceiros](THIRD_PARTY_NOTICES.md).
 
-O último comando compila o frontend para produção com a URL da API temporária. Cada execução de QA cria banco, contas e e-mails próprios em `.local/qa/run-*`, usa portas livres e remove apenas seus arquivos/processos no encerramento. Não usa o PostgreSQL configurado no seu `.env` nem a demonstração persistente. Na primeira execução do navegador, instale o Chromium com `rtk proxy npm --prefix frontend exec playwright install chromium`.
+## Funcionalidades
 
-Para abrir um ambiente descartável manualmente, use `rtk proxy node scripts/qa-environment.js --serve` e o endereço impresso no terminal. O catálogo desse ambiente começa vazio. As capturas da suíte usam registros exclusivos de QA.
+| Área | Recursos |
+| --- | --- |
+| Descoberta | Home com capas reais, destaques, rankings, busca, filtros e Atlas do acervo |
+| Conta | Cadastro, confirmação por e-mail, recuperação de senha, login Google e lembrar de mim |
+| Perfil | Informações pessoais/endereço, foto completa otimizada, carteirinha animada e livros salvos |
+| Circulação | Reserva, compra, aluguel, extensão e acompanhamento em Meus Pedidos |
+| Checkout | Endereço por CEP, retirada/entrega, cotação e confirmação por pressionamento |
+| Comunidade | Favoritos sincronizados, estrelas de 1 a 5 e comentários moderados |
+| Atendimento | Conversas persistidas, respostas da equipe e encerramento |
+| Administração | Acervo, estoque, pedidos, entregas, atrasos, financeiro, usuários e avaliações |
 
-A cena 3D é decorativa: telas menores que 768 px, movimento reduzido e falhas de capa/WebGL mantêm a capa estática e as ações HTML. A alternância clara/escura já existente continua disponível.
+O catálogo foi verificado com **131 livros** na publicação. Esse total pode mudar pela administração. Preços e estoque de catálogo precisam ser conferidos antes de uso comercial.
 
-Veja o [relatório de verificação](docs/verification/2026-10-13-editorial-redesign.md) e as [atribuições de terceiros](THIRD_PARTY_NOTICES.md). Pagamentos reais, SMTP, Google Maps e dispositivos físicos exigem homologação separada; simulação de pagamento e e-mail em arquivo são identificados na demonstração.
+## Tecnologias
 
-## Começar rapidamente no Windows
+- **Frontend:** React 19, Vite 8, React Router 7, Tailwind CSS 4 e CSS de componentes; Axios para a API.
+- **Visual:** GSAP, Three.js/React Three Fiber, Recharts, Lucide e fontes locais Source Serif 4 e IBM Plex Sans.
+- **Backend:** Node.js, Express 5, Prisma 5.22, bcryptjs, Google Auth Library, Nodemailer 10.1.1, Multer e Sharp.
+- **Infraestrutura:** Vercel Services, Neon/PostgreSQL e Vercel Blob público/privado.
+- **Integrações:** Google Identity Services, Gmail SMTP, openrouteservice/HeiGIT, ViaCEP e consulta bibliográfica por ISBN.
+- **Qualidade:** Node Test Runner, Vitest, Testing Library, Playwright e ESLint.
 
-Instale Node.js 22.12 ou superior. Abra um terminal nesta pasta e execute:
+As versões instaladas ficam nos dois `package-lock.json`. Nem toda dependência instalada é usada pelo fluxo atual: os recursos antigos de remoção de fundo, por exemplo, não são executados pelo editor de foto.
+
+## Estado das integrações
+
+| Recurso | Situação documentada |
+| --- | --- |
+| Frontend, API e PostgreSQL | Publicados; catálogo consultado e painel autenticado verificado |
+| Login Google | Login real validado na origem de produção |
+| Gmail | SMTP verificado; teste real recebido na caixa de entrada do remetente |
+| Fotos | Armazenamento privado; imagem inteira e fundo preservados |
+| Frete ORS | Configurado; cotação externa real verificada localmente, sem nova compra/cotação de produção nesta documentação |
+| Favoritos | Persistência + SSE; não utiliza WebSocket |
+| Pagamentos | Código executável ainda integra Mercado Pago; cobrança real não homologada |
+| Stripe | Migração pendente; variáveis preparatórias não constituem implementação |
+| Cron | Configurado diariamente; disparo automático na plataforma ainda requer conferência de logs |
+
+O sistema não coleta nem armazena número de cartão ou CVV. Segurar o botão cria o pedido, sem comprovar pagamento. A simulação de pagamento é recusada em produção.
+
+## Executar com PostgreSQL próprio
+
+Pré-requisitos: Node.js **22.12 ou superior compatível com Vite** (Node 24 no deploy recente), npm e PostgreSQL. Use uma base de desenvolvimento separada.
 
 ```powershell
 npm run setup
-npm run demo
+Copy-Item .env.example .env
 ```
 
-Abra http://localhost:5173. A primeira instalação precisa de internet.
-
-- Administrador de demonstração: `admin@biblioconnect.com`
-- Senha de demonstração: `admin123`
-- O catálogo começa vazio: entre como administrador e use **Novo Livro**.
-- Banco persistente da demonstração: `.local/database`.
-- E-mails de demonstração: `.local/emails`. Abra o HTML mais recente e use o link de confirmação ou recuperação.
-- Na página de detalhes do pedido, use **Simular pagamento (demonstração)** para testar sem cobrança. Em Meus Pedidos, clique em **Detalhes e pagamento**.
-- Encerre o terminal com Ctrl+C. Ao reiniciar a demonstração, faça login novamente.
-- As portas 3000, 5173 e 55440 precisam estar livres. A demonstração usa um banco isolado e não acessa seu PostgreSQL existente.
-
-A demonstração usa PGlite, uma implementação local de PostgreSQL. E-mails são arquivos e pagamentos são simulações explicitamente identificadas. Google Maps e checkout real exigem a configuração abaixo.
-
-## Usar PostgreSQL e integrações reais
-
-1. Crie um banco PostgreSQL vazio chamado `biblioconnect`.
-2. Copie `.env.example` para `.env` e configure `DATABASE_URL`, `JWT_SECRET`, `ADMIN_EMAIL` e `ADMIN_PASSWORD`.
-3. Execute:
+Edite `.env` antes de iniciar: `DATABASE_URL`, `AUTH_SECRET`, `CRON_SECRET`, URLs locais e, para o primeiro provisionamento local, `ADMIN_EMAIL` e `ADMIN_PASSWORD` fortes. Use segredos independentes de ao menos 32 bytes. A autenticação atual usa sessões no banco; `JWT_SECRET` é compatibilidade legada.
 
 ```powershell
-npm run setup
 npm run prisma:deploy
 npm start
 ```
@@ -61,70 +75,61 @@ npm start
 Em outro terminal:
 
 ```powershell
-cd frontend
-npm run dev
+npm --prefix frontend run dev
 ```
 
-O frontend usa `http://localhost:3000`; para mudar, copie `frontend/.env.example` para `frontend/.env` e ajuste `VITE_API_URL`. Para gerar os arquivos de distribuição: `npm --prefix frontend run build`. Não use `npm run demo` com a intenção de conectar ao banco real: esse comando sempre inicia o ambiente isolado.
+Frontend: `http://localhost:5173`. API local: `http://localhost:3000`, sem `/api`. O frontend usa `VITE_API_URL` se definido; o build hospedado fixa `/api`.
 
-### E-mail
+O bootstrap administrativo roda no servidor local somente se não houver ADMIN. A importação serverless não executa esse bootstrap; definir variáveis na Vercel não cria automaticamente a conta no banco. Credenciais administrativas são privadas e não estão neste README.
 
-Para Gmail, configure `EMAIL_PROVIDER=gmail`, `EMAIL_USER` e uma senha de app em `EMAIL_PASS`. Para outro SMTP, use `EMAIL_PROVIDER=smtp`, `EMAIL_HOST`, `EMAIL_PORT` e `EMAIL_SECURE`. O comando `npm run email:test` verifica a configuração; leia `CONFIGURAR_EMAIL_GMAIL.md` para os detalhes. Para testes sem envio, use `EMAIL_PROVIDER=file` apenas em desenvolvimento. Mensagens locais contêm links de autenticação e não devem ser publicadas.
+### Demonstração isolada
 
-### Mercado Pago
+```powershell
+npm run demo
+```
 
-Configure `MERCADO_PAGO_ACCESS_TOKEN` e `MERCADO_PAGO_WEBHOOK_SECRET`. Configure a notificação `payment` para `BACKEND_URL/webhooks/mercadopago` usando uma URL pública HTTPS. Use também uma URL HTTPS em `FRONTEND_URL` para o retorno automático. A aprovação é conferida na API do provedor, com assinatura, moeda, valor e referência local; o retorno do navegador sozinho não aprova um pagamento.
+Usa PGlite e dados em `.local/database`, com e-mails em arquivo. Não equivale ao banco Neon publicado nem sincroniza seu catálogo automaticamente. Pode usar configurações próprias de demonstração; não o publique como produção.
 
-As novas preferências incluem a referência local necessária para a validação. Checkouts criados em versões anteriores precisam ser conciliados ou recriados; não serão automaticamente aceitos sem essa referência. Estornos reais são realizados no provedor: alterar o status administrativo apenas registra a informação no sistema. Pagamentos tardios de pedidos cancelados e cobranças duplicadas exigem conciliação administrativa.
-
-### Entrega e ISBN
-
-Para cotação real, configure `GOOGLE_MAPS_API_KEY`, habilite a Routes API e informe `STORE_ADDRESS`, `DELIVERY_BASE_FEE` e `DELIVERY_PRICE_PER_KM`. O backend recalcula o frete na compra. Os botões dos parceiros de entrega são links externos, não contratam entregadores automaticamente. O preenchimento por ISBN usa Google Books, podendo usar `GOOGLE_BOOKS_API_KEY`.
-
-## Regras corrigidas
-
-- Criação de pedido e baixa condicional de estoque ocorrem na mesma transação.
-- Cancelamentos e finalizações são serializados: o estoque retorna uma única vez.
-- Pedidos finalizados não reabrem. Compras concluídas consomem a unidade; concluir reservas ou aluguéis encerra a operação e devolve a unidade ao acervo. Use a finalização somente quando a unidade já puder voltar ao estoque.
-- Cancelamento de pedido pago requer providenciar o estorno antes; reservas sem cobrança podem ser canceladas pelo cliente.
-- Aluguel ativo permanece pendente até sua finalização. Extensões pagas são aplicadas uma vez após confirmação; extensões de custo zero são imediatas. Uma extensão pendente pode ter seu checkout retomado.
-- Valores e campos dos livros são validados no servidor, inclusive quando a API é chamada diretamente.
-- Campos de senha e tokens de recuperação/validação não são devolvidos nas respostas de usuários ou pedidos.
-- O chat administrativo consulta as mensagens da conversa aberta, trata erros e bloqueia envio repetido durante uma requisição.
-
-## Testes
+## Testar sem alterar dados reais
 
 ```powershell
 npm test
+npm --prefix frontend test
 npm --prefix frontend run lint
-npm --prefix frontend run build
+npm --prefix frontend run build:hosted
+node scripts/qa-environment.js --integration
+node scripts/qa-environment.js --e2e-production
 ```
 
-O teste integrado fica desativado por padrão para não inserir dados em um banco de uso real. Com `npm run demo` aberto em outro terminal:
+QA cria seu próprio banco, contas e portas. O primeiro E2E pode precisar de `npm --prefix frontend exec playwright install chromium`. Não aponte `API_TEST_URL` para produção. Os [relatórios de verificação](docs/verification) distinguem execuções e limites; não são certificação de segurança.
 
-```powershell
-$env:API_TEST_URL='http://127.0.0.1:3000'
-$env:EMAIL_OUTPUT_DIR='.local/emails'
-npm test
+## Hospedagem
+
+`vercel.ts` separa frontend Vite e backend Express no mesmo domínio; `/api/*` vai para `src/app.js`. O Prisma usa PostgreSQL Neon. Capas são públicas no Blob; retratos são privados e entregues pela API autenticada. O cron protegido `/api/internal/cron` está agendado para 06:00 UTC, equivalente a 03:00 em Brasília na data desta edição.
+
+Segredos ficam nas variáveis protegidas da Vercel e em arquivos locais ignorados. Banco, mídia privada e credenciais não fazem parte do bundle. Ver [procedimento de deploy](docs/setup/vercel.md).
+
+## Regenerar a documentação
+
+Com Python e ReportLab disponíveis, execute `python scripts/docs/build_documentation.py`. O gerador atualiza dicionário, mapa de rotas, diagramas e PDF a partir do schema/código e do Markdown técnico. Não lê arquivos de credenciais nem acessa o banco. Para preparar uma instalação Python separada, a dependência é `python -m pip install reportlab`.
+
+## Estrutura
+
+```text
+frontend/src/       Telas, layouts, componentes e recursos React
+server.js          Rotas principais da API e inicialização local
+src/app.js         Entrada Express para Vercel
+src/routes/        Perfil, Google, favoritos, mídia e cron
+src/services/      Sessões, pedidos, frete, mídia, e-mail e demais serviços
+src/middleware/    Autenticação, CSRF e idempotência
+prisma/            Schema PostgreSQL e migrações
+scripts/           QA, demonstração, catálogo e migração de hospedagem
+tests/             Testes de backend
+frontend/e2e/      Testes de navegador
+docs/              Documentação, proveniência e verificações
+output/pdf/        Documento técnico exportado
 ```
 
-O teste integrado insere registros identificados como teste, usa apenas localhost e inclui compras e cancelamentos concorrentes. Consulte `RELATORIO_DE_TESTES.md` para evidências e limites da validação.
+## Créditos e direitos
 
-## Arquivos principais
-
-- `server.js`: API, autenticação, administração e integração dos serviços.
-- `src/services/orderService.js`: estoque e transições de pedidos, com transações.
-- `src/services/paymentWebhook.js`: assinatura e aplicação idempotente de pagamentos.
-- `src/services/emailService.js`: SMTP e caixa de saída local.
-- `src/utils/validation.js`: validação de livros e senhas.
-- `scripts/demo.js`: ambiente local completo e persistente.
-- `frontend/src`: telas, componentes e comunicação com a API.
-- `tests`: testes unitários e de integração.
-
-## Produção
-
-Defina `NODE_ENV=production`, um segredo JWT aleatório, senha administrativa forte e `ALLOW_PAYMENT_SIMULATION=false`. Utilize PostgreSQL, HTTPS, backups e credenciais reais. O modo de demonstração não é uma configuração de produção. Antes de receber cobranças, valide o checkout e os webhooks na conta do provedor. A rotina de atraso depende de o backend permanecer ativo.
-
-## Créditos do projeto original
-
-Projeto acadêmico BiblioConnect. Equipe informada no material recebido: Lucas Soares Silva, Adriano Mikhael e João Lucas. Esta revisão corrige e documenta o código recebido.
+Projeto acadêmico BiblioConnect. Equipe informada no material original: **Lucas Soares Silva, Adriano Mikhael e João Lucas**. O manifesto do backend declara ISC; componentes, fontes e dependências mantêm suas próprias licenças. Capas pertencem aos respectivos titulares. Consulte [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) e a proveniência em `docs/catalog`.

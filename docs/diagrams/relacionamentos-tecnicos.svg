@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="540" viewBox="0 0 940 540" role="img">
+<title>Diagrama técnico do BiblioConnect</title>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#526B80"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<polyline points="390,92 155,195" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="245" y="147" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="470,92 470,195" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="482" y="150" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="550,92 785,195" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="665" y="147" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="785,285 785,405" fill="none" stroke="#DD8205" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<text x="665" y="350" fill="#DD8205" font-family="Arial,sans-serif" font-size="16">Referência lógica</text>
+<rect x="340" y="10" width="260" height="82" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="357" y="39" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Usuario</text>
+<text x="357" y="62" fill="#506579" font-family="Arial,sans-serif" font-size="16">Conta autenticada</text>
+<rect x="25" y="195" width="260" height="90" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="42" y="224" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">IdentidadeExterna</text>
+<text x="42" y="247" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK usuarioId</text>
+<text x="42" y="268" fill="#506579" font-family="Arial,sans-serif" font-size="16">Único provider/subject</text>
+<rect x="340" y="195" width="260" height="90" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="357" y="224" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Sessao</text>
+<text x="357" y="247" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK usuarioId</text>
+<text x="357" y="268" fill="#506579" font-family="Arial,sans-serif" font-size="16">Hashes e expiração</text>
+<rect x="655" y="195" width="260" height="90" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="672" y="224" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">OperacaoIdempotente</text>
+<text x="672" y="247" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK usuarioId</text>
+<text x="672" y="268" fill="#506579" font-family="Arial,sans-serif" font-size="16">Retry e fingerprint</text>
+<rect x="25" y="405" width="260" height="90" rx="12" fill="#F0F4F7" stroke="#DD8205" stroke-width="1.5"/>
+<text x="42" y="434" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">DesafioGoogle</text>
+<text x="42" y="457" fill="#506579" font-family="Arial,sans-serif" font-size="16">Sem FK para Usuario</text>
+<text x="42" y="478" fill="#506579" font-family="Arial,sans-serif" font-size="16">Nonce/cookie antes do login</text>
+<rect x="340" y="405" width="260" height="90" rx="12" fill="#F0F4F7" stroke="#DD8205" stroke-width="1.5"/>
+<text x="357" y="434" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">LimiteOperacao</text>
+<text x="357" y="457" fill="#506579" font-family="Arial,sans-serif" font-size="16">Sem FK para Usuario</text>
+<text x="357" y="478" fill="#506579" font-family="Arial,sans-serif" font-size="16">Janela e chave derivada</text>
+<rect x="655" y="405" width="260" height="90" rx="12" fill="#F0F4F7" stroke="#DD8205" stroke-width="1.5"/>
+<text x="672" y="434" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Pedido</text>
+<text x="672" y="457" fill="#506579" font-family="Arial,sans-serif" font-size="16">resultadoId lógico</text>
+<text x="672" y="478" fill="#506579" font-family="Arial,sans-serif" font-size="16">Sem FK nesse vínculo</text>
+</svg>

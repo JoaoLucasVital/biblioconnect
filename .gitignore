@@ -23,3 +23,5 @@ frontend/test-results/
 frontend/playwright-report/
 .superpowers/
 .impeccable/review/
+# Cache do gerador local de documentação em Python
+__pycache__/

@@ -1,0 +1,202 @@
+erDiagram
+    Usuario {
+        Int id PK
+        String nome
+        String email UK
+        String senha
+        String avatarKey
+        DateTime welcomeSeenAt
+        String stripeCustomerId UK
+        String telefone
+        String endereco
+        String cep
+        String rua
+        String bairro
+        String cidade
+        String estado
+        String numero
+        String complemento
+        String pontoReferencia
+        String role
+        Boolean emailConfirmado
+        String tokenConfirmacaoEmail UK
+        String tokenConfirmacaoHash UK
+        DateTime tokenConfirmacaoExpira
+        String tokenResetSenha UK
+        String tokenResetSenhaHash UK
+        DateTime tokenResetSenhaExpira
+        Boolean bloqueado
+        DateTime createdAt
+    }
+    Livro {
+        Int id PK
+        String isbn UK
+        String titulo
+        String autor
+        String redator
+        Int ano
+        String categoria
+        String sinopse
+        Float precoCompra
+        Float precoAluguel
+        Int diasInclusos
+        Float precoDiaExtra
+        Int estoque
+        Boolean isDoado
+        String imagemUrl
+        Boolean destaque
+        Boolean disponivel
+        DateTime createdAt
+        DateTime updatedAt
+    }
+    Pedido {
+        Int id PK
+        String tipo
+        String status
+        String statusPagamento
+        Float valor
+        Int diasAluguel
+        DateTime retiradaLimite
+        DateTime devolucaoPrevista
+        String modalidadeEntrega
+        String enderecoEntrega
+        Float distanciaEntregaKm
+        Float valorEntrega
+        String statusEntrega
+        String transportadoraEntrega
+        String codigoRastreio
+        Float valorExtensaoPendente
+        Int diasExtensaoPendente
+        DateTime ultimaNotificacaoAtraso
+        String preferenciaPagamentoId
+        String linkPagamento
+        DateTime createdAt
+        DateTime updatedAt
+        Int usuarioId
+        Int livroId
+    }
+    Usuario ||--o{ Pedido : usuario
+    Livro ||--o{ Pedido : livro
+    Pagamento {
+        Int id PK
+        String gateway
+        String gatewayPaymentId
+        String gatewayPreferenceId
+        String metodo
+        String status
+        String tipo
+        Float valor
+        DateTime createdAt
+        DateTime updatedAt
+        Int pedidoId
+    }
+    Pedido ||--o{ Pagamento : pedido
+    IdentidadeExterna {
+        String id PK
+        String provider
+        String subject
+        Int usuarioId
+        DateTime createdAt
+    }
+    Usuario ||--o{ IdentidadeExterna : usuario
+    Sessao {
+        String id PK
+        String tokenHash UK
+        String previousTokenHash UK
+        DateTime previousTokenValidUntil
+        Int usuarioId
+        Boolean lembrar
+        DateTime createdAt
+        DateTime lastSeenAt
+        DateTime rotatedAt
+        DateTime idleExpiresAt
+        DateTime absoluteExpiresAt
+        DateTime revokedAt
+    }
+    Usuario ||--o{ Sessao : usuario
+    DesafioGoogle {
+        String id PK
+        String nonceHash UK
+        String cookieHash
+        Boolean lembrar
+        DateTime createdAt
+        DateTime expiresAt
+        DateTime consumedAt
+    }
+    Favorito {
+        Int id PK
+        Int usuarioId
+        Int livroId
+        DateTime createdAt
+    }
+    Usuario ||--o{ Favorito : usuario
+    Livro ||--o{ Favorito : livro
+    EventoFavorito {
+        BigInt id PK
+        Int livroId
+        Int total
+        DateTime createdAt
+    }
+    Livro ||--o{ EventoFavorito : livro
+    EventoGateway {
+        String id PK
+        String gateway
+        String eventId
+        String tipo
+        Int pagamentoId
+        DateTime createdAt
+    }
+    Pagamento o|--o{ EventoGateway : pagamento
+    OperacaoIdempotente {
+        String id PK
+        Int usuarioId
+        String scope
+        String keyHash
+        String fingerprint
+        Int resultadoId
+        String state
+        DateTime createdAt
+        DateTime updatedAt
+        DateTime expiresAt
+    }
+    Usuario ||--o{ OperacaoIdempotente : usuario
+    LimiteOperacao {
+        String id PK
+        String scope
+        String keyHash
+        DateTime windowStart
+        Int count
+        DateTime expiresAt
+    }
+    Avaliacao {
+        Int id PK
+        Int nota
+        String comentario
+        String status
+        DateTime createdAt
+        DateTime updatedAt
+        Int usuarioId
+        Int livroId
+    }
+    Usuario ||--o{ Avaliacao : usuario
+    Livro ||--o{ Avaliacao : livro
+    Conversa {
+        Int id PK
+        String assunto
+        String status
+        DateTime createdAt
+        DateTime updatedAt
+        Int usuarioId
+    }
+    Usuario ||--o{ Conversa : usuario
+    MensagemChat {
+        Int id PK
+        String texto
+        String remetenteRole
+        Boolean lida
+        DateTime createdAt
+        Int conversaId
+        Int remetenteId
+    }
+    Conversa ||--o{ MensagemChat : conversa
+    Usuario ||--o{ MensagemChat : remetente

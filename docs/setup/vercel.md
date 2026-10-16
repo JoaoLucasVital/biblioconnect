@@ -1,40 +1,73 @@
-# Hospedagem integrada do BiblioConnect
+# Hospedagem do BiblioConnect
 
-Atualização em 15/10/2026: projeto `biblioconnect` criado na equipe `joaolucasdev` (Hobby), Neon gratuito e dois Blob stores conectados em São Paulo (`gru1`). A cópia dos dados e imagens foi migrada e conferida. Ainda não há deploy da aplicação. Google, e-mail, Stripe e preparação do preview permanecem no [guia das contas](2026-10-14-services.md).
+Atualizado em **15/10/2026**. Este guia substitui o estado inicial de preparação da migração. A aplicação já está publicada em **https://biblioconnect-olive.vercel.app**.
 
-## O que está preparado
+## Arquitetura publicada
 
-`vercel.ts` define frontend Vite e backend Express em um projeto. A configuração do projeto na Vercel deverá usar **Services**. O backend exporta `src/app.js`, sem abrir porta, conectar antecipadamente o banco ou iniciar timers durante importação. O processo local continua em `node server.js`.
+- Projeto Vercel `biblioconnect`, com **Services** definidos em `vercel.ts`.
+- Frontend: raiz `frontend`, Vite, comando `npm run build:hosted`, saída `dist` e fallback para `index.html`.
+- Backend: raiz do repositório, Express, entrada `src/app.js`, build `npm run prisma:generate`.
+- `/api` e `/api/*` são resolvidos antes da SPA. Express remove o prefixo pelo mount em `src/app.js`.
+- Neon mantém PostgreSQL; o build não aplica migrações automaticamente.
+- Blob público armazena capas; Blob privado guarda retratos e staging de upload.
+- Headers da configuração: `nosniff`, `strict-origin-when-cross-origin` e `X-Frame-Options: DENY`.
 
-As regras públicas `/api` e `/api/(.*)` precedem o frontend. A Vercel preserva o caminho recebido; o mount Express em `/api` remove esse prefixo antes das rotas existentes. Essa remoção explícita evita depender de um rewrite que apenas escolhe uma rota. O build `npm --prefix frontend run build:hosted` fixa a URL pública da API em `/api`; navegação direta como `/perfil` vai para o frontend.
+O `server.js` exporta a aplicação. Importá-lo em serverless não inicia listener, bootstrap de administrador ou timers locais. `node server.js` continua sendo o processo de desenvolvimento.
 
-O cron diário chama `/api/internal/cron`, com `Authorization: Bearer <CRON_SECRET>`. A chave deve conter pelo menos 32 bytes e ser diferente de AUTH_SECRET. A execução reivindica cada lembrete atomicamente e libera a tentativa quando o envio falha. Limpa eventos de favoritos anteriores a 24 horas, desafios Google e limites vencidos; operações concluídas são preservadas por 90 dias para proteger retries tardios. Também remove até 1.000 capas temporárias abandonadas há mais de uma hora, exclusivamente no prefixo `book-staging/`; nunca remove retratos nessa rotina. O cron precisa ser validado no deploy real.
+## Estado conferido
 
-## Armazenamento e migração concluídos
+O catálogo foi verificado com 131 livros. Login Google real e painel autenticado funcionaram na origem pública. O Gmail dedicado teve SMTP validado e mensagem de teste recebida na caixa de entrada. Acesso anônimo à foto de perfil foi recusado com 401. Esses resultados não homologam pagamentos ou todas as integrações.
 
-- `biblioconnect-db`: Neon Free, PostgreSQL com Prisma; 22 livros, 3 contas, 5 pedidos, favoritos, avaliação e chat preservados.
-- `biblioconnect-covers`: Blob público; 65 arquivos, incluindo as variantes de capa. Os nomes foram preservados para manter os `srcSet` existentes.
-- `biblioconnect-portraits`: Blob privado; uma foto migrada. O teste de acesso anônimo retornou 403. O acesso é feito pelo backend autenticado, usando OIDC com `BLOB_PRIVATE_STORE_ID` e `BLOB_PRIVATE_WEBHOOK_PUBLIC_KEY`.
-- `MEDIA_STORAGE=blob` configurado em Production e Preview. Capas usam `BLOB_READ_WRITE_TOKEN` do store público; esse segredo nunca vai ao frontend. O ambiente local continua com `MEDIA_STORAGE=local` e dados originais.
-- Development foi autorizado temporariamente pelo proprietário para migração/testes e removido ao final. Não há token permanente privado configurado.
+O código financeiro ainda utiliza **Mercado Pago**; Stripe permanece pendente de migração. A declaração de variáveis Stripe no ambiente não habilita um fluxo Stripe inexistente. ORS teve cotação real local e configuração hospedada; não foi realizada uma nova compra/cotação de produção nesta revisão.
 
-O cadastro/edição pede um ticket exclusivo por administrador, válido por dez minutos. O SDK envia até 5 MB diretamente ao store privado, com escopo de caminho, MIME e tamanho. A finalização verifica dono/ticket e conteúdo real, limita pixels, remove metadados e publica WebP. A foto de perfil continua inteira, com fundo e proporção originais.
+## Ambiente protegido
 
-`scripts/migrate-hosted-data.mjs` aceita `--snapshot`, `--destination` e `--env-file`; sem `--execute` faz somente dry-run. O snapshot deve ser um backup fechado, com `hosted-snapshot.json` e checksums de banco, uploads e avatares. O destino contém host/database exatos, projeto e store privado aprovados. O script recusa banco/storage não vazios; uma tentativa parcial exige inspeção, sem reset automático. Nunca apontar para o diretório PGlite vivo. A inserção dos registros é transacional, mantém IDs/FKs e ajusta sequências, comparando contagens e hashes completos.
+Configure os segredos apenas nas variáveis protegidas da Vercel. Grupos principais: `DATABASE_URL`, `AUTH_SECRET`, `CRON_SECRET`, `GOOGLE_CLIENT_ID`, `EMAIL_*`, `ORS_API_KEY`, variáveis Blob e URLs públicas. Não copie valores reais para documentação, código ou chat.
 
-Backups, credenciais e relatórios detalhados ficam em diretórios privados ignorados pelo Git. Sessões/desafios/limites/operações temporárias locais não são copiados; tokens locais de confirmação/reset são invalidados somente na cópia hospedada. A conta administrativa com a senha conhecida de demonstração fica bloqueada e sem senha hospedada. As senhas pessoais e o banco local são preservados. Antes do deploy, preparar acesso administrativo seguro e reconciliar qualquer alteração local posterior ao snapshot.
+- `FRONTEND_URL`: `https://biblioconnect-olive.vercel.app`.
+- `BACKEND_URL`: `https://biblioconnect-olive.vercel.app/api`.
+- `NODE_ENV=production`, `MEDIA_STORAGE=blob`, `ALLOW_PAYMENT_SIMULATION=false`.
+- Google deve autorizar a origem pública exata no cliente existente.
+- Gmail utiliza senha de app, diferente da senha de login normal; o titular a salva como Secret.
+- Previews continuam protegidos. Não desativar proteção para corrigir problema de alias.
 
-## Antes do primeiro preview
+Retratos privados podem usar OIDC do projeto com `BLOB_PRIVATE_STORE_ID` e `BLOB_PRIVATE_WEBHOOK_PUBLIC_KEY`; capas usam autorização do store público. Credenciais do servidor não são expostas por `VITE_*`.
 
-1. Conectar Google, Stripe e e-mail; configurar segredos somente no backend e completar checkout/webhook.
-2. Preparar acesso administrativo seguro, URLs HTTPS de Google/e-mail/webhook, origens permitidas e cookies.
-3. Conferir o preset Services do projeto e validar o build/roteamento na plataforma autenticada. O projeto remoto ainda usa o preset Other; a configuração local não comprova suporte do deploy.
-4. Fazer preview protegido e conferir login, sessões, acervo/capas, favoritos em duas sessões, perfil, frete real, cartão/Pix de teste e cron. Publicar somente após esses testes e a revisão final.
+## Rotina de deploy
 
-Auditoria de produção em 15/10: permanece um alerta alto em Nodemailer. A atualização e os testes de compatibilidade fazem parte da próxima etapa de envio real de e-mail e precisam ser concluídos antes da publicação. Não foi aplicada atualização major automática/forçada.
+1. Conferir branch, diff e segredos fora do Git. Executar os checks adequados à alteração.
+2. Fazer backup e aplicar migrações necessárias em etapa separada e revisada; o build apenas gera o client.
+3. Conferir projeto vinculado, URLs, providers e credenciais. Não usar seed/reset.
+4. Criar deployment, conferir o resultado e promovê-lo ao domínio público aprovado.
+5. Validar home, navegação direta, API, sessão administrativa, catálogo e acesso privado a fotos.
+6. Conferir logs e integrações específicas alteradas, sem criar cobranças ou dados reais de teste sem planejamento.
 
-## Evidência local disponível
+Na sessão de publicação, foram utilizados os comandos abaixo com a CLI autenticada no projeto correto:
 
-Os testes `deployment-config.test.js` verificam importação sem listener/timers e autorização de cron, além da seleção das rotas na configuração. `runtime-jobs.test.js` usa banco descartável para provar concorrência dos lembretes, nova tentativa após falha e retenção dos eventos. Esses testes não substituem build e validação dos serviços na Vercel.
+```powershell
+npx vercel@64.1.0 deploy --prod --skip-domain --yes --archive=tgz
+# Usar a URL retornada, sem inventar ou reutilizar uma URL antiga:
+npx vercel@64.1.0 promote <URL_DO_DEPLOYMENT_VERIFICADO> --yes
+```
 
-Referências oficiais: [Services](https://vercel.com/docs/services), [roteamento e caminho preservado](https://vercel.com/kb/guide/vercel-services), [configuração TypeScript](https://vercel.com/docs/project-configuration/vercel-ts).
+A promoção foi necessária para atualizar o domínio público. O endereço padrão do projeto e previews podem exigir autenticação Vercel. A versão com Gmail foi publicada pelo deploy `dpl_CefDC1hX5RUhrNDMpKYDcyFHWX3f`; conferir o painel para versões posteriores.
+
+Rollback de deployment reverte código, não banco, e-mails ou uploads. Tratar restauração de dados e compatibilidade de schema separadamente.
+
+## Cron
+
+O cron chama `/api/internal/cron` às **06:00 UTC** diariamente, equivalente a **03:00 em Brasília** nesta data. Requer `Authorization: Bearer <CRON_SECRET>`, segredo independente de ao menos 32 bytes.
+
+A rotina reivindica notificações de atraso atomicamente, libera retry quando envio falha e limpa eventos/controles expirados. Também pode limpar até 1.000 capas abandonadas há mais de uma hora no prefixo de staging, sem excluir retratos nessa limpeza. A execução agendada real precisa ser conferida nos logs; configuração e testes locais não comprovam disparo automático.
+
+## Migração e dados
+
+O catálogo e o proprietário foram preservados no reset anteriormente autorizado; depois, novos usuários podem ter se cadastrado. Não repetir a limpeza. Dados reais não devem ser inferidos pelas contagens antigas dos documentos históricos.
+
+`scripts/migrate-hosted-data.mjs` aceita snapshot, destino e env-file. Sem `--execute`, faz dry-run. Exige backup consistente e destino validado, recusa cenários de destino não vazio e compara contagens/checksums. Não apontar para PGlite vivo. A demonstração local não sincroniza com Neon automaticamente.
+
+`.vercelignore` exclui Git, `.local`, `.superpowers`, `.env*`, dados locais, relatórios, testes e documentos do bundle. Backups, senhas e e-mails com links de autenticação permanecem privados.
+
+## Fontes
+
+Configuração atual: `vercel.ts`, `src/app.js`, serviços de storage/cron e `docs/verification/2026-10-15-release-reset.md`, `2026-10-15-confirmation-email.md` e `2026-10-15-profile-photo-safari.md`. Referências externas registradas no projeto: [Vercel Services](https://vercel.com/docs/services) e [configuração TypeScript](https://vercel.com/docs/project-configuration/vercel-ts). A documentação técnica principal descreve os limites de homologação.

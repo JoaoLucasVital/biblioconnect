@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="730" viewBox="0 0 940 730" role="img">
+<title>Diagrama técnico do BiblioConnect</title>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#526B80"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<polyline points="100,101 100,205" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="110" y="160" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="210,101 400,205" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="290" y="148" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="285,55 615,55 615,165 710,205" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="430" y="40" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="720,101 230,205" fill="none" stroke="#DD8205" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<text x="510" y="151" fill="#DD8205" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="775,101 555,205" fill="none" stroke="#DD8205" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<text x="660" y="151" fill="#DD8205" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="860,101 860,205" fill="none" stroke="#DD8205" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<text x="870" y="160" fill="#DD8205" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="25,65 10,65 10,445 25,445" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="15" y="350" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="155,491 155,605" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="167" y="555" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="65,101 0,101 0,665 25,665" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<polyline points="915,55 930,55 930,355 470,355 470,405" fill="none" stroke="#DD8205" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+<text x="490" y="341" fill="#DD8205" font-family="Arial,sans-serif" font-size="16">1:N livro</text>
+<polyline points="785,291 785,405" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="800" y="350" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N</text>
+<polyline points="785,491 785,605" fill="none" stroke="#526B80" stroke-width="2" marker-end="url(#arr)"/>
+<text x="663" y="555" fill="#526B80" font-family="Arial,sans-serif" font-size="16">1:N / FK opcional</text>
+<rect x="25" y="15" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="42" y="44" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Usuario</text>
+<text x="42" y="67" fill="#506579" font-family="Arial,sans-serif" font-size="16">PK id | email único</text>
+<text x="42" y="88" fill="#506579" font-family="Arial,sans-serif" font-size="16">Conta e papel</text>
+<rect x="655" y="15" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="672" y="44" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Livro</text>
+<text x="672" y="67" fill="#506579" font-family="Arial,sans-serif" font-size="16">PK id | ISBN opcional único</text>
+<text x="672" y="88" fill="#506579" font-family="Arial,sans-serif" font-size="16">Acervo, preço e estoque</text>
+<rect x="25" y="205" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="42" y="234" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Favorito</text>
+<text x="42" y="257" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK usuarioId + livroId</text>
+<text x="42" y="278" fill="#506579" font-family="Arial,sans-serif" font-size="16">Par único</text>
+<rect x="340" y="205" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="357" y="234" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Avaliacao</text>
+<text x="357" y="257" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK usuarioId + livroId</text>
+<text x="357" y="278" fill="#506579" font-family="Arial,sans-serif" font-size="16">Par único; moderação</text>
+<rect x="655" y="205" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="672" y="234" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Pedido</text>
+<text x="672" y="257" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK usuarioId + livroId</text>
+<text x="672" y="278" fill="#506579" font-family="Arial,sans-serif" font-size="16">Uma unidade por pedido</text>
+<rect x="25" y="405" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="42" y="434" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Conversa</text>
+<text x="42" y="457" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK usuarioId</text>
+<text x="42" y="478" fill="#506579" font-family="Arial,sans-serif" font-size="16">Atendimento</text>
+<rect x="340" y="405" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="357" y="434" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">EventoFavorito</text>
+<text x="357" y="457" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK livroId | PK BigInt</text>
+<text x="357" y="478" fill="#506579" font-family="Arial,sans-serif" font-size="16">Contagem para SSE</text>
+<rect x="655" y="405" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="672" y="434" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Pagamento</text>
+<text x="672" y="457" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK pedidoId</text>
+<text x="672" y="478" fill="#506579" font-family="Arial,sans-serif" font-size="16">Uma ou mais tentativas</text>
+<rect x="25" y="605" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="42" y="634" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">MensagemChat</text>
+<text x="42" y="657" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK conversaId + remetenteId</text>
+<text x="42" y="678" fill="#506579" font-family="Arial,sans-serif" font-size="16">Autor é um Usuario</text>
+<rect x="655" y="605" width="260" height="86" rx="12" fill="#F0F4F7" stroke="#102A43" stroke-width="1.5"/>
+<text x="672" y="634" fill="#102A43" font-family="Arial,sans-serif" font-size="20" font-weight="bold">EventoGateway</text>
+<text x="672" y="657" fill="#506579" font-family="Arial,sans-serif" font-size="16">FK pagamentoId opcional</text>
+<text x="672" y="678" fill="#506579" font-family="Arial,sans-serif" font-size="16">Único gateway/eventId</text>
+</svg>
