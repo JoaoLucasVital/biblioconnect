@@ -19,6 +19,8 @@ Fontes bibliográficas nem sempre possuem todos os dados. Avisar quais campos ex
 
 - [x] Causa reproduzida e fonte alternativa consultada.
 - [x] Regressões e implementação; revisão independente e correção dos dois achados.
-- [ ] Verificação, publicação e demonstração.
+- [x] Verificação, publicação e demonstração.
 
 Verificação local: frontend 168/168; backend 73 aprovados, um teste integrado preexistente ignorado; build hospedado aprovado. Fluxo real em cópia isolada: consulta 200, capa WebP 200, cadastro 201 e leitura persistida; livro de teste e cópia removidos. Nenhum livro de teste criado online.
+
+Publicado no GitHub e no alias `biblioconnect-olive.vercel.app` (deploy `dpl_D8pNeJbkqHv65fHZNy3vfnDxvG1X`). Consulta autenticada do ISBN 9788532530783: 200, todos os campos bibliográficos previstos presentes, capa pública WebP 348×500 e 33.436 bytes; ISBN inválido: 400. Formulário publicado conferido no navegador com preenchimento e prévia carregada, sem salvar novo livro online. Ambiente local reiniciado com backup e os dados preservados.
