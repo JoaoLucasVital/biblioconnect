@@ -2,8 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { SRGBColorSpace, Texture } from "three";
 import BookCover from "../../components/ui/BookCover.jsx";
-
-const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import {resolveBookCoverUrl} from '../../components/ui/bookCoverUrl.js';
 
 function Unavailable({ onUnavailable }) {
   const reported = useRef(false);
@@ -122,9 +121,7 @@ export default function BookScene({ livro, active = true, onUnavailable }) {
   const image = typeof livro?.imagemUrl === "string" ? livro.imagemUrl.trim() : "";
   if (!image) return <Unavailable onUnavailable={onUnavailable} />;
 
-  const src = /^https?:\/\//i.test(image)
-    ? image
-    : `${apiUrl.replace(/\/$/, "")}/${image.replace(/^\/+/, "")}`;
+  const src = resolveBookCoverUrl(image);
 
   // A cover change owns a fresh texture and failure state; old GPU resources are disposed.
   return <CoverScene key={src} src={src} livro={livro} active={active} onUnavailable={onUnavailable} />;

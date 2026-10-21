@@ -8,17 +8,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/api.js";
 import {prepareBookUpload} from "../api/bookUpload.js";
 import IsbnLookup from "../components/IsbnLookup.jsx";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import {resolveBookCoverUrl} from '../components/ui/bookCoverUrl.js';
 
 function montarUrlImagem(imagemUrl) {
-  if (!imagemUrl) return "";
-
-  if (imagemUrl.startsWith("http://") || imagemUrl.startsWith("https://")) {
-    return imagemUrl;
-  }
-
-  return `${API_URL}${imagemUrl}`;
+  return resolveBookCoverUrl(imagemUrl);
 }
 
 function EditBook() {

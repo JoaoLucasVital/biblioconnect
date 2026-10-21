@@ -1,15 +1,10 @@
 import { useState } from "react";
 import coverVariants from "./cover-variants.json";
-
-const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-function imageUrl(value) {
-  if (!value) return "";
-  return /^https?:\/\//i.test(value) ? value : `${apiUrl.replace(/\/$/, "")}/${value.replace(/^\/+/, "")}`;
-}
+import {resolveBookCoverUrl} from './bookCoverUrl.js';
 
 export default function BookCover({ livro, className = "", sizes = "(min-width: 1280px) 240px, (min-width: 768px) 30vw, 50vw", priority = false }) {
   const [failedImage, setFailedImage] = useState(null);
-  const src = imageUrl(livro?.imagemUrl);
+  const src = resolveBookCoverUrl(livro?.imagemUrl);
   const variants = coverVariants[src.split("/").pop()];
   const directory = src.slice(0, src.lastIndexOf("/") + 1);
   const srcSet = variants?.map(item => `${directory}${item.file} ${item.width}w`).join(", ");
