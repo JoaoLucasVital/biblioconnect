@@ -3,7 +3,7 @@ import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import useInitialLoad from "../components/useInitialLoad.js";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/api.js";
 import {prepareBookUpload} from "../api/bookUpload.js";
@@ -15,6 +15,7 @@ function montarUrlImagem(imagemUrl) {
 }
 
 function EditBook() {
+  const imageInput=useRef(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -166,6 +167,8 @@ function EditBook() {
     }));
 
     if (dados.imagemUrl) {
+      setNovaImagem(null);
+      if(imageInput.current)imageInput.current.value='';
       setImagemUrlExterna(dados.imagemUrl);
       setImagemAtual(dados.imagemUrl);
       setPreviewImagem("");
@@ -263,7 +266,7 @@ function EditBook() {
                 )}
               </div>
 
-              <div className="grid gap-2"><Field label={"Trocar imagem da capa"}><input type="file" name="imagem" accept="image/jpeg,image/png,image/webp,image/jpg" onChange={handleImagemChange} /></Field><small  className="text-xs text-muted">
+              <div className="grid gap-2"><Field label={"Trocar imagem da capa"}><input ref={imageInput} type="file" name="imagem" accept="image/jpeg,image/png,image/webp,image/jpg" onChange={handleImagemChange} /></Field><small  className="text-xs text-muted">
                   Tamanho máximo: 5MB. Formatos aceitos: JPG, PNG ou WEBP.
                 </small>{novaImagem ? (
                   <div  className="text-sm text-muted">

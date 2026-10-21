@@ -3,14 +3,16 @@ import Button from "../components/ui/Button.jsx";
 import Field from "../components/ui/Field.jsx";
 import StatusMessage from "../components/ui/StatusMessage.jsx";
 import Dialog from "../components/ui/Dialog.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/api.js";
 import {prepareBookUpload} from "../api/bookUpload.js";
 import IsbnLookup from "../components/IsbnLookup.jsx";
+import {resolveBookCoverUrl} from '../components/ui/bookCoverUrl.js';
 
 function AddBooks() {
   const navigate = useNavigate();
+  const imageInput=useRef(null);
 
   const [form, setForm] = useState({
     isbn: "",
@@ -121,8 +123,13 @@ function AddBooks() {
     }));
 
     if (dados.imagemUrl) {
+      setImagem(null);
+      if (imageInput.current) imageInput.current.value = '';
       setImagemUrlExterna(dados.imagemUrl);
-      setPreviewImagem(dados.imagemUrl);
+      setPreviewImagem(resolveBookCoverUrl(dados.imagemUrl));
+    } else if (!imagem) {
+      setImagemUrlExterna('');
+      setPreviewImagem('');
     }
   }
 
@@ -211,7 +218,7 @@ function AddBooks() {
                 )}
               </div>
 
-              <div className="grid gap-2"><Field label={"Imagem da capa"}><input type="file" name="imagem" accept="image/jpeg,image/png,image/webp,image/jpg" onChange={handleImagemChange} /></Field><small  className="text-xs text-muted">
+              <div className="grid gap-2"><Field label={"Imagem da capa"}><input ref={imageInput} type="file" name="imagem" accept="image/jpeg,image/png,image/webp,image/jpg" onChange={handleImagemChange} /></Field><small  className="text-xs text-muted">
                   Tamanho máximo: 5MB. Recomendado: imagem vertical de capa.
                 </small>{imagem && (
                   <div  className="text-sm text-muted">

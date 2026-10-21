@@ -36,7 +36,8 @@ import {
   getLinksEntregasTerceirizadas,
   freteConfigurado,
 } from "./src/services/deliveryService.js";
-import { buscarLivroPorIsbn, normalizarIsbn } from "./src/services/isbnService.js";
+import { buscarLivroPorIsbn, buscarCapaPorIsbn, normalizarIsbn } from "./src/services/isbnService.js";
+import {createIsbnRoutes} from './src/routes/isbnRoutes.js';
 import { enviarNotificacao } from "./src/services/notificationService.js";
 import {
   descreverErroEmail,
@@ -2281,18 +2282,8 @@ app.get("/integracoes/status", autenticar, async (req, res) => {
   });
 });
 
-// Autopreenchimento do formulário do livro a partir do ISBN.
-app.get("/isbn/:isbn", autenticar, somenteAdmin, async (req, res) => {
-  try {
-    const livro = await buscarLivroPorIsbn(req.params.isbn);
-    if (!livro) {
-      return res.status(404).json({ erro: "ISBN não encontrado no Google Books" });
-    }
-    res.json(livro);
-  } catch (error) {
-    res.status(400).json({ erro: error.message });
-  }
-});
+app.use(createIsbnRoutes({authenticate:autenticar,admin:somenteAdmin,rateLimit:auth.rateLimit,
+  service:{lookup:buscarLivroPorIsbn,cover:buscarCapaPorIsbn},baseUrl:BACKEND_URL}));
 
 // Prévia de frete. A compra recalcula novamente o valor para não confiar no frontend.
 app.post("/entrega/cotacao", autenticar, auth.rateLimit("delivery-quote",{limit:30,windowMs:60000,key:req=>String(req.usuario.id)}), async (req, res) => {
