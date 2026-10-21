@@ -21,6 +21,18 @@ active after edits. Use `rg` for exact text, styles, or files outside the index.
 
 The `.codegraph/` directory is a generated local index. Do not commit its database.
 
+## Context efficiency and reverse engineering
+
+Use the installed `token-efficiency` skill by default and prefix shell commands
+with RTK. The local `vibe-coding-context` skill adapts the Vibe Coding Toolkit:
+read focused source ranges, reuse the existing CodeGraph index and keep compact
+handoffs. Do not run its broad machine setup recipes automatically.
+
+REA (`reverse-engineer-anything`) is installed for artifact or runtime analysis.
+Use CodeGraph for ordinary source exploration. A reference video establishes
+visible behavior, not the original implementation. Configuration and verification
+details are in `docs/setup/ai-tooling.md`.
+
 ## Current redesign brief
 
 - Use the original BiblioConnect as the baseline.

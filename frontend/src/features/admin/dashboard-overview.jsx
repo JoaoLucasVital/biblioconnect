@@ -3,9 +3,9 @@ import { ArrowDownLeft, ArrowUpRight, BookOpen, Bookmark, Check, CircleAlert, Li
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import "./dashboard.css";
 import {AnimatedHeading} from '../../components/motion/TextAnimations.jsx';
+import AnimatedNumber from "../../components/motion/AnimatedNumber.jsx";
 
 const number = (value) => Number(value || 0).toLocaleString("pt-BR");
-const money = (value) => Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 function EmptyChart({ title, children, icon: Icon = BookOpen }) {
   return <div className="dashboard-empty">
@@ -57,53 +57,58 @@ export default function DashboardOverview({ stats }) {
       <div className="dashboard-header-actions"><Link className="dashboard-secondary-link" to="/admin/financeiro">Ver financeiro<ArrowUpRight size={16} aria-hidden="true"/></Link><Link className="dashboard-primary-link" to="/admin/pedidos">Gerenciar pedidos <ArrowUpRight size={17} aria-hidden="true" /></Link></div>
     </header>
 
+    <div className="dashboard-top-grid">
+    <section className="dashboard-library-card bc-widget-enter" aria-label="Acervo da biblioteca">
+      <div className="dashboard-library-top"><span>Biblioteca / Acervo</span><LibraryBig size={22} strokeWidth={1.4} aria-hidden="true" /></div>
+      <div className="dashboard-library-total"><strong><AnimatedNumber value={stats.livros} /></strong><span>títulos no catálogo</span></div>
+      <p>Histórias para conectar<br />aos seus leitores.</p>
+      <Link to="/admin/livros">Explorar acervo<ArrowUpRight size={17} aria-hidden="true" /></Link>
+    </section>
     <section className="dashboard-kpis" aria-label="Indicadores da biblioteca">
-      {metrics.map(({ label, value, text, icon: Icon, to, accent }) => <Link to={to} key={label} className={`dashboard-kpi${accent ? " dashboard-kpi-accent" : ""}`}>
-        <div className="dashboard-kpi-top"><span>{label}</span><Icon size={19} strokeWidth={1.5} aria-hidden="true" /></div><strong>{number(value)}</strong><div className="dashboard-kpi-foot"><small>{text}</small><ArrowUpRight size={15} aria-hidden="true" /></div>
+      {metrics.map(({ label, value, text, icon: Icon, to, accent }) => <Link to={to} key={label} className={`dashboard-kpi bc-widget-enter${accent ? " dashboard-kpi-accent" : ""}`}>
+        <div className="dashboard-kpi-top"><span>{label}</span><Icon size={16} strokeWidth={1.5} aria-hidden="true" /></div><strong><AnimatedNumber value={value} /></strong><div className="dashboard-kpi-foot"><small>{text}</small><ArrowUpRight size={13} aria-hidden="true" /></div>
       </Link>)}
     </section>
 
-    <div className="dashboard-overview-grid">
-      <section className="dashboard-panel dashboard-movements">
-        <PanelHeading index="01 / Operação" title="Movimentações da biblioteca" aside={<span className="dashboard-period">Dados consolidados</span>}>Reservas, vendas, aluguéis e atrasos registrados.</PanelHeading>
+      <section className="dashboard-panel dashboard-movements bc-widget-enter">
+        <PanelHeading index="Operação" title="O acervo em movimento" aside={<span className="dashboard-period">Acumulado</span>}>Reservas, vendas, aluguéis e atrasos.</PanelHeading>
         {hasMovements ? <div className="dashboard-chart" role="img" aria-label={movements.map((item) => `${item.nome}: ${number(item.valor)}`).join("; ")}>
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-            <BarChart data={movements} layout="vertical" margin={{ top: 12, right: 40, bottom: 4, left: 0 }} barSize={28} accessibilityLayer>
-              <CartesianGrid horizontal={false} stroke="var(--dash-line)" strokeDasharray="3 5" />
-              <XAxis type="number" allowDecimals={false} axisLine={false} tickLine={false} tick={{ fill: "var(--muted)", fontSize: 10 }} />
-              <YAxis type="category" dataKey="nome" width={72} axisLine={false} tickLine={false} tick={{ fill: "var(--muted)", fontSize: 11 }} />
+            <BarChart data={movements} margin={{ top: 18, right: 6, bottom: 0, left: -22 }} barSize={24} accessibilityLayer>
+              <CartesianGrid vertical={false} stroke="var(--dash-line)" strokeDasharray="3 5" />
+              <XAxis dataKey="nome" axisLine={false} tickLine={false} tick={{ fill: "var(--dash-muted)", fontSize: 10 }} interval={0} />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fill: "var(--dash-muted)", fontSize: 10 }} />
               <Tooltip content={<ChartTooltip />} cursor={{ fill: "var(--dash-soft)" }} />
-              <Bar dataKey="valor" isAnimationActive={false} radius={[0, 4, 4, 0]}>{movements.map((item) => <Cell key={item.nome} fill={item.cor} />)}<LabelList dataKey="valor" position="right" formatter={number} fill="var(--text)" fontSize={12} /></Bar>
+              <Bar dataKey="valor" isAnimationActive={false} radius={[5, 5, 0, 0]}>{movements.map((item) => <Cell key={item.nome} fill={item.cor} />)}<LabelList dataKey="valor" position="top" formatter={number} fill="var(--text)" fontSize={11} /></Bar>
             </BarChart>
           </ResponsiveContainer>
         </div> : <EmptyChart title="A operação começa aqui" icon={Bookmark}>Ainda não há reservas, vendas, aluguéis ou atrasos registrados. Os dados aparecerão conforme a biblioteca movimentar o acervo.</EmptyChart>}
         <div className="dashboard-chart-summary">{movements.map((item) => <div key={item.nome}><span><i style={{ background: item.cor }} aria-hidden="true" />{item.nome}</span><strong>{number(item.valor)}</strong></div>)}</div>
       </section>
-
+    </div>
       <aside className="dashboard-summary-stack" aria-label="Resumos operacionais">
-        <section className={`dashboard-attention${stats.atrasos > 0 ? " has-pending" : ""}`}>
+        <section className={`dashboard-attention bc-widget-enter${stats.atrasos > 0 ? " has-pending" : ""}`}>
           <div className="dashboard-section-label"><span>Acompanhamento</span>{stats.atrasos > 0 ? <CircleAlert size={18} aria-hidden="true" /> : <Check size={18} aria-hidden="true" />}</div>
           <h2>{stats.atrasos > 0 ? "Pendências para acompanhar" : "Sem atrasos registrados"}</h2>
-          <div className="dashboard-attention-numbers"><div><strong>{number(stats.atrasos)}</strong><span>Atrasos</span></div><div><strong>{money(stats.multasPendentes)}</strong><span>Multas pendentes</span></div></div>
+          <div className="dashboard-attention-numbers"><div><strong><AnimatedNumber value={stats.atrasos} /></strong><span>Atrasos</span></div><div><strong><AnimatedNumber value={stats.multasPendentes} currency /></strong><span>Multas pendentes</span></div></div>
           <Link to="/admin/atrasos">Atrasos e multas <ArrowUpRight size={16} aria-hidden="true" /></Link>
         </section>
-        <section className="dashboard-readers">
+        <section className="dashboard-readers bc-widget-enter">
           <div className="dashboard-section-label"><span>Status de usuários</span><Users size={18} aria-hidden="true" /></div>
-          <div className="dashboard-readers-total"><strong>{number(stats.usuarios)}</strong><span>Usuários cadastrados</span></div>
+          <div className="dashboard-readers-total"><strong><AnimatedNumber value={stats.usuarios} /></strong><span>Usuários cadastrados</span></div>
           {stats.usuarios > 0 && <div className="dashboard-users-track" aria-hidden="true"><span style={{ flex: activeUsers }} /><span style={{ flex: stats.usuariosBloqueados }} /></div>}
           <dl><div><dt><i aria-hidden="true" />Ativos</dt><dd>{number(activeUsers)}</dd></div><div><dt><i aria-hidden="true" />Congelados</dt><dd>{number(stats.usuariosBloqueados)}</dd></div></dl>
           {stats.usuarios === 0 && <p className="dashboard-no-users">A distribuição será exibida após os primeiros cadastros.</p>}
           <Link to="/admin/usuarios">Gerenciar usuários <ArrowUpRight size={15} aria-hidden="true" /></Link>
         </section>
       </aside>
-    </div>
 
     <div className="dashboard-rankings-grid">
-      <section className="dashboard-panel"><PanelHeading index="02 / Acervo em destaque" title="Livros mais vendidos">Ranking por compras registradas.</PanelHeading>
+      <section className="dashboard-panel bc-widget-enter"><PanelHeading index="Acervo em destaque" title="Livros mais vendidos">Ranking por compras registradas.</PanelHeading>
         {stats.livroMaisVendido && <div className="dashboard-leader"><span className="dashboard-leader-caption">Livro mais vendido</span><strong>{stats.livroMaisVendido.titulo}</strong><span>{number(stats.livroMaisVendido.quantidadeVendas)} {Number(stats.livroMaisVendido.quantidadeVendas) === 1 ? "venda registrada" : "vendas registradas"}</span></div>}
         <Ranking items={stats.livrosMaisVendidos} kind="book" />
       </section>
-      <section className="dashboard-panel"><PanelHeading index="03 / Preferências dos leitores" title="Gêneros mais vendidos">Distribuição das vendas por categoria.</PanelHeading>
+      <section className="dashboard-panel bc-widget-enter"><PanelHeading index="Preferências dos leitores" title="Gêneros mais vendidos">Distribuição das vendas por categoria.</PanelHeading>
         {stats.generoMaisVendido && <div className="dashboard-leader dashboard-leader-genre"><span className="dashboard-leader-caption">Gênero mais vendido</span><strong>{stats.generoMaisVendido.genero}</strong><span>{number(stats.generoMaisVendido.quantidadeVendas)} {Number(stats.generoMaisVendido.quantidadeVendas) === 1 ? "venda registrada" : "vendas registradas"}</span></div>}
         <Ranking items={stats.generosMaisVendidos} kind="genre" />
       </section>

@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { transitionTheme } from "./motion/themeTransition.js";
 import usePageVisible from "./usePageVisible.js";
 import "./theme-toggle.css";
 
@@ -10,20 +12,28 @@ function savedTheme() {
 /** Adapted from RiccardoRapelli / Uiverse; license in THIRD_PARTY_NOTICES.md. */
 export default function ThemeToggle() {
   const [dark,setDark]=useState(savedTheme);
+  const intended=useRef(dark);
   const visible=usePageVisible();
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     document.body.classList.toggle("dark",dark);
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content",dark?"#0f172a":"#fff7ed");
   },[dark]);
   useEffect(()=>{
-    const sync=event=>{if(event.key==="theme" || event.key===null)setDark(savedTheme());};
+    const sync=event=>{
+      if(event.key!=="theme" && event.key!==null)return;
+      const next=savedTheme();intended.current=next;
+      transitionTheme(null,()=>setDark(next),{instant:true});
+    };
     window.addEventListener("storage",sync);
     return ()=>window.removeEventListener("storage",sync);
   },[]);
   function change(event) {
-    const checked=event.target.checked;
-    setDark(checked);
-    try { localStorage.setItem("theme",checked?"dark":"light"); } catch { /* Session theme remains usable. */ }
+    const checked=!intended.current;
+    intended.current=checked;
+    transitionTheme(event.target,()=>{
+      flushSync(()=>setDark(checked));
+      try { localStorage.setItem("theme",checked?"dark":"light"); } catch { /* Session theme remains usable. */ }
+    },{instant:event.nativeEvent.detail===0});
   }
   return <label className="bc-theme-switch" title="Alternar tema" data-paused={!visible || undefined}>
     <input type="checkbox" role="switch" aria-label="Tema escuro" checked={dark} onChange={change}/>

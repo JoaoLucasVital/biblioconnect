@@ -15,12 +15,12 @@
 .bc-admin-nav-link,.bc-admin-group-trigger,.bc-admin-atlas-link{position:relative;display:flex;align-items:center;gap:8px;width:100%;min-height:36px;padding:8px 10px;border:0;border-radius:10px;color:var(--nav-ink);font-size:12px;line-height:1.35;text-decoration:none;cursor:pointer;transition:background-color 160ms ease,color 160ms ease}
 .bc-admin-nav-link>svg,.bc-admin-group-trigger>svg,.bc-admin-atlas-link>svg{width:17px;height:17px;flex-shrink:0}
 .bc-admin-nav-label{min-width:0;white-space:nowrap}
-.bc-admin-nav .bc-shiny-text{--text:var(--nav-ink);--shine:#fff7ed}
+.bc-admin-nav .bc-shiny-text{--text:var(--nav-ink);--shine:#ffffff}
 .bc-admin-nav-link.is-active{z-index:1;border-radius:14px 0 0 14px;background:var(--nav-active);color:var(--nav-active-ink);font-weight:600}
 .bc-admin-nav:not(.is-compact) .bc-admin-nav-link.is-active::before,.bc-admin-nav:not(.is-compact) .bc-admin-nav-link.is-active::after{content:'';position:absolute;right:0;width:10px;height:10px;pointer-events:none}
 .bc-admin-nav:not(.is-compact) .bc-admin-nav-link.is-active::before{top:-10px;background:radial-gradient(circle at 0 0,transparent 9.5px,var(--nav-active) 10px)}
 .bc-admin-nav:not(.is-compact) .bc-admin-nav-link.is-active::after{bottom:-10px;background:radial-gradient(circle at 0 100%,transparent 9.5px,var(--nav-active) 10px)}
-.bc-admin-nav-link.is-active .bc-shiny-text{--text:var(--nav-active-ink);--shine:#ffcc8b}
+.bc-admin-nav-link.is-active .bc-shiny-text{--text:var(--nav-active-ink);--shine:#ffffff}
 .bc-admin-nav-link.is-active>svg{color:#ffba62}
 .bc-admin-nav-divider{height:4px}
 .bc-admin-nav-group{margin-top:4px}

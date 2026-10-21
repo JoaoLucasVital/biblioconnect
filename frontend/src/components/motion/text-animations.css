@@ -1,5 +1,5 @@
-.bc-shiny-text{--shine:#aa5100;display:inline-block;color:var(--text);background:linear-gradient(110deg,var(--text) 35%,var(--shine) 48%,var(--text) 61%);background-size:250% 100%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:bc-text-shine 6s linear infinite}
-body.dark .bc-shiny-text{--shine:#f6bc72}
+.bc-shiny-text{--shine:#cbd9e3;display:inline-block;color:var(--text);background:linear-gradient(110deg,var(--text) 35%,var(--shine) 48%,var(--text) 61%);background-size:250% 100%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:bc-text-shine 6s linear infinite}
+body.dark .bc-shiny-text{--shine:#ffffff}
 .bc-animated-heading{animation:bc-heading-reveal 300ms var(--ease-out) both}
 @keyframes bc-text-shine{0%,25%{background-position:100% 0}75%,100%{background-position:0 0}}
 @keyframes bc-heading-reveal{from{opacity:0;filter:blur(4px);transform:translateY(8px)}to{opacity:1;filter:blur(0);transform:translateY(0)}}

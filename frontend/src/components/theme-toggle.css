@@ -37,4 +37,9 @@
 .bc-theme-switch[data-paused] * { animation-play-state:paused; }
 .bc-theme-switch input:focus-visible + .bc-theme-slider * { transition:none; }
 @media (prefers-reduced-motion:reduce) { .bc-theme-switch * { animation:none; transition:none; } }
+
+html.bc-theme-transition::view-transition-old(root),
+html.bc-theme-transition::view-transition-new(root) { animation:none; mix-blend-mode:normal; }
+html.bc-theme-transition::view-transition-old(root) { z-index:1; }
+html.bc-theme-transition::view-transition-new(root) { z-index:2; }
 @media (forced-colors:active) { .bc-theme-switch input { opacity:1; appearance:auto; } .bc-theme-slider { display:none; } }
