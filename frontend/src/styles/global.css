@@ -25,6 +25,7 @@
     color-scheme: dark;
   }
   html { -webkit-text-size-adjust: 100%; }
+  html:has(body.dark) { color-scheme: dark; }
   body { color: var(--text); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
   button, a, [role="button"] { touch-action: manipulation; }
   button { user-select: none; }
@@ -66,6 +67,15 @@
   button, input, select, textarea { font: inherit; }
   button { touch-action: manipulation; }
   input, textarea { caret-color: var(--text); }
+  /* Native popup menus need their own palette; transparent selects only style
+     the closed control. Keep every option readable in both application themes. */
+  select { color-scheme: inherit; }
+  select option, select optgroup { color: var(--text); background-color: var(--card); }
+  select option:disabled { color: var(--muted); }
+  @media (forced-colors: active) {
+    select option, select optgroup { color: CanvasText; background-color: Canvas; }
+    select option:disabled { color: GrayText; }
+  }
   ::selection { background: #e67e00; color: #1e293b; }
   :focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
   .bc-button { transition: transform 140ms var(--ease-out), background-color 140ms ease; }
